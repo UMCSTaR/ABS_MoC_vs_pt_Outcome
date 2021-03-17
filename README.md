@@ -1,5 +1,30 @@
-repo-template
+# MOC vs. Outcomes
 
-This repo is a starting point for uniformity among project repos.  Just clone it and create an RStudio project from the now-existing folder and you're off.  You also need to create a `data` folder at the top level to go with others seen here, but note that it is already added to .gitignore, so its contents should never appear on GitHub.
+## Summary
 
-Consult the `other_docs/style_suggestions.Rmd`  before getting too carried away.
+Association between *initial* American Board of Surgery (ABS) re-certification in ABS *US trained* *general surgeons* and risk-adjusted surgical patient outcomes. 
+
+Main variable: Maintenance of certification (MOC)
+Outcome: severe complication and death within 30 days
+Procedure: 162 general surgery procedures
+
+## Dataset
+
+### ABS
+Available MOC variables in ABS data:
+
+- **nAttemptsReCert**:	Number of attempts of the ReCert exam on first time attempt to get recertified
+- **PFfirstR**:	Pass/Fail result in first ReCert attempt
+- **ReCeverPassed**:	Candidate has passed at least one ReCert exam (1), or attempted but never passed (0)
+
+Only use data used before 2017
+> They changed their process to an annual certification starting in 2018. Therefore, I think we should only analyze data until 2017, just to keep the method cleaner. We can list this as a limitation. - Andrew Jones
+
+
+## Lab notebook
+
+
+## Other
+
+Google drive at: `Active Projects/2019.08 ABS MoC v Pt Outcomes (K08 Aim 2-2) - Brian`
+Maize folder: `George_Surgeon_Projects/MOC_vs_Outcome`
