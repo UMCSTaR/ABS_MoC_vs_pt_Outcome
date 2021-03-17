@@ -1,0 +1,8 @@
+---
+title: "ReadMe"
+output: html_document
+---
+
+This folder works as Lab Notebook. Put intermediate reports, like model results, diagrams, that help decision making for the research group.
+
+For example, model results for medicare data cohort for Partial Colectomy procedure.
