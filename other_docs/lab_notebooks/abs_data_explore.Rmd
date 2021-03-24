@@ -1,0 +1,242 @@
+---
+title: "ABS Data Explore"
+author: "Xilin Chen"
+date: "3/23/2021"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = F,
+  warning = F,
+  message = F,
+  comment = NA
+)
+
+library(tidyverse)
+library(DT)
+library(gtsummary)
+```
+
+```{r, cache=TRUE}
+# ABS data prep -----------------------------------------------------------
+abs = data.table::fread(
+  "/Volumes/George_Surgeon_Projects/Surgeon Profile data/abs_with_npi.csv",
+  colClasses = c("character")
+)
+
+selected_abs_gs = abs %>% 
+  mutate(residency_graduation_year = ifelse(!is.na(residency_yog),
+                                            residency_yog, yot)) %>% 
+  select(npi, sex, residency_graduation_year, Gcompyear, ReCeverPassed,
+         PFfirstCE, QEeverPassed, nAttemptsReCert, PFfirstR, us_medschool, gs_specialty_cms, fellowship) %>% 
+  mutate(npi = as.character(npi))
+
+
+abs_gs = selected_abs_gs %>% 
+ filter(fellowship == "FALSE", us_medschool != "Foreign_MG" | is.na(us_medschool))
+
+# nrow(abs_gs) #32735
+
+abs_medicare_gs = selected_abs_gs %>% 
+  filter(gs_specialty_cms == "TRUE")
+
+# nrow(abs_medicare_gs) #18865
+
+```
+
+### ABS General Surgery surgeons and Non-foreign med school trained
+
+
+```{r Input}
+radioButtons(
+  "define_gs",
+  label = "Definition of GS:",
+  choices = list(
+    "Fellowship from ABS and fellowship council" = 1,
+    "Fellowship adding medicare definition" = 2
+  ),
+  selected = 1
+)
+
+
+```
+
+breakdown of recertification records
+
+```{r}
+# define data based on how we define General Surgery surgeons
+data_gs <- reactive({
+   if(input$define_gs == 1){
+    abs_gs 
+   } else if (input$define_gs == 2) {
+    abs_medicare_gs 
+   }
+  })
+```
+
+
+```{r output}
+renderTable({
+  data_gs() %>%
+    count(ReCeverPassed, name = "n_surg") %>% 
+    mutate(perc = scales::percent(n_surg/sum(n_surg), digits = 1))
+})
+```
+
+
+
+### Define never recertified surgeon group (Define NA)
+
+
+```{r}
+numericInput("n_years", label = "number of years after graduation", value = 17)
+```
+
+breakdown of NA recertification records after excluding unqualified surgeons based on the number of years after graduation.
+
+```{r}
+# data processing---------------------
+# add year after graduation flag and passed CE exam flag
+# Only for on record ReCertification surgeon group
+data_gs_na = reactive({
+  
+  # add yoe flg
+  data_gs = data_gs() %>%
+    filter(is.na(ReCeverPassed)) %>%
+    mutate(
+      residency_graduation_year = as.numeric(residency_graduation_year),
+      enough_years_after_graduation =
+        ifelse((2019 - residency_graduation_year) <= input$n_years,
+               "excluded",
+               "included"
+        )
+    )
+
+  # Only keep surgeons that passed CE exam
+  passed_CE_surgeons = data_gs %>%
+    filter(!is.na(Gcompyear), Gcompyear != "0" |
+             PFfirstCE == "P") %>% pull(npi)
+  # add CE pass exam flg
+  data_gs %>%
+    mutate(CE_exam = ifelse(npi %in% passed_CE_surgeons, "passed", "no pass"))
+  
+})
+```
+
+
+
+```{r}
+# Include va exclude surgeon table based on year after graduation
+renderTable({
+  data_gs_na() %>%
+    filter(CE_exam == "passed") %>% 
+    count(enough_years_after_graduation, name = "n_surg") %>%
+    mutate(perc = scales::percent(n_surg/sum(n_surg), digits = 1))
+
+})
+
+# number of surgeons that never passed CE
+# This is excluded in our analysis
+renderText({
+  n_no_pass_ce = data_gs_na() %>% 
+    filter(CE_exam == "no pass") %>% 
+    nrow()
+
+  paste0("The number of surgeons excluded becasue of no passong CE exam is ",
+        n_no_pass_ce)
+
+})
+```
+
+
+### Grandfather Surgeon effects among never certified surgeons
+
+```{r}
+# data process
+# get qualified NA surgeons
+data_na_qualified_suregons = reactive({
+  data_gs_na() %>%
+    filter(CE_exam == "passed",
+           enough_years_after_graduation == "included") 
+})
+```
+
+number of surgeons in each graduation year
+
+```{r}
+renderPlot({
+  data_na_qualified_suregons() %>%
+    count(residency_graduation_year) %>% 
+    ggplot(aes(x= residency_graduation_year, y = n)) +
+    geom_point() + 
+    theme_classic() +
+    theme(axis.text=element_text(size=15),
+          axis.title = element_text(size=20))
+})
+
+```
+
+
+```{r}
+numericInput("graduation_year", label = "Choose a year to define grandpa surgeons", value = 2000, min = 1900, max = 2019)
+
+```
+
+```{r}
+data_na_qualified_suregons_filter_grad_year = reactive({
+  data_na_qualified_suregons() %>%
+    mutate(
+      residency_graduation_year = as.numeric(residency_graduation_year),
+      older_surgeon = ifelse(
+        residency_graduation_year < input$graduation_year,
+        "yes",
+        "no"
+      )
+    )
+})
+
+renderTable({  
+  data_na_qualified_suregons_filter_grad_year() %>% 
+    count(older_surgeon, name = "n_surg") %>% 
+    mutate(perc = scales::percent(n_surg/sum(n_surg), digits = 1))
+  })
+```
+
+### Download Processed dataset
+
+- Exclude no recertification record surgeons who had less than cutoff years after graduation
+- Added 3nd recertification category as "no record"
+- added new older_surgeon variable based on graduation year cutoff
+
+```{r}
+downloadButton("downloadData", "Download Processed Data")
+```
+
+```{r}
+processed_data = reactive({
+  rbind(
+    data_na_qualified_suregons_filter_grad_year() %>% 
+      mutate(ReCeverPassed = "no record"),
+    data_gs() %>%
+      filter(!is.na(ReCeverPassed)) %>% 
+      mutate(older_surgeon = ifelse(residency_graduation_year <= input$graduation_year, "yes", "no")),
+    fill = TRUE
+  )
+})
+
+
+downloadHandler(
+    filename = function() {
+      paste("~/Documents/Repo/ABS_MoC_vs_pt_Outcome/data/processed_abs/defined_gs",input$define_gs, "_", "yoe",input$n_years, "_", "grandpa", input$graduation_year, ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(processed_data(), file, row.names = FALSE)
+    }
+  )
+```
+
+
+
+
