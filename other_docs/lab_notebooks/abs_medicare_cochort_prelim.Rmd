@@ -1,0 +1,63 @@
+---
+title: "ABS Medicare Cohort"
+author: "Xilin Chen"
+date: "4/6/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  eval = TRUE,
+  comment = NA,
+  message = FALSE,
+  warning = FALSE,
+  R.options = list(width = 220),
+  dev.args = list(bg = 'transparent'),
+  dev = 'png',
+  layout = "l-body-outset",
+  fig.align = 'center',
+  out.width = '75%',
+  fig.asp = .75,
+  fig.pos = 'H',
+  cache = FALSE, 
+  cache.rebuild = TRUE
+)
+
+library(tidyverse)
+library(gtsummary)
+```
+
+```{r}
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready.rdata")
+```
+
+
+## Descriptives
+
+### Cases table1
+
+```{r}
+# table1 for the cohort
+medicare_abs_model_ready %>% 
+  select(ce_cert_status, flg_death_30d, flg_cmp_po_severe_not_poa, flg_readmit_30d,
+         flg_util_reop,emergent_admit, flg_assistant_surgeon, flg_hosp_urban) %>% 
+  mutate(flg_cmp_po_severe_not_poa = as.numeric(flg_cmp_po_severe_not_poa)) %>% 
+  gtsummary::tbl_summary(by = ce_cert_status) 
+```
+
+### Surgeons table1
+
+```{r}
+medicare_abs_model_ready %>% 
+  distinct(id_physician_npi, ce_cert_status, PFfirstR, nAttemptsReCert,
+           sex, residency_graduation_year) %>% 
+  select(ce_cert_status, PFfirstR, nAttemptsReCert,
+         sex, residency_graduation_year) %>% 
+  mutate(nAttemptsReCert = as.factor(nAttemptsReCert)) %>% 
+  tbl_summary(by = ce_cert_status)
+```
+
+
+##
+
