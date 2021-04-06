@@ -69,7 +69,7 @@ medicare_abs = medicare_abs %>%
     )
   )
 
-# descriptives for recert status and outcomes
+# descriptive for recert status and outcomes
 summary_recert_medicare = medicare_abs %>%
   group_by(recert_status) %>%
   summarise(

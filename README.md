@@ -4,9 +4,9 @@
 
 Association between *initial* American Board of Surgery (ABS) re-certification in ABS *US trained* *general surgeons* and risk-adjusted surgical patient outcomes. 
 
-Main variable: Maintenance of certification (MOC)
-Outcome: severe complication and death within 30 days
-Procedure: 162 general surgery procedures
+- Main variable: Maintenance of certification (MOC)
+- Outcome: severe complication and death within 30 days
+- Procedure: 162 general surgery procedures
 
 ## Dataset
 
@@ -22,6 +22,9 @@ Only use data used before 2017
 
 
 ## Lab notebook
+
+### Table 1
+
 
 
 ## Other

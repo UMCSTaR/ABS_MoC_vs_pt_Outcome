@@ -229,7 +229,7 @@ processed_data = reactive({
 
 downloadHandler(
     filename = function() {
-      paste("~/Documents/Repo/ABS_MoC_vs_pt_Outcome/data/processed_abs/defined_gs",input$define_gs, "_", "yoe",input$n_years, "_", "grandpa", input$graduation_year, ".csv", sep = "")
+      paste("defined_gs",input$define_gs, "_", "yoe",input$n_years, "_", "grandpa", input$graduation_year, ".csv", sep = "")
     },
     content = function(file) {
       write.csv(processed_data(), file, row.names = FALSE)
