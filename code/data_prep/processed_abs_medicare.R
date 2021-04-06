@@ -20,11 +20,20 @@ medicare_abs %>%
   distinct(npi, ReCeverPassed) %>% 
   tidyext::cat_by(ReCeverPassed)
 
-medicare_abs %>% 
-  select(ReCeverPassed, flg_death_30d, flg_cmp_po_severe_not_poa, flg_readmit_30d,
-         flg_util_reop,e_admit_type, flg_assistant_surgeon, flg_hosp_urban, AHRQ_score) %>% 
+
+medicare_abs_model_ready = prep_data_for_model(medicare_abs) %>% 
+  mutate(ce_cert_status = case_when(ReCeverPassed == 0 ~ "failed",
+                                    ReCeverPassed == 1 ~ "passed",
+                                    ReCeverPassed == "no record" ~ "no_record"),
+         ce_cert_status = factor(ce_cert_status, levels = c("failed", "passed", "no_record")))
+
+save(medicare_abs_model_ready, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready.rdata")
+
+medicare_abs_model_ready %>% 
+  select(ce_cert_status, flg_death_30d, flg_cmp_po_severe_not_poa, flg_readmit_30d,
+         flg_util_reop,emergent_admit, flg_assistant_surgeon, flg_hosp_urban) %>% 
   mutate(flg_cmp_po_severe_not_poa = as.numeric(flg_cmp_po_severe_not_poa)) %>% 
-  gtsummary::tbl_summary(by = ReCeverPassed) 
+  gtsummary::tbl_summary(by = ce_cert_status) 
 
 
 # model -------------------------------------------------------------------
@@ -33,11 +42,7 @@ set.seed(123)
 sample_surg = sample_frac(abs, 0.1) %>% pull(npi)
 medicare_abs = medicare_abs %>% filter(npi %in% sample_surg)
 
-medicare_abs_model_ready = prep_data_for_model(medicare_abs) %>% 
-  mutate(ce_cert_status = case_when(ReCeverPassed == 0 ~ "failed",
-                                 ReCeverPassed == 1 ~ "passed",
-                                 ReCeverPassed == "no record" ~ "no_record"),
-         ce_cert_status = factor(ce_cert_status, levels = c("failed", "passed", "no_record")))
+
 
 medicare_abs_model_ready %>% count(ce_cert_status)
 
