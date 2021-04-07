@@ -25,7 +25,9 @@ medicare_abs_model_ready = prep_data_for_model(medicare_abs) %>%
   mutate(ce_cert_status = case_when(ReCeverPassed == 0 ~ "failed",
                                     ReCeverPassed == 1 ~ "passed",
                                     ReCeverPassed == "no record" ~ "no_record"),
-         ce_cert_status = factor(ce_cert_status, levels = c("failed", "passed", "no_record")))
+         ce_cert_status = factor(ce_cert_status, levels = c("failed", "passed", "no_record")),
+         n_attempts_recert = ifelse(nAttemptsReCert >=3, "≥3", nAttemptsReCert),
+         n_attempts_recert = factor(n_attempts_recert, levels = c("1", "2", "≥3")))
 
 save(medicare_abs_model_ready, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready.rdata")
 

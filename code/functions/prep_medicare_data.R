@@ -20,15 +20,11 @@ prep_data_for_model <- function(
     ungroup()
   
   
-  # standardize numeric -----------------------------------------------------
-  data = data %>% 
-    mutate_at(vars(c("surgeon_yearly_load", "age_at_admit", "AHRQ_score")), function(x) scale(x)[,1]) %>% 
-    rename_at(vars(c("surgeon_yearly_load", "age_at_admit", "AHRQ_score")), function(x) paste0(x, '_std'))
-
-  
   # redefine categorical ------------------------------------------------------
   # race
   # emergency status
+  # facility claim year
+  # add surgeon yearly volume---
   
   data = data %>% 
     mutate(
@@ -45,7 +41,18 @@ prep_data_for_model <- function(
                                          e_ses_5grp <=3 ~ "low_ses",
                                          TRUE ~ NA_character_),
       # facility claim year center
-      year = facility_clm_yr-2007)
+      year = facility_clm_yr - 2007) %>%
+    
+      # add surgeon yearly volume
+    group_by(id_physician_npi, facility_clm_yr) %>%
+    mutate(surgeon_yearly_load = n()) %>% 
+    ungroup()
+  
+  # standardize numeric -----------------------------------------------------
+  data = data %>% 
+    mutate_at(vars(c("surgeon_yearly_load", "age_at_admit", "AHRQ_score")), function(x) scale(x)[,1]) %>% 
+    rename_at(vars(c("surgeon_yearly_load", "age_at_admit", "AHRQ_score")), function(x) paste0(x, '_std'))
+  
   
   
   # convert logical to integers ---------------------------------------------
