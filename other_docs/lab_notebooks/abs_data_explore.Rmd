@@ -29,7 +29,7 @@ abs = data.table::fread(
 selected_abs_gs = abs %>% 
   mutate(residency_graduation_year = ifelse(!is.na(residency_yog),
                                             residency_yog, yot)) %>% 
-  select(npi, sex, residency_graduation_year, Gcompyear, ReCeverPassed,
+  select(npi, sex, residency_graduation_year, Gcertyear, Gcompyear, ReCeverPassed,
          PFfirstCE, QEeverPassed, nAttemptsReCert, PFfirstR, us_medschool, gs_specialty_cms, fellowship) %>% 
   mutate(npi = as.character(npi))
 
@@ -39,14 +39,15 @@ abs_gs = selected_abs_gs %>%
 
 # nrow(abs_gs) #32735
 
-abs_medicare_gs = selected_abs_gs %>% 
+# add medicare gs definition
+abs_medicare_gs = abs_gs %>% 
   filter(gs_specialty_cms == "TRUE")
 
-# nrow(abs_medicare_gs) #18865
+# nrow(abs_medicare_gs) #13259
 
 ```
 
-### ABS General Surgery surgeons and Non-foreign med school trained
+### 1. ABS General Surgery surgeons and Non-foreign med school trained
 
 
 ```{r Input}
@@ -57,7 +58,7 @@ radioButtons(
     "Fellowship from ABS and fellowship council" = 1,
     "Fellowship adding medicare definition" = 2
   ),
-  selected = 1
+  selected = 2
 )
 
 
@@ -87,14 +88,12 @@ renderTable({
 
 
 
-### Define never recertified surgeon group (Define NA)
+### 2. Define never recertified surgeon group (Define NA)
 
 
-```{r}
-numericInput("n_years", label = "number of years after graduation", value = 17)
-```
+- at least have 10 years after the initial certification year
 
-breakdown of NA recertification records after excluding unqualified surgeons based on the number of years after graduation.
+breakdown of NA recertification records 
 
 ```{r}
 # data processing---------------------
@@ -102,25 +101,20 @@ breakdown of NA recertification records after excluding unqualified surgeons bas
 # Only for on record ReCertification surgeon group
 data_gs_na = reactive({
   
-  # add yoe flg
-  data_gs = data_gs() %>%
+  # add failed_recert_10yrs flg
+  data_gs() %>%
+    # filter to NA 
     filter(is.na(ReCeverPassed)) %>%
     mutate(
-      residency_graduation_year = as.numeric(residency_graduation_year),
-      enough_years_after_graduation =
-        ifelse((2019 - residency_graduation_year) <= input$n_years,
-               "excluded",
-               "included"
-        )
-    )
-
-  # Only keep surgeons that passed CE exam
-  passed_CE_surgeons = data_gs %>%
-    filter(!is.na(Gcompyear), Gcompyear != "0" |
-             PFfirstCE == "P") %>% pull(npi)
-  # add CE pass exam flg
-  data_gs %>%
-    mutate(CE_exam = ifelse(npi %in% passed_CE_surgeons, "passed", "no pass"))
+    Gcertyear = as.numeric(Gcertyear),
+    years_after_recertification = 2019 - Gcertyear
+  ) %>% 
+  mutate(
+    # years after initial recertification >10 years,
+    # Defined NA that has failed the exam
+    failed_recert_10yrs = ifelse(years_after_recertification>10, "failed",
+                           "not 10 yrs"),
+  )
   
 })
 ```
@@ -128,11 +122,10 @@ data_gs_na = reactive({
 
 
 ```{r}
-# Include va exclude surgeon table based on year after graduation
+# Include na exclude surgeon table based on year after inital certification
 renderTable({
   data_gs_na() %>%
-    filter(CE_exam == "passed") %>% 
-    count(enough_years_after_graduation, name = "n_surg") %>%
+    count(failed_recert_10yrs, name = "n_surg") %>%
     mutate(perc = scales::percent(n_surg/sum(n_surg), digits = 1))
 
 })
@@ -140,35 +133,39 @@ renderTable({
 # number of surgeons that never passed CE
 # This is excluded in our analysis
 renderText({
-  n_no_pass_ce = data_gs_na() %>% 
-    filter(CE_exam == "no pass") %>% 
+  n_no_pass_in_10yrs = data_gs_na() %>% 
+    filter(failed_recert_10yrs == "failed") %>% 
     nrow()
 
-  paste0("The number of surgeons excluded becasue of no passong CE exam is ",
-        n_no_pass_ce)
+  paste0("The number of surgeons failed to get recertified in 10 years: ",
+        n_no_pass_in_10yrs)
 
 })
 ```
 
 
-### Grandfather Surgeon effects among never certified surgeons
+### 3. Grandfather Surgeon effects among never certified surgeons from NA
+
+from ABS paper
+> the American Board of Surgery (ABS) introduced time-limited certification in 1976, requiring diplomats certified subsequently to pass a secure, multiple-choice comprehensive recertification examination in surgery every 10 years as demonstration that they remain current with advancements in surgical knowledge.
 
 ```{r}
 # data process
 # get qualified NA surgeons
 data_na_qualified_suregons = reactive({
   data_gs_na() %>%
-    filter(CE_exam == "passed",
-           enough_years_after_graduation == "included") 
+    filter(failed_recert_10yrs == "failed") 
 })
 ```
 
-number of surgeons in each graduation year
+number of failed to pass (from NA) surgeons in each graduation year 
+
 
 ```{r}
 renderPlot({
   data_na_qualified_suregons() %>%
     count(residency_graduation_year) %>% 
+    mutate(residency_graduation_year= as.numeric(residency_graduation_year)) %>% 
     ggplot(aes(x= residency_graduation_year, y = n)) +
     geom_point() + 
     theme_classic() +
@@ -180,9 +177,11 @@ renderPlot({
 
 
 ```{r}
-numericInput("graduation_year", label = "Choose a year to define grandpa surgeons", value = 2000, min = 1900, max = 2019)
+numericInput("graduation_year", label = "Choose a year to define grandpa surgeons", value = 1976, min = 1900, max = 2019)
 
 ```
+
+
 
 ```{r}
 data_na_qualified_suregons_filter_grad_year = reactive({
@@ -206,8 +205,8 @@ renderTable({
 
 ### Download Processed dataset
 
-- Exclude no recertification record surgeons who had less than cutoff years after graduation
-- Added 3nd recertification category as "no record"
+- Exclude no recertification record surgeons who had less than cutoff years after initial certification
+- Added 3nd recertification category as "no record, failed" from NA
 - added new older_surgeon variable based on graduation year cutoff
 
 ```{r}
@@ -218,10 +217,10 @@ downloadButton("downloadData", "Download Processed Data")
 processed_data = reactive({
   rbind(
     data_na_qualified_suregons_filter_grad_year() %>% 
-      mutate(ReCeverPassed = "no record"),
+      filter(older_surgeon == "no") %>% 
+      mutate(ReCeverPassed = "no record, failed"),
     data_gs() %>%
-      filter(!is.na(ReCeverPassed)) %>% 
-      mutate(older_surgeon = ifelse(residency_graduation_year <= input$graduation_year, "yes", "no")),
+      filter(!is.na(ReCeverPassed)),
     fill = TRUE
   )
 })
@@ -229,7 +228,7 @@ processed_data = reactive({
 
 downloadHandler(
     filename = function() {
-      paste("defined_gs",input$define_gs, "_", "yoe",input$n_years, "_", "grandpa", input$graduation_year, ".csv", sep = "")
+      paste0("defined_gs",input$define_gs, "_", "grandpa", input$graduation_year, ".csv")
     },
     content = function(file) {
       write.csv(processed_data(), file, row.names = FALSE)
