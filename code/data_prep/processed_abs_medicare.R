@@ -45,11 +45,17 @@ sample_surg = sample_frac(abs, 0.1) %>% pull(npi)
 medicare_abs = medicare_abs %>% filter(npi %in% sample_surg)
 
 
+load("X:\\George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_17.rdata")
+medicare_abs_model_ready = medicare_abs_model_ready_17
 
-medicare_abs_model_ready %>% count(ce_cert_status)
+medicare_abs_model_ready %>% count(re_cert_status)
 
 covariates = c(
-  'ce_cert_status',
+  # cert status
+  # choose one
+  # 're_cert_status',
+  're_cert_bin',
+  # other
   'flg_male',
   'age_at_admit_std',
   'AHRQ_score_std',
@@ -71,21 +77,42 @@ f = formula(paste("flg_death_30d ~ 1", paste(covariates, collapse = ' + '),
                   "(1 | id_physician_npi)", "(1 | e_proc_grp_lbl)",
                   sep = " + "))
 
-death_model = glmer(formula = f,
+
+system.time({
+  death_model_bin_17 = glmer(formula = f,
       data = medicare_abs_model_ready,
       family = binomial)
+})
+
+# severe cmp 
+medicare_abs_model_ready_2011 = medicare_abs_model_ready %>% 
+  filter(facility_clm_yr>2011)
+
+medicare_abs_model_ready_2011 %>% count(flg_cmp_po_any_not_poa)
+
+f = formula(paste("flg_cmp_po_any_not_poa ~ 1", paste(covariates, collapse = ' + '),
+                   "(1 | e_proc_grp_lbl)",
+                  sep = " + "))
+
+
+system.time({
+  cmp_model_bin_17 = glmer(formula = f,
+                             data = medicare_abs_model_ready,
+                             family = binomial)
+})
 
 # bayes -------------------------------------------------------------------
 
 
-f = formula(paste("flg_death_30d | trials(1) ~ 1", paste(covariates, collapse = ' + '), "(1 | id_physician_npi)",
+f = formula(paste("flg_death_30d | trials(1) ~ 1", paste(covariates, collapse = ' + '),
+                  "(1 | id_physician_npi)", "(1 | e_proc_grp_lbl)",
         sep = " + "))
 
-test = brm(data = medicare_abs_model_ready, family = binomial,
+death_brms_model = brm(data = medicare_abs_model_ready, family = binomial,
     f,
     prior = c(prior(normal(0, 10), class = Intercept),
               prior(normal(0, 10), class = b),
               prior(cauchy(0, 1), class = sd)),
-    iter = 5000, warmup = 1000, chains = 4, cores = 4,  
+    iter = 5000, warmup = 1000, chains = 4, cores = 10,  
     control = list(adapt_delta = 0.95),
     seed = 12)
