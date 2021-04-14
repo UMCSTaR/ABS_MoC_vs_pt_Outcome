@@ -26,11 +26,30 @@ knitr::opts_chunk$set(
 
 library(tidyverse)
 library(gtsummary)
+library(emmeans)
 ```
 
-```{r}
+```{r, cache=TRUE}
+# cohort data
 load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready.rdata")
+# model data
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model.rdata")
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_10yr.rdata")
 ```
+
+## define year of practice
+
+```{r}
+medicare_abs_model_ready %>% count(val_yr_practice) %>% 
+  ggplot()+
+  geom_line(aes(x = val_yr_practice,
+                y = n)) +
+  labs(y= "n cases") +
+  theme_classic()
+```
+
+
+
 
 
 ## Descriptives
@@ -40,24 +59,86 @@ load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_re
 ```{r}
 # table1 for the cohort
 medicare_abs_model_ready %>% 
-  select(ce_cert_status, flg_death_30d, flg_cmp_po_severe_not_poa, flg_readmit_30d,
-         flg_util_reop,emergent_admit, flg_assistant_surgeon, flg_hosp_urban) %>% 
+  select(re_cert_status, flg_death_30d, flg_cmp_po_severe_not_poa, flg_readmit_30d,
+         flg_util_reop,emergent_admit, flg_assistant_surgeon, flg_hosp_urban, e_proc_grp_lbl) %>% 
   mutate(flg_cmp_po_severe_not_poa = as.numeric(flg_cmp_po_severe_not_poa)) %>% 
-  gtsummary::tbl_summary(by = ce_cert_status) 
+  gtsummary::tbl_summary(by = re_cert_status) 
 ```
 
 ### Surgeons table1
 
 ```{r}
 medicare_abs_model_ready %>% 
-  distinct(id_physician_npi, ce_cert_status, PFfirstR, nAttemptsReCert,
-           sex, residency_graduation_year) %>% 
-  select(ce_cert_status, PFfirstR, nAttemptsReCert,
-         sex, residency_graduation_year) %>% 
-  mutate(nAttemptsReCert = as.factor(nAttemptsReCert)) %>% 
-  tbl_summary(by = ce_cert_status)
+  distinct(id_physician_npi, re_cert_status, PFfirstR, n_attempts_recert,
+           sex, residency_graduation_year, surgeon_yearly_load) %>% 
+  select(re_cert_status, PFfirstR, n_attempts_recert,
+         sex, residency_graduation_year, surgeon_yearly_load) %>% 
+  tbl_summary(by = re_cert_status)
+```
+
+### include cases after first 10 years of practice intital certification
+
+```{r}
+medicare_abs_model_ready_10yr_after_cert = medicare_abs_model_ready %>% 
+  filter(facility_clm_yr - Gcertyear >10)
+
+# save(medicare_abs_model_ready_10yr_after_cert, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_10yr_after_cert.rdata")
+
+medicare_abs_model_ready_10yr_after_cert %>% count(val_yr_practice) %>% 
+  ggplot()+
+  geom_line(aes(x = val_yr_practice,
+                y = n)) +
+  labs(y= "n cases") +
+  theme_classic()
+```
+
+```{r}
+# table1 for the cohort
+medicare_abs_model_ready_10yr_after_cert %>% 
+  select(re_cert_status, flg_death_30d, flg_cmp_po_severe_not_poa, flg_readmit_30d,
+         flg_util_reop,emergent_admit, flg_assistant_surgeon, flg_hosp_urban, e_proc_grp_lbl) %>% 
+  mutate(flg_cmp_po_severe_not_poa = as.numeric(flg_cmp_po_severe_not_poa)) %>% 
+  gtsummary::tbl_summary(by = re_cert_status) 
+```
+
+### Surgeons table1
+
+```{r}
+medicare_abs_model_ready_10yr_after_cert %>% 
+  distinct(id_physician_npi, re_cert_status, PFfirstR, n_attempts_recert,
+           sex, residency_graduation_year, surgeon_yearly_load) %>% 
+  select(re_cert_status, PFfirstR, n_attempts_recert,
+         sex, residency_graduation_year, surgeon_yearly_load) %>% 
+  tbl_summary(by = re_cert_status)
 ```
 
 
-##
+
+## Model based
+
+### all years
+
+```{r}
+broom.mixed::tidy(death_model) %>% 
+  mutate(or = exp(estimate))
+
+emmeans(death_model, "re_cert_bin", data =death_model@frame, type = "response")
+```
+
+### 10 years after initial recert
+
+```{r}
+broom.mixed::tidy(death_model_10yr) %>% 
+  mutate(or = exp(estimate))
+
+emmeans(death_model_10yr, "re_cert_bin", data =death_model@frame, type = "response")
+```
+
+
+
+
+
+
+
+
 
