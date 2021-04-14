@@ -53,6 +53,11 @@ save(medicare_abs_model_ready, file = "/Volumes/George_Surgeon_Projects/MOC_vs_O
 
 medicare_abs_model_ready %>% count(re_cert_status)
 
+load("X:\\George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_17.rdata")
+medicare_abs_model_ready = medicare_abs_model_ready_17
+
+medicare_abs_model_ready %>% count(re_cert_status)
+
 covariates = c(
   # cert status
   # choose one
@@ -80,33 +85,25 @@ f = formula(paste("flg_death_30d ~ 1", paste(covariates, collapse = ' + '),
                    "(1 | e_proc_grp_lbl)",
                   sep = " + "))
 
-death_model = glmer(formula = f,
+
+system.time({
+  death_model_bin_17 = glmer(formula = f,
       data = medicare_abs_model_ready,
       family = binomial)
-
-save(death_model, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model.rdata")
-
-
-medicare_abs_model_ready_10yr_after_cert = medicare_abs_model_ready %>% 
-  filter(facility_clm_yr - Gcertyear >10)
-
-death_model_10yr = glmer(formula = f,
-                         data = medicare_abs_model_ready_10yr_after_cert,
-                         family = binomial)
-
-save(death_model_10yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_10yr.rdata")
+})
 
 # bayes -------------------------------------------------------------------
 
 
-f = formula(paste("flg_death_30d | trials(1) ~ 1", paste(covariates, collapse = ' + '), "(1 | id_physician_npi)",
+f = formula(paste("flg_death_30d | trials(1) ~ 1", paste(covariates, collapse = ' + '),
+                  "(1 | id_physician_npi)", "(1 | e_proc_grp_lbl)",
         sep = " + "))
 
-test = brm(data = medicare_abs_model_ready, family = binomial,
+death_brms_model = brm(data = medicare_abs_model_ready, family = binomial,
     f,
     prior = c(prior(normal(0, 10), class = Intercept),
               prior(normal(0, 10), class = b),
               prior(cauchy(0, 1), class = sd)),
-    iter = 5000, warmup = 1000, chains = 4, cores = 4,  
+    iter = 5000, warmup = 1000, chains = 4, cores = 10,  
     control = list(adapt_delta = 0.95),
     seed = 12)
