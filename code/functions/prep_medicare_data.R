@@ -13,11 +13,10 @@ prep_data_for_model <- function(
   # cohort selection -------------------------------------------------------
   
   # if only want physicians with minimum number of obs
-  
-  data = data %>% 
-    group_by(id_physician_npi, facility_clm_yr) %>% 
-    mutate(surgeon_yearly_load = n()) %>% 
-    ungroup()
+  # data = data %>% 
+  #   group_by(npi, facility_clm_yr) %>% 
+  #   mutate(surgeon_yearly_load = n()) %>% 
+  #   ungroup()
   
   
   # redefine categorical ------------------------------------------------------
@@ -44,16 +43,17 @@ prep_data_for_model <- function(
       year = facility_clm_yr - 2007) %>%
     
       # add surgeon yearly volume
-    group_by(id_physician_npi, facility_clm_yr) %>%
+    group_by(npi, facility_clm_yr) %>%
     mutate(surgeon_yearly_load = n()) %>% 
     ungroup()
   
   # standardize numeric -----------------------------------------------------
-  data = data %>% 
+  std_var = data %>% 
+    select(surgeon_yearly_load, age_at_admit, AHRQ_score) %>% 
     mutate_at(vars(c("surgeon_yearly_load", "age_at_admit", "AHRQ_score")), function(x) scale(x)[,1]) %>% 
     rename_at(vars(c("surgeon_yearly_load", "age_at_admit", "AHRQ_score")), function(x) paste0(x, '_std'))
   
-  
+  data = cbind(data, std_var)
   
   # convert logical to integers ---------------------------------------------
   data = mutate_if(data, is.logical, as.integer)
