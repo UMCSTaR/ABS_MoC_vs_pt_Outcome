@@ -189,7 +189,16 @@ abs_w_recert %>%
 # library(data.table)
 # library(tidyverse)
 # 
+# # medicare
 # medicare = fread("X://George_Surgeon_Projects/standardized_medicare_data_using_R/analytic/full_data/analytic_selected_vars.csv")
+# 
+# # keep  162 purchased procedures
+# procedure_map = readr::read_csv("X://George_Surgeon_Projects/standardized_medicare_data_using_R/input/all_purchasesd_ECS.csv")
+# n_distinct(procedure_map$e_ecs_id) #162
+# medicare = medicare %>% 
+#   filter(e_proc_grp %in% procedure_map$e_ecs_id)
+# 
+# # abs
 # load("X://George_Surgeon_Projects/MOC_vs_Outcome/data/abs/abs_w_recert.rdata")
 # 
 # abs_medicare = abs_w_recert %>%
