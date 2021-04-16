@@ -1,12 +1,12 @@
 library(tidyverse)
 
 # load lined abs medicare data 
-load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_4_13.rdata")
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10yr.rdata")
 
 source("code/functions/prep_medicare_data.R")
 
 # prep variables
-medicare_abs_model_ready = prep_data_for_model(abs_medicare) %>% 
+medicare_abs_model_ready = prep_data_for_model(abs_medicare_10yr) %>% 
   mutate(re_cert_status = case_when(ReCeverPassed == 0 ~ "failed",
                                     ReCeverPassed == 1 ~ "passed",
                                     is.na(ReCeverPassed) ~ "no record, failed"),
@@ -58,3 +58,4 @@ system.time({
                           family = binomial)
 })
 
+# save(death_model_bin, file = "X://George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")

@@ -183,6 +183,8 @@ abs_w_recert %>%
 
 ## 3. Data linkage
 
+- Only keep cases that performed 10 years after initial certification.
+
 ```{r, eval=FALSE}
 # link abs with medicare
 # this ran on PC
@@ -203,17 +205,20 @@ abs_w_recert %>%
 # 
 # abs_medicare = abs_w_recert %>%
 #   inner_join(medicare, by = c("npi" = "id_physician_npi"))
+#
+# abs_medicare_10yr = abs_medicare %>% 
+#   filter(facility_clm_yr - Gcertyear>10) 
 # 
-# abs_medicare_npi = abs_medicare %>%
+# abs_medicare_npi = abs_medicare_10yr %>%
 #   select(npi)
 # 
-# save(abs_medicare, file = "X://George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_4_13.rdata")
-# save(abs_medicare_npi, file = "X://George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi_4_13.rdata")
+# save(abs_medicare_10yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10yr.rdata")
+# save(abs_medicare_npi, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi_4_16.rdata")
 ```
 
 
 ```{r, cache=TRUE}
-load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi_4_13.rdata")
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi_4_16.rdata")
 ```
 
 
@@ -234,6 +239,7 @@ perc = scales::percent(n_lost/nrow(abs_w_recert))
 
 
 `r n_lost` (`r perc`) surgeons from ABS didn't have recorded ABS records.
+
 
 
 

@@ -20,6 +20,10 @@ Available MOC variables in ABS data:
 Only use data used before 2017
 > They changed their process to an annual certification starting in 2018. Therefore, I think we should only analyze data until 2017, just to keep the method cleaner. We can list this as a limitation. - Andrew Jones
 
+### Cohort definition
+
+![](other_docs/Diagram/cohort_definition/cohort_definition.png)
+
 
 ## Lab notebook
 
