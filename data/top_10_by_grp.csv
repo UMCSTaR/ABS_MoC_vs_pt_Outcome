@@ -1,0 +1,21 @@
+re_cert_bin,procedure,n,perc,percentage_in_pass_or_fail_grp
+Failed,Repair of lung injury by lobectomy/pneumonectomy (open) (Trauma),22862,0.23,23%
+Failed,Harvest of upper extremity artery/vein for bypass,5932,0.06,6%
+Failed,Femoral artery to popliteal artery bypass with Â graft,5129,0.05,5%
+Failed,Common femoral/Deep (profunda) artery thrombectomy/endarterectomy,3309,0.03,3%
+Failed,Descending thoracic aorta repair (endovascular),2343,0.02,2%
+Failed,Partial colectomy with anastomosis (open),2336,0.02,2%
+Failed,Repair of lower extremity blood vessel,2270,0.02,2%
+Failed,Partial colectomy with coloproctostomy (open),1998,0.02,2%
+Failed,Infrarenal abdominal aortic aneurysm repair (open),1973,0.02,2%
+Failed,Aorta to iliofemoral artery bypass graft,1918,0.02,2%
+Passed,Partial colectomy with anastomosis (open),83162,0.06,6%
+Passed,Small bowel resection with anastomosis (open),81892,0.06,6%
+Passed,Partial colectomy with ileocolostomy (open),59632,0.04,4%
+Passed,Partial colectomy with cecostomy or colostomy (open),54094,0.04,4%
+Passed,Splenic flexure takedown (in addition to primary procedure),48442,0.04,4%
+Passed,Lysis of adhesions (open),46335,0.03,3%
+Passed,Ventral hernia repair (open),42978,0.03,3%
+Passed,Ventral Hernia Repair W/Mesh,42765,0.03,3%
+Passed,Partial colectomy with coloproctostomy (open),41265,0.03,3%
+Passed,Cholecystectomy (open),38819,0.03,3%
