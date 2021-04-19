@@ -1,14 +1,12 @@
 library(tidyverse)
+library(lme4)
 
 # load dt
-load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready.rdata")
+load("X:\\George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata")
 
 # model -------------------------------------------------------------------
 
 covariates = c(
-  # id
-  'npi', 
-  'id_hospital',
   # choose one cert status--
   # 're_cert_status',
   're_cert_bin',
@@ -32,23 +30,27 @@ covariates = c(
 )
 
 
-all(covariates %in% names(medicare_abs_model_ready))
+all(covariates %in% names(medicare_abs_model_ready_no_na))
 
 
 # lme4 --------------------------------------------------------------------
+# random effect 
+# id
+# 'npi', 
+# 'id_hospital'
 
 f = formula(paste("flg_death_30d ~ 1", paste(covariates, collapse = ' + '),
                   "(1 | e_proc_grp_lbl)",
                   sep = " + "))
-
+f
 
 system.time({
   death_model_bin = glmer(formula = f,
-                          data = medicare_abs_model_ready,
+                          data = medicare_abs_model_ready_no_na,
                           family = binomial)
 })
 
-# save(death_model_bin, file = "X://George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
+save(death_model_bin, file = "X://George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
 
 
 # glmmtmb -----------------------------------------------------------------
