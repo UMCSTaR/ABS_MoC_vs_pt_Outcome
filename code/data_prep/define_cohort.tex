@@ -87,7 +87,7 @@
 \makeatother
 \subtitle{Cohort Definition}
 \author{Xilin Chen}
-\date{2021-04-16}
+\date{2021-04-19}
 
 \begin{document}
 \maketitle
@@ -159,7 +159,7 @@ Exclusion:
 
 Below is the re-certification status for all qualified ABS surgeons.
 Very few surgeons have recorded failed re-certification status. A large
-portion of surgeons doesn't have re-certification records at all,
+portion of surgeons didn't have re-certification records at all,
 i.e.~NA.
 
 \begin{table}[H]
@@ -191,14 +191,16 @@ every 10 years.
 
 4522 surgeons who had no recertification record but had initial board
 certification more than 10 years ago. We include this group as failed
-recertification group.
+recertification group. Surgeons who didn't have 10 years after the
+initial certification process were excluded because they didn't have
+enough time to pass the re-certification exam.
 
 \hypertarget{grandfathered-out-of-the-recertification-process}{%
 \paragraph{2.2 Grandfathered out of the recertification
 process}\label{grandfathered-out-of-the-recertification-process}}
 
 We excluded surgeons who had their initial certification before 1976. It
-is bases on the recertification was introduced at 1976 ``the American
+was bases on the recertification was introduced at 1976 ``the American
 Board of Surgery (ABS) introduced time-limited certification in 1976,
 requiring diplomats certified subsequently to pass\ldots{}''. If the
 surgeon was initially certified before 1976, she/he was not required for
@@ -229,6 +231,14 @@ passed & 16532 & 79\%\\
 \tightlist
 \item
   Only keep cases that performed 10 years after initial certification.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The ABS gives 10 years for surgeons for the recertification. We keep
+    cases that 10 years after the initial certification to better
+    capture the impact of the recertification process.
+  \end{itemize}
 \end{itemize}
 
 Link ABS with Medicare by NPI. Below is the number of surgeons by each
@@ -249,6 +259,14 @@ passed & 13011 & 87\%\\
 \end{tabular}
 \end{table}
 
-6066 (29\%) surgeons from ABS didn't have recorded ABS records.
+6066 (29\%) surgeons from ABS didn't have recorded medicare outcomes.
+
+\hypertarget{cohort-definition-diagram}{%
+\subsection{4. Cohort definition
+diagram}\label{cohort-definition-diagram}}
+
+Below is the consort diagram for the data selection process
+
+\includegraphics{/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/cohort_definition.png}
 
 \end{document}

@@ -59,3 +59,25 @@ system.time({
 })
 
 # save(death_model_bin, file = "X://George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
+
+
+# glmmtmb -----------------------------------------------------------------
+library(glmmTMB)
+
+system.time({
+  death_model_bin_glmtmb = glmmTMB(formula = f,
+                          data = medicare_abs_model_ready,
+                          family = binomial)
+})
+
+# save(death_model_bin_glmtmb, file = "X://George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin_glmtmb.rdata")
+
+
+
+# bayesian -----------------------------------------------------------------
+
+
+
+
+
+

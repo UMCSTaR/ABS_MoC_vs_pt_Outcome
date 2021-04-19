@@ -98,7 +98,7 @@ Exclusion:
   - Fellowship or non-US trained surgeons (n = `r n_exclude`). 
     - Fellowship and Med school information is from ABS, AMA and Fellowship Council data.
   
-Below is the re-certification status for all qualified ABS surgeons. Very few surgeons have recorded failed re-certification status.  A large portion of surgeons doesn't have re-certification records at all, i.e. NA.
+Below is the re-certification status for all qualified ABS surgeons. Very few surgeons have recorded failed re-certification status.  A large portion of surgeons didn't have re-certification records at all, i.e. NA.
 
 ```{r}
 abs_gs %>%
@@ -136,11 +136,11 @@ failed_na = abs_recert_na %>%
 
 ```
 
-`r nrow(failed_na)` surgeons who had no recertification record but had initial board certification more than 10 years ago. We include this group as failed recertification group.
+`r nrow(failed_na)` surgeons who had no recertification record but had initial board certification more than 10 years ago. We include this group as failed recertification group. Surgeons who didn't have 10 years after the initial certification process were excluded because they didn't have enough time to pass the re-certification exam.
 
 #### 2.2 Grandfathered out of the recertification process
 
-We excluded surgeons who had their initial certification before 1976. It is bases on the recertification was introduced at 1976 "the American Board of Surgery (ABS) introduced time-limited certification in 1976, requiring diplomats certified subsequently to pass...". If the surgeon was initially certified before 1976, she/he was not required for recertification at the initial certification time.
+We excluded surgeons who had their initial certification before 1976. It was bases on the recertification was introduced at 1976 "the American Board of Surgery (ABS) introduced time-limited certification in 1976, requiring diplomats certified subsequently to pass...". If the surgeon was initially certified before 1976, she/he was not required for recertification at the initial certification time.
 
 ```{r}
 failed_na = failed_na %>%
@@ -183,7 +183,8 @@ abs_w_recert %>%
 
 ## 3. Data linkage
 
-- Only keep cases that performed 10 years after initial certification.
+- Only keep cases that performed 10 years after initial certification. 
+    - The ABS gives 10 years for surgeons for the recertification. We keep cases that 10 years after the initial certification to better capture the impact of the recertification process. 
 
 ```{r, eval=FALSE}
 # link abs with medicare
@@ -194,7 +195,7 @@ abs_w_recert %>%
 # # medicare
 # medicare = fread("X://George_Surgeon_Projects/standardized_medicare_data_using_R/analytic/full_data/analytic_selected_vars.csv")
 # 
-# # keep  162 purchased procedures
+# # keep 162 purchased procedures
 # procedure_map = readr::read_csv("X://George_Surgeon_Projects/standardized_medicare_data_using_R/input/all_purchasesd_ECS.csv")
 # n_distinct(procedure_map$e_ecs_id) #162
 # medicare = medicare %>% 
@@ -238,9 +239,15 @@ perc = scales::percent(n_lost/nrow(abs_w_recert))
 ```
 
 
-`r n_lost` (`r perc`) surgeons from ABS didn't have recorded ABS records.
+`r n_lost` (`r perc`) surgeons from ABS didn't have recorded medicare outcomes.
 
 
+
+## 4. Cohort definition diagram
+
+Below is the consort diagram for the data selection process
+
+![](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/cohort_definition.png)
 
 
 
