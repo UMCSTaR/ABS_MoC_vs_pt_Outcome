@@ -7,31 +7,6 @@ library(patchwork)
 # load dt
 load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready.rdata")
 
-# choose variables to include in table1. The variables should be consistent with the model covariates.
-covariates = c(
-  # choose one cert status--
-  # 're_cert_status',
-  're_cert_bin',
-  # other--
-  'flg_male',
-  'age_at_admit',
-  'AHRQ_score',
-  'race_white',
-  'ses_binary',
-  'emergent_admit',
-  'year',
-  'surgeon_yearly_load',
-  # "had_assist_surg",
-  'flg_hosp_ICU_hosp'
-)
-
-all(covariates %in% names(medicare_abs_model_ready))
-
-medicare_abs_model_ready_no_na = medicare_abs_model_ready %>% 
-  mutate(re_cert_bin = ifelse(re_cert_bin == "passed", "Passed", "Failed")) %>% 
-  drop_na(!!covariates)
-  
-
 # case level ----------------------------------
 medicare_abs_model_ready_no_na %>% 
   select(!!covariates, - year) %>% 
@@ -98,4 +73,4 @@ p_f / p_p
 
 ggsave("images/top10_performed_proc.png")
   
-  
+

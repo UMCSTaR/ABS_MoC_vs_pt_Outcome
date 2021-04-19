@@ -39,6 +39,10 @@ prep_data_for_model <- function(
       ses_binary = case_when(e_ses_5grp > 3 ~ "high_ses",
                                          e_ses_5grp <=3 ~ "low_ses",
                                          TRUE ~ NA_character_),
+      # hospital bed
+      hosp_beds_2grp = ifelse(e_hosp_beds_4grp == 1 | e_hosp_beds_4grp == 2, 
+                              "≤350", 
+                              ">350"),
       # facility claim year center
       year = facility_clm_yr - 2007) %>%
     
@@ -49,9 +53,9 @@ prep_data_for_model <- function(
   
   # standardize numeric -----------------------------------------------------
   std_var = data %>% 
-    select(surgeon_yearly_load, age_at_admit, AHRQ_score) %>% 
-    mutate_at(vars(c("surgeon_yearly_load", "age_at_admit", "AHRQ_score")), function(x) scale(x)[,1]) %>% 
-    rename_at(vars(c("surgeon_yearly_load", "age_at_admit", "AHRQ_score")), function(x) paste0(x, '_std'))
+    select(surgeon_yearly_load, age_at_admit, AHRQ_score, val_hosp_rn2bed_ratio, val_hosp_rn2inptday_ratio, val_hosp_rn2inptday_ratio, val_hosp_mcday2inptday_ratio) %>% 
+    mutate_at(vars(c("surgeon_yearly_load", "age_at_admit", "AHRQ_score", "val_hosp_rn2bed_ratio", "val_hosp_rn2inptday_ratio", "val_hosp_rn2inptday_ratio", "val_hosp_mcday2inptday_ratio")), function(x) scale(x)[,1]) %>% 
+    rename_at(vars(c("surgeon_yearly_load", "age_at_admit", "AHRQ_score", "val_hosp_rn2bed_ratio", "val_hosp_rn2inptday_ratio", "val_hosp_rn2inptday_ratio", "val_hosp_mcday2inptday_ratio")), function(x) paste0(x, '_std'))
   
   data = cbind(data, std_var)
   

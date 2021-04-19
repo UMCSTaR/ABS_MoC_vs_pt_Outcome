@@ -32,16 +32,16 @@ library(tidyverse)
 library(kableExtra)
 ```
 
-This document describes how the ABS maintance of certification and medicare outcomes cohort was defined. The data will be used for further statistical analyses.
+This document describes how the ABS maintenance of certification and medicare outcomes cohort was defined. The data will be used for further statistical analyses.
 
 ## 1. Data Sources
 
-- ABS certification data (recerived at September 2019 from ABS)
+- ABS certification data (received at September 2019 from ABS)
 - Medicare claim data
   - Year: 2007-2018
   - Procedures: commonly performed general surgery procedures (162 procedures in total)
   
-ABS and Medicare claim data are linked using phycisian NPIs.
+ABS and Medicare claim data are linked using physician NPIs.
 
 ## 2. Data Process
 
