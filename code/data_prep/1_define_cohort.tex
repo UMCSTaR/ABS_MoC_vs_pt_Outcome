@@ -87,7 +87,7 @@
 \makeatother
 \subtitle{Cohort Definition}
 \author{Xilin Chen}
-\date{2021-04-19}
+\date{2021-04-20}
 
 \begin{document}
 \maketitle
@@ -122,14 +122,26 @@ statistical analyses.
 
 ABS and Medicare claim data are linked using physician NPIs.
 
+\pagebreak
+
+\hypertarget{cohort-definition-diagram-overview}{%
+\subsection{2. Cohort definition diagram
+overview}\label{cohort-definition-diagram-overview}}
+
+Below is the consort diagram for the data selection process. Detailed
+cohort selection descriptions are included in \emph{3. Data Process} and
+\emph{4. Data linkage}.
+
+\includegraphics{/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/cohort_definition.png}
+
 \hypertarget{data-process}{%
-\subsection{2. Data Process}\label{data-process}}
+\subsection{3. Data Process}\label{data-process}}
 
 \hypertarget{abs}{%
 \subsubsection{ABS}\label{abs}}
 
 \hypertarget{inclusion-and-exclusion}{%
-\subsubsection{1. Inclusion and
+\subsubsection{3.1. Inclusion and
 Exclusion}\label{inclusion-and-exclusion}}
 
 Inclusion:
@@ -178,12 +190,12 @@ NA & 14380 & 46.3\%\\
 \end{table}
 
 \hypertarget{define-never-recertified-surgeon-group-define-na-group}{%
-\subsubsection{2. Define never recertified surgeon group (Define NA
+\subsubsection{3.2. Define never recertified surgeon group (Define NA
 group)}\label{define-never-recertified-surgeon-group-define-na-group}}
 
-\hypertarget{at-least-have-10-years-after-the-initial-certification-year}{%
-\paragraph{2.1. At least have 10 years after the initial certification
-year}\label{at-least-have-10-years-after-the-initial-certification-year}}
+\hypertarget{at-least-10-years-after-the-initial-certification-year}{%
+\paragraph{3.2.1. At least 10 years after the initial certification
+year}\label{at-least-10-years-after-the-initial-certification-year}}
 
 The ABS require diplomats certified subsequently to pass a secure,
 multiple-choice comprehensive recertification examination in surgery
@@ -196,7 +208,7 @@ initial certification process were excluded because they didn't have
 enough time to pass the re-certification exam.
 
 \hypertarget{grandfathered-out-of-the-recertification-process}{%
-\paragraph{2.2 Grandfathered out of the recertification
+\paragraph{3.2.2 Grandfathered out of the recertification
 process}\label{grandfathered-out-of-the-recertification-process}}
 
 We excluded surgeons who had their initial certification before 1976. It
@@ -207,7 +219,8 @@ surgeon was initially certified before 1976, she/he was not required for
 recertification at the initial certification time.
 
 242 surgeons graduated before 1976 and are excluded in the analyses
-cohort.
+cohort. Below are the surgeon re-certification status after excluding
+the 10 years cutoff and grandfathered out surgeons.
 
 \begin{table}[H]
 \centering
@@ -225,7 +238,7 @@ passed & 16532 & 79\%\\
 \end{table}
 
 \hypertarget{data-linkage}{%
-\subsection{3. Data linkage}\label{data-linkage}}
+\subsection{4. Data linkage}\label{data-linkage}}
 
 \begin{itemize}
 \tightlist
@@ -260,13 +273,5 @@ passed & 13011 & 87\%\\
 \end{table}
 
 6066 (29\%) surgeons from ABS didn't have recorded medicare outcomes.
-
-\hypertarget{cohort-definition-diagram}{%
-\subsection{4. Cohort definition
-diagram}\label{cohort-definition-diagram}}
-
-Below is the consort diagram for the data selection process
-
-\includegraphics{/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/cohort_definition.png}
 
 \end{document}
