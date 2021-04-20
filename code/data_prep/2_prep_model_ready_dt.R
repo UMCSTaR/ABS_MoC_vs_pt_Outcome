@@ -78,4 +78,5 @@ medicare_abs_model_ready_no_na = medicare_abs_model_ready %>%
   drop_na(!!covariates)
 
 
-save(medicare_abs_model_ready, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready.rdata")
+save(medicare_abs_model_ready_no_na, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata")
+
