@@ -1,0 +1,117 @@
+---
+title: "Model Results"
+author: "Xilin Chen"
+date: "4/20/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  eval = TRUE,
+  comment = NA,
+  message = FALSE,
+  warning = FALSE,
+  R.options = list(width = 220),
+  dev.args = list(bg = 'transparent'),
+  dev = 'png',
+  layout = "l-body-outset",
+  fig.align = 'center',
+  out.width = '75%',
+  fig.asp = .75,
+  fig.pos = 'H',
+  cache = FALSE, 
+  cache.rebuild = TRUE
+)
+
+library(tidyverse)
+library(kableExtra)
+library(broom.mixed)
+library(lme4)
+library(emmeans)
+```
+
+## Death 30days
+
+```{r}
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
+
+# top 10 procedures
+top10_all = read_csv("~/Documents/Repo/ABS_MoC_vs_pt_Outcome/data/top_10_all.csv")
+top10_all_by_grp = read_csv("~/Documents/Repo/ABS_MoC_vs_pt_Outcome/data/top_10_by_grp.csv")
+top10_f = top10_all_by_grp %>% filter(re_cert_bin== "Failed")
+top10_p = top10_all_by_grp %>% filter(re_cert_bin== "Passed")
+```
+
+### Regression table
+
+```{r}
+tidy(death_model_bin) %>%
+  filter(!str_detect(term, "sd")) %>% 
+  transmute(term,
+            estimate,
+            OR = exp(estimate),
+            p_value = round(p.value, 3)) %>% 
+  kable(caption = "Fexed effect table") %>% 
+  kable_styling(full_width = F)
+```
+
+### Fig1
+
+```{r}
+rg <- ref_grid(death_model_bin)
+summary(rg) %>% glimpse()
+
+test = predict(rg, interval = "prediction", by = "re_cert_bin") %>% glimpse()
+
+emmeans(death_model_bin, ~ re_cert_bin, type = "response")
+emmeans_cert = emmeans(death_model_bin,
+                       ~ re_cert_bin,
+                       type = "response",
+                       weights = "cells")
+plot(emmeans_cert) +
+  scale_x_continuous(labels = scales::percent_format()) +
+  labs(y = "Re-certification status",
+       x = "Probability",
+       title = "Risk-adjusted mortality rate by recertification status") +
+  theme_classic()
+  
+# # compare probability (non-linear)
+# pairs(emmeans_cert, reverse = T)
+# # compare odds ratio (linear)
+# pairs(emmeans(death_model_bin, ~ re_cert_bin), reverse = T, weights = "cells")
+
+```
+
+### by top10 procedure
+
+```{r}
+re_proce = ggpredict(death_model_bin, terms = c("re_cert_bin", "procedure"), type = "random")
+
+
+ggplot(re_proce %>% filter(group %in% top10_all$procedure),
+       aes(x = reorder(group, predicted), y = predicted, fill = x)) +
+  geom_bar(stat='identity', position='dodge') +
+  coord_flip() +
+  labs(title = "top10 most performed procedures") +
+  theme_bw()
+
+ggplot(re_proce %>% filter(group %in% top10_f$procedure),
+       aes(x = reorder(group, predicted), y = predicted, fill = x)) +
+  geom_bar(stat='identity', position='dodge') +
+  labs(title = "top10 most performed procedures by not recertified surgeons") +
+  coord_flip() +
+  theme_bw()
+
+ggplot(re_proce %>% filter(group %in% top10_p$procedure),
+       aes(x = reorder(group, predicted), y = predicted, fill = x)) +
+  geom_bar(stat='identity', position='dodge') +
+  labs(title = "top10 most performed procedures by recertified surgeons") +
+  coord_flip() +
+  theme_bw()
+  
+```
+
+
+
+
