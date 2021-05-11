@@ -29,11 +29,12 @@ library(kableExtra)
 library(broom.mixed)
 library(lme4)
 library(emmeans)
+library(ggeffects)
 ```
 
 ## Death 30days
 
-```{r}
+```{r, cache=TRUE}
 load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
 
 # top 10 procedures
@@ -45,6 +46,7 @@ top10_p = top10_all_by_grp %>% filter(re_cert_bin== "Passed")
 
 ### Regression table
 
+Fixed effect table
 ```{r}
 tidy(death_model_bin) %>%
   filter(!str_detect(term, "sd")) %>% 
@@ -52,22 +54,18 @@ tidy(death_model_bin) %>%
             estimate,
             OR = exp(estimate),
             p_value = round(p.value, 3)) %>% 
-  kable(caption = "Fexed effect table") %>% 
+  kable() %>% 
   kable_styling(full_width = F)
 ```
+
 
 ### Fig1
 
 ```{r}
-rg <- ref_grid(death_model_bin)
-summary(rg) %>% glimpse()
-
-test = predict(rg, interval = "prediction", by = "re_cert_bin") %>% glimpse()
-
-emmeans(death_model_bin, ~ re_cert_bin, type = "response")
 emmeans_cert = emmeans(death_model_bin,
                        ~ re_cert_bin,
                        type = "response",
+                       data = death_model_bin@frame,
                        weights = "cells")
 plot(emmeans_cert) +
   scale_x_continuous(labels = scales::percent_format()) +
@@ -75,7 +73,10 @@ plot(emmeans_cert) +
        x = "Probability",
        title = "Risk-adjusted mortality rate by recertification status") +
   theme_classic()
-  
+
+# try emmeans
+# rg <- ref_grid(death_model_bin)
+# summary(rg) %>% glimpse()
 # # compare probability (non-linear)
 # pairs(emmeans_cert, reverse = T)
 # # compare odds ratio (linear)
@@ -83,32 +84,29 @@ plot(emmeans_cert) +
 
 ```
 
-### by top10 procedure
+### by procedure
+
+top10 most different procedures mortality outcomes by passed vs. failed surgeons
 
 ```{r}
 re_proce = ggpredict(death_model_bin, terms = c("re_cert_bin", "procedure"), type = "random")
 
+re_proce_diff_top10 = re_proce %>%
+  pivot_wider(names_from = x,
+              values_from = predicted) %>% 
+  mutate(diff = Passed - Failed) %>% 
+  arrange(-diff) %>% 
+  head(10)
 
-ggplot(re_proce %>% filter(group %in% top10_all$procedure),
+
+ggplot(re_proce %>% filter(group %in% re_proce_diff_top10$group),
        aes(x = reorder(group, predicted), y = predicted, fill = x)) +
   geom_bar(stat='identity', position='dodge') +
   coord_flip() +
-  labs(title = "top10 most performed procedures") +
-  theme_bw()
-
-ggplot(re_proce %>% filter(group %in% top10_f$procedure),
-       aes(x = reorder(group, predicted), y = predicted, fill = x)) +
-  geom_bar(stat='identity', position='dodge') +
-  labs(title = "top10 most performed procedures by not recertified surgeons") +
-  coord_flip() +
-  theme_bw()
-
-ggplot(re_proce %>% filter(group %in% top10_p$procedure),
-       aes(x = reorder(group, predicted), y = predicted, fill = x)) +
-  geom_bar(stat='identity', position='dodge') +
-  labs(title = "top10 most performed procedures by recertified surgeons") +
-  coord_flip() +
-  theme_bw()
+  labs(title = "",
+       x = "") +
+  theme_bw() +
+  theme(legend.position = "bottom")
   
 ```
 

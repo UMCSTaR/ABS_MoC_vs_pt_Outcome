@@ -13,21 +13,21 @@ covariates = c(
   're_cert_bin',
   # other--
   'flg_male',
-  'age_at_admit_std',
-  'AHRQ_score_std',
+  'age_at_admit',
+  'AHRQ_score',
   'race_white',
   'ses',
   'emergent_admit',
   'year',
-  'surgeon_yearly_load_std',
+  'surgeon_yearly_load',
   # "had_assist_surg",
   # hospital--
   'hospital_icu',
   'hospital_urban',
   'hospital_beds_gt_350',
-  'hospital_icu',
-  'hospital_rn2bed_ratio_std',
-  'hospital_mcday2inptday_ratio_std'
+  'val_hosp_rn2bed_ratio',
+  'val_hosp_mcday2inptday_ratio',
+  'val_hosp_rn2inptday_ratio'
 )
 
 # case level ----------------------------------
