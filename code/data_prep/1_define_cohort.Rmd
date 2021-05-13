@@ -196,38 +196,31 @@ abs_w_recert %>%
 
 ```{r, eval=FALSE}
 # link abs with medicare
-# this ran on PC
 # library(data.table)
 # library(tidyverse)
 # 
 # # medicare
-# medicare = fread("X://George_Surgeon_Projects/standardized_medicare_data_using_R/analytic/full_data/analytic_selected_vars.csv")
-# 
-# # keep 162 purchased procedures
-# procedure_map = readr::read_csv("X://George_Surgeon_Projects/standardized_medicare_data_using_R/input/all_purchasesd_ECS.csv")
-# n_distinct(procedure_map$e_ecs_id) #162
-# medicare = medicare %>% 
-#   filter(e_proc_grp %in% procedure_map$e_ecs_id)
+# medicare = fread("/Volumes/George_Surgeon_Projects/standardized_medicare_data_using_R/analysis_ready_data/ecs_primary_surgeon_medicare2018.csv")
 # 
 # # abs
-# load("X://George_Surgeon_Projects/MOC_vs_Outcome/data/abs/abs_w_recert.rdata")
+# load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs/abs_w_recert.rdata")
 # 
 # abs_medicare = abs_w_recert %>%
 #   inner_join(medicare, by = c("npi" = "id_physician_npi"))
-#
-# abs_medicare_10yr = abs_medicare %>% 
-#   filter(facility_clm_yr - Gcertyear>10) 
+# 
+# abs_medicare_10yr = abs_medicare %>%
+#   filter(facility_clm_yr - Gcertyear>10)
 # 
 # abs_medicare_npi = abs_medicare_10yr %>%
 #   select(npi)
 # 
 # save(abs_medicare_10yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10yr.rdata")
-# save(abs_medicare_npi, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi_4_16.rdata")
+# save(abs_medicare_npi, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi.rdata")
 ```
 
 
 ```{r, cache=TRUE}
-load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi_4_16.rdata")
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi.rdata")
 ```
 
 
