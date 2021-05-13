@@ -1,0 +1,200 @@
+---
+title: "Surgeon yearly case Volume"
+author: "Xilin Chen"
+date: "5/12/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata")
+
+surg_vol_year = medicare_abs_model_ready_no_na %>% 
+  distinct(re_cert_bin, npi, surgeon_yearly_load, facility_clm_yr) 
+
+surg_vol_year %>% group_by(re_cert_bin) %>% summarise(mean = mean(surgeon_yearly_load))
+
+# per surgeon per year
+ggplot(data = surg_vol_year,
+      aes(x = surgeon_yearly_load))  +
+  geom_histogram() +
+  labs(y = "surgeon year count") +
+  theme_classic()
+```
+
+```{r}
+set.seed(123)
+sample_surg = surg_vol_year %>% 
+  distinct(re_cert_bin, npi) %>% 
+  group_by(re_cert_bin) %>% 
+  sample_n(3) 
+
+#   npi        re_cert_bin
+#   <chr>      <chr>      
+# 1 1750355129 Failed     
+# 2 1689675134 Failed     
+# 3 1104888114 Failed     
+# 4 1205835063 Passed     
+# 5 1811194962 Passed     
+# 6 1326032723 Passed   
+
+sample_surg_vol = surg_vol_year %>% filter(npi %in% sample_surg$npi)
+  
+```
+
+```{r}
+# procedure map
+define_proc_by_cpt <- readr::read_csv("/Volumes/George_Surgeon_Projects/standardized_medicare_data_using_R/input/all_purchasesd_ECS.csv") %>% 
+  transmute(cpt_cd = cpt_cd, e_proc_grp, e_proc_grp_lbl) %>% 
+  distinct()
+
+# BETOS
+load("data/BETOS_TB.rda")
+```
+
+```{r falied}
+# sample surg 1104888114 -------------------------------------
+# from NPPES: Plastic and Reconstructive Surgery Physician
+medicare_abs_model_ready_no_na %>% filter(npi == 1104888114) # 1 case
+abs_medicare_10yr %>% filter(npi == 1104888114) # 1 case; facility claim March 2011
+
+# checked medicare analytic file before merge ABS, n case =1
+
+# 100% carrier claims ---------------------------------------
+# check all professional claims for this surgeon in 2011
+carrier_phy_1104888114_2011 = read_csv( "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/QA/carrier_phy_1104888114_2011.csv")
+
+# map to ecs
+phy_1104888114 = carrier_phy_1104888114_2011 %>% 
+  mutate(cpt_cd = HCPCS_CD) %>% 
+  left_join(define_proc_by_cpt)
+
+n_distinct(phy_1104888114$BENE_ID) # 5 patient
+
+nrow(phy_1104888114) # 26 professional claims
+phy_1104888114 %>% filter(!is.na(e_proc_grp)) %>% select(e_proc_grp_lbl) # 1 ecs case Mastectomy, simple
+
+# 20% medicare claims--------------------------------------------
+# All ECS procedures are included
+load("/Volumes/George_Surgeon_Projects/medicare20pct/data/analytic.rdata")
+
+medicare20_1104888114 = data %>% 
+  filter(id_physician_npi == 1104888114)
+
+# 0 record
+data %>% count(facility_clm_yr)
+
+# sample surgeon 1689675134 -------------------------------------------
+medicare_abs_model_ready_no_na %>% filter(npi == 1689675134) %>% count(facility_clm_yr)
+
+# 100% carrier claims ---------------------------------------
+# check all professional claims for this surgeon in 2011
+carrier_phy_16896751344_2011 = read_csv( "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/QA/carrier_phy_1689675134_2011.csv")
+
+# map to ecs
+phy_16896751344 = carrier_phy_16896751344_2011 %>% 
+  mutate(cpt_cd = HCPCS_CD) %>% 
+  left_join(define_proc_by_cpt)
+
+n_distinct(phy_16896751344$BENE_ID) # 169 patient
+
+nrow(phy_16896751344) # 26 professional claims
+phy_16896751344 %>% filter(!is.na(e_proc_grp)) %>% count(e_proc_grp_lbl, sort = T) 
+
+
+# BETOS
+phy_16896751344 %>% 
+  filter(is.na(e_proc_grp)) %>% 
+  left_join(BETOS_TB) %>% 
+  select(CLM_ID, DESCRIPTION) %>% 
+  count(DESCRIPTION, sort = T) 
+
+
+# 20% medicare claims--------------------------------------------
+# All ECS procedures are included
+load("/Volumes/George_Surgeon_Projects/medicare20pct/data/analytic.rdata")
+
+medicare20_16896751344 = data %>% 
+  filter(id_physician_npi == 16896751344)
+
+# 0 record
+data %>% count(facility_clm_yr)
+
+```
+
+```{r}
+# sample surgeon 1811194962
+# from NPPES Thoracic Surgery (cardiothoracic Vascular Surgery), General Surgery
+medicare_abs_model_ready_no_na %>% filter(npi == 1811194962)  %>% nrow() # 14 cases in total; 7 case at year 2016; 6 cases at year 2017
+abs_medicare_10yr %>% filter(npi == 1811194962) %>% nrow() #14
+
+# 100% carrier claims ---------------------------------------
+# check all professional claims for this surgeon in 2011
+carrier_phy_1811194962_2016 = read_csv( "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/QA/carrier_phy_1811194962_2016.csv")
+
+# map to ecs
+phy_1811194962 = carrier_phy_1811194962_2016 %>% 
+  mutate(cpt_cd = HCPCS_CD) %>% 
+  left_join(define_proc_by_cpt)
+
+n_distinct(phy_1811194962$BENE_ID) #64 patients
+
+nrow(phy_1811194962) #211  claims in 2011
+phy_1811194962 %>% filter(!is.na(e_proc_grp)) %>% nrow #12 claims are ECS related
+
+# what are the non ecs procedures
+# BETOS
+phy_1811194962 %>% 
+  filter(is.na(e_proc_grp)) %>% 
+  left_join(BETOS_TB) %>% 
+  select(CLM_ID, DESCRIPTION) %>% 
+  count(DESCRIPTION, sort = T)
+
+# 20% medicare claims--------------------------------------------
+medicare20_1811194962 = data %>% 
+  filter(id_physician_npi == 1811194962)
+
+nrow(medicare20_1811194962) # 0 record
+
+
+# surgeon 1144388638--------------------------
+medicare_abs_model_ready_no_na %>% filter(npi == 1144388638)  %>% count(facility_clm_yr) # 4 cases in total; 2 case at year 2007; 2 cases at year 2009
+
+# 100% carrier claims ---------------------------------------
+# check all professional claims for this surgeon in 2011
+carrier_phy_1144388638_2009 = read_csv( "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/QA/carrier_phy_1144388638_2009.csv")
+
+# map to ecs
+phy_1144388638 = carrier_phy_1144388638_2009 %>% 
+  mutate(cpt_cd = HCPCS_CD) %>% 
+  left_join(define_proc_by_cpt)
+
+n_distinct(phy_1144388638$BENE_ID) #4 patients
+
+nrow(phy_1144388638) #12  claims in 2009
+phy_1144388638 %>% filter(!is.na(e_proc_grp)) %>% nrow # 4 claims are ECS related
+
+# what are the non ecs procedures
+# BETOS
+phy_1144388638 %>% 
+  filter(is.na(e_proc_grp)) %>% 
+  left_join(BETOS_TB) %>% 
+  select(CLM_ID, DESCRIPTION) %>% 
+  count(DESCRIPTION, sort = T)
+
+# 20% medicare claims--------------------------------------------
+medicare20_1144388638 = data %>% 
+  filter(id_physician_npi == 1144388638)
+
+nrow(medicare20_1144388638) # 2 record
+
+medicare20_1144388638 %>% count(e_ecs_lbl, facility_clm_yr)
+
+
+```
+
+
+

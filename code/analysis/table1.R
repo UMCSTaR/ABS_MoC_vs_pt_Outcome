@@ -20,14 +20,15 @@ covariates = c(
   'emergent_admit',
   'year',
   'surgeon_yearly_load',
-  # "had_assist_surg",
+  'years_after_initial_certification',
+  "had_assist_surg",
   # hospital--
   'hospital_icu',
   'hospital_urban',
   'hospital_beds_gt_350',
-  'val_hosp_rn2bed_ratio',
-  'val_hosp_mcday2inptday_ratio',
-  'val_hosp_rn2inptday_ratio'
+  'hospital_icu',
+  'hospital_rn2bed_ratio',
+  'hospital_mcday2inptday_ratio'
 )
 
 # case level ----------------------------------
