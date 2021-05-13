@@ -18,8 +18,8 @@ medicare_abs_model_ready = prep_data_for_model(abs_medicare_10yr) %>%
          re_cert_bin = ifelse(re_cert_status == "passed", "Passed", "Failed"),
          
          n_attempts_recert = ifelse(nAttemptsReCert >=3, "≥3", nAttemptsReCert),
-         n_attempts_recert = factor(n_attempts_recert, levels = c("1", "2", "≥3")))
-
+         n_attempts_recert = factor(n_attempts_recert, levels = c("1", "2", "≥3")),
+         years_after_initial_certification = facility_clm_yr - Gcertyear)
 
 
 # check
@@ -44,14 +44,16 @@ covariates = c(
   'emergent_admit',
   'year',
   'surgeon_yearly_load_std',
-  # "had_assist_surg",
+  'years_after_initial_certification',
+  "had_assist_surg"
   # hospital--
-  'hospital_icu',
-  'hospital_urban',
-  'hospital_beds_gt_350',
-  'hospital_icu',
-  'hospital_rn2bed_ratio_std',
-  'hospital_mcday2inptday_ratio_std'
+  # not until AHA had 2018 data
+  # 'hospital_icu',
+  # 'hospital_urban',
+  # 'hospital_beds_gt_350',
+  # 'hospital_icu',
+  # 'hospital_rn2bed_ratio_std',
+  # 'hospital_mcday2inptday_ratio_std'
 )
 
 medicare_abs_model_ready = medicare_abs_model_ready %>%
