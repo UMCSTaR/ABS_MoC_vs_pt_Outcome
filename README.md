@@ -27,11 +27,11 @@ Only use data used before 2017
 
 ![](other_docs/Diagram/cohort_definition/cohort_definition.png)
 
-### Cochort selection document
+### Cohort selection document
 
 Describes the cohort selection steps in details
 
-[](code/data_prep/1_define_cohort.pdf)
+[define_cohort report](code/data_prep/1_define_cohort.pdf)
 
 
 ## Lab notebook
