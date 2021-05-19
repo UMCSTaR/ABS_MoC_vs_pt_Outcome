@@ -87,7 +87,7 @@
 \makeatother
 \subtitle{Cohort Definition}
 \author{Xilin Chen}
-\date{2021-04-20}
+\date{2021-05-19}
 
 \begin{document}
 \maketitle
@@ -152,6 +152,23 @@ Inclusion:
   Surgeons with NPI
 \item
   Passed initial certification exam
+\item
+  Not qualified (10 years after initial certification) for exam after
+  2017 (exam change in 2017)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    to address the exam changes in 2017, we excluded all surgeons who
+    were qualified for recertification after(including) 2017. In our
+    dataset, we don't have the recertifcation exam years for surgeons.
+    So it's not possible to know if the surgeon took the exam before or
+    after 2017. By excluding surgeons who were qualified to take the
+    exam after 2017, we exclude the group who might have taken the exam
+    after 2017. However, this also excluded some surgeons who took
+    recertification exam earlier than 10 years after the initial
+    certification.
+  \end{itemize}
 \end{itemize}
 
 Exclusion:
@@ -180,11 +197,11 @@ i.e.~NA.
 \hline
 ReCeverPassed & n suregon & percentage\\
 \hline
-0 & 154 & 0.5\%\\
+0 & 138 & 1\%\\
 \hline
-1 & 16532 & 53.2\%\\
+1 & 15838 & 65\%\\
 \hline
-NA & 14380 & 46.3\%\\
+NA & 8511 & 35\%\\
 \hline
 \end{tabular}
 \end{table}
@@ -201,7 +218,7 @@ The ABS require diplomats certified subsequently to pass a secure,
 multiple-choice comprehensive recertification examination in surgery
 every 10 years.
 
-4522 surgeons who had no recertification record but had initial board
+5999 surgeons who had no recertification record but had initial board
 certification more than 10 years ago. We include this group as failed
 recertification group. Surgeons who didn't have 10 years after the
 initial certification process were excluded because they didn't have
@@ -218,7 +235,7 @@ requiring diplomats certified subsequently to pass\ldots{}''. If the
 surgeon was initially certified before 1976, she/he was not required for
 recertification at the initial certification time.
 
-242 surgeons graduated before 1976 and are excluded in the analyses
+702 surgeons graduated before 1976 and are excluded in the analyses
 cohort. Below are the surgeon re-certification status after excluding
 the 10 years cutoff and grandfathered out surgeons.
 
@@ -228,11 +245,11 @@ the 10 years cutoff and grandfathered out surgeons.
 \hline
 Recert\_status & n suregon & percentage\\
 \hline
-failed & 154 & 1\%\\
+failed & 138 & 1\%\\
 \hline
-NA\_failed & 4280 & 20\%\\
+NA\_failed & 5297 & 25\%\\
 \hline
-passed & 16532 & 79\%\\
+passed & 15838 & 74\%\\
 \hline
 \end{tabular}
 \end{table}
@@ -240,19 +257,21 @@ passed & 16532 & 79\%\\
 \hypertarget{data-linkage}{%
 \subsection{4. Data linkage}\label{data-linkage}}
 
-\begin{itemize}
-\tightlist
-\item
-  Only keep cases that performed 10 years after initial certification.
+\hypertarget{link-medicare-data-with-abs-data-by-npi}{%
+\subsubsection{4.1 Link Medicare data with ABS data by
+NPI}\label{link-medicare-data-with-abs-data-by-npi}}
 
-  \begin{itemize}
-  \tightlist
-  \item
-    The ABS gives 10 years for surgeons for the recertification. We keep
-    cases that 10 years after the initial certification to better
-    capture the impact of the recertification process.
-  \end{itemize}
-\end{itemize}
+\hypertarget{only-keep-cases-that-performed-between-10-20-years-after-initial-certification}{%
+\subsubsection{4.2 Only keep cases that performed between 10-20 years
+after initial
+certification*}\label{only-keep-cases-that-performed-between-10-20-years-after-initial-certification}}
+
+The ABS gives 10 years for surgeons for the recertification. We keep
+cases that 10 years after the initial certification to better capture
+the impact of the recertification process. However, we excluded cases
+happened 20 years after the initial certification to elude the
+re-recertification effect,.e. only the first recertificastion cases were
+included in the cohort.
 
 Link ABS with Medicare by NPI. Below is the number of surgeons by each
 recertification category after linked with Medicare outcomes.
@@ -263,15 +282,16 @@ recertification category after linked with Medicare outcomes.
 \hline
 Recert\_status & n suregon & percentage\\
 \hline
-failed & 62 & 0\%\\
+failed & 44 & 0\%\\
 \hline
-NA\_failed & 1827 & 12\%\\
+NA\_failed & 1173 & 11\%\\
 \hline
-passed & 13011 & 87\%\\
+passed & 9602 & 89\%\\
 \hline
 \end{tabular}
 \end{table}
 
-6066 (29\%) surgeons from ABS didn't have recorded medicare outcomes.
+5314 ABS surgeons don't have Medicare cases matched; 5140 surgeons don't
+have cases between 10 to 20 years after the initial certification.
 
 \end{document}

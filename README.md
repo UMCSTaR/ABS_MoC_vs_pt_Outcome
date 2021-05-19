@@ -11,6 +11,7 @@ Association between *initial* American Board of Surgery (ABS) re-certification i
 ## Dataset
 
 ### ABS
+
 Available MOC variables in ABS data:
 
 - **nAttemptsReCert**:	Number of attempts of the ReCert exam on first time attempt to get recertified
@@ -22,7 +23,15 @@ Only use data used before 2017
 
 ### Cohort definition
 
+### Cohort selection diagram
+
 ![](other_docs/Diagram/cohort_definition/cohort_definition.png)
+
+### Cochort selection document
+
+Describes the cohort selection steps in details
+
+[](code/data_prep/1_define_cohort.pdf)
 
 
 ## Lab notebook

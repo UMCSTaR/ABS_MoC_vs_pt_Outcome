@@ -61,14 +61,16 @@ Below is the consort diagram for the data selection process. Detailed cohort sel
 abs = data.table::fread("/Volumes/George_Surgeon_Projects/Surgeon Profile data/abs_with_npi.csv")
 
 # nrow(abs) #51624
+
+abs = abs %>% 
+  mutate(residency_graduation_year = ifelse(!is.na(residency_yog),
+                                            residency_yog, yot))
 ```
 
 
 ```{r abs_gs}
 selected_abs = abs %>% 
-  mutate(residency_graduation_year = ifelse(!is.na(residency_yog),
-                                            residency_yog, yot),
-         npi = as.character(npi),
+  mutate(npi = as.character(npi),
          # initial certification
          pass_CE = ifelse(PFfirstCE == "p" | !is.na(Gcompyear), "passed", "failed")
          ) %>% 
@@ -94,12 +96,23 @@ n_exclude = nrow(abs_cert)-nrow(abs_gs)
 
 ```
 
+```{r}
+# 2017 as the last year
+abs_gs_2017 = abs_gs %>% 
+  mutate(cutoff_2007 = ifelse(Gcertyear+10>=2017, "exlcude", "include")) %>% 
+  filter(cutoff_2007 == "include" | is.na(cutoff_2007))
+
+# nrow(abs_gs) - nrow(abs_gs_2017)
+
+```
 ### 3.1. Inclusion and Exclusion
 
 Inclusion: 
  
   - Surgeons with NPI
   - Passed initial certification exam
+  - Not qualified (10 years after initial certification) for exam after 2017 (exam change in 2017)
+    - to address the exam changes in 2017, we excluded all surgeons who were qualified for recertification after(including) 2017. In our dataset, we don't have the recertifcation exam years for surgeons. So it's not possible to know if the surgeon took the exam before or after 2017. By excluding surgeons who were qualified to take the exam after 2017, we exclude the group who might have taken the exam after 2017. However, this also excluded some surgeons who took recertification exam earlier than 10 years after the initial certification.
 
 Exclusion: 
  
@@ -109,7 +122,7 @@ Exclusion:
 Below is the re-certification status for all qualified ABS surgeons. Very few surgeons have recorded failed re-certification status.  A large portion of surgeons didn't have re-certification records at all, i.e. NA.
 
 ```{r}
-abs_gs %>%
+abs_gs_2017 %>%
   count(ReCeverPassed, name = "n suregon") %>%
   mutate(percentage = scales::percent(`n suregon` / sum(`n suregon`))) %>% 
   kable() %>% 
@@ -123,25 +136,31 @@ abs_gs %>%
 The ABS require diplomats certified subsequently to pass a secure, multiple-choice comprehensive recertification examination in surgery every 10 years.
 
 ```{r}
-abs_recert_na = abs_gs %>%
+abs_recert_na = abs_gs_2017 %>%
     # filter to NA 
     filter(is.na(ReCeverPassed)) %>%
     mutate(
     Gcertyear = as.numeric(Gcertyear),
-    years_after_recertification = 2019 - Gcertyear
+    years_after_certification = 2019 - Gcertyear,
+    years_after_certification = ifelse(is.na(years_after_certification),
+                                         2019 - Gcompyear, Gcompyear)
   ) %>% 
   mutate(
     # years after initial recertification >10 years,
     # Defined NA that has failed the exam
-    failed_recert_10yrs = ifelse(years_after_recertification>10, "failed",
-                           "not 10 yrs"),
+    failed_recert_10yrs = ifelse(years_after_certification>10, "failed",
+                           "not 10 yrs")
   )
+
+# abs_recert_na %>% count(failed_recert_10yrs)
 
 # find NA that had more than 10 years after the first certifification
 failed_na = abs_recert_na %>% 
   filter(failed_recert_10yrs == "failed") 
 
-
+# excluded surgeons
+# abs_recert_na %>% 
+#   filter(failed_recert_10yrs == "not 10 yrs") %>% nrow()
 ```
 
 `r nrow(failed_na)` surgeons who had no recertification record but had initial board certification more than 10 years ago. We include this group as failed recertification group. Surgeons who didn't have 10 years after the initial certification process were excluded because they didn't have enough time to pass the re-certification exam.
@@ -167,7 +186,7 @@ qualified_na_failed_surgeons = failed_na %>%
 `r nrow(failed_na)- length(qualified_na_failed_surgeons)` surgeons graduated before 1976 and are excluded in the analyses cohort. Below are the surgeon re-certification status after excluding the 10 years cutoff and grandfathered out surgeons.
 
 ```{r}
-abs_w_recert = abs_gs %>%
+abs_w_recert = abs_gs_2017 %>%
   mutate(
     npi = as.character(npi),
     Recert_status = case_when(
@@ -184,6 +203,8 @@ abs_w_recert %>%
   kable() %>%
   kable_styling(full_width = F)
 
+# nrow(abs_w_recert) #21273
+
 # save(abs_w_recert, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs/abs_w_recert.rdata")
 ```
 
@@ -191,15 +212,19 @@ abs_w_recert %>%
 
 ## 4. Data linkage
 
-- Only keep cases that performed 10 years after initial certification. 
-    - The ABS gives 10 years for surgeons for the recertification. We keep cases that 10 years after the initial certification to better capture the impact of the recertification process. 
+### 4.1 Link Medicare data with ABS data by NPI
+
+### 4.2 Only keep cases that performed between 10-20 years after initial certification*
+
+The ABS gives 10 years for surgeons for the recertification. We keep cases that 10 years after the initial certification to better capture the impact of the recertification process. However, we excluded cases happened 20 years after the initial certification to elude the re-recertification effect,.e. only the first recertificastion cases were included in the cohort.
+
 
 ```{r, eval=FALSE}
 # link abs with medicare
 # library(data.table)
 # library(tidyverse)
 # 
-# # medicare
+# medicare
 # medicare = fread("/Volumes/George_Surgeon_Projects/standardized_medicare_data_using_R/analysis_ready_data/ecs_primary_surgeon_medicare2018.csv")
 # 
 # # abs
@@ -208,19 +233,28 @@ abs_w_recert %>%
 # abs_medicare = abs_w_recert %>%
 #   inner_join(medicare, by = c("npi" = "id_physician_npi"))
 # 
-# abs_medicare_10yr = abs_medicare %>%
-#   filter(facility_clm_yr - Gcertyear>10)
+# # number of ABS surgeons who have no medicare record
+# n_no_medicare_record = n_distinct(abs_w_recert$npi) - n_distinct(abs_medicare$npi)
 # 
-# abs_medicare_npi = abs_medicare_10yr %>%
+# abs_medicare_10_20yr = abs_medicare %>%
+#   filter(facility_clm_yr - Gcertyear>10,
+#          facility_clm_yr - Gcertyear<=20)
+#
+# n_exclude_10_20 = n_distinct(abs_medicare$npi) - n_distinct(abs_medicare_10_20yr$npi) 
+# nrow(abs_medicare_10_20yr)
+# 
+# abs_medicare_npi = abs_medicare_10_20yr %>%
 #   select(npi)
-# 
-# save(abs_medicare_10yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10yr.rdata")
+#
+# save(abs_medicare_10_20yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata")
 # save(abs_medicare_npi, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi.rdata")
+# save(n_no_medicare_record, n_exclude_10_20, file="data/numbers_for_cohort_desp.RData")
 ```
 
 
-```{r, cache=TRUE}
+```{r}
 load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi.rdata")
+# load("~/Documents/Repo/ABS_MoC_vs_pt_Outcome/data/numbers_for_cohort_desp.RData")
 ```
 
 
@@ -239,8 +273,7 @@ n_lost = nrow(abs_w_recert) - n_distinct(abs_medicare_npi$npi)
 perc = scales::percent(n_lost/nrow(abs_w_recert))
 ```
 
-
-`r n_lost` (`r perc`) surgeons from ABS didn't have recorded medicare outcomes.
+5314 ABS surgeons don't have Medicare cases matched; 5140 surgeons don't have cases between 10 to 20 years after the initial certification.
 
 
 
