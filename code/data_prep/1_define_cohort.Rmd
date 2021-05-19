@@ -224,7 +224,7 @@ The ABS gives 10 years for surgeons for the recertification. We keep cases that 
 # library(data.table)
 # library(tidyverse)
 # 
-# medicare
+# # medicare
 # medicare = fread("/Volumes/George_Surgeon_Projects/standardized_medicare_data_using_R/analysis_ready_data/ecs_primary_surgeon_medicare2018.csv")
 # 
 # # abs
@@ -239,13 +239,13 @@ The ABS gives 10 years for surgeons for the recertification. We keep cases that 
 # abs_medicare_10_20yr = abs_medicare %>%
 #   filter(facility_clm_yr - Gcertyear>10,
 #          facility_clm_yr - Gcertyear<=20)
-#
-# n_exclude_10_20 = n_distinct(abs_medicare$npi) - n_distinct(abs_medicare_10_20yr$npi) 
+# 
+# n_exclude_10_20 = n_distinct(abs_medicare$npi) - n_distinct(abs_medicare_10_20yr$npi)
 # nrow(abs_medicare_10_20yr)
 # 
 # abs_medicare_npi = abs_medicare_10_20yr %>%
 #   select(npi)
-#
+# 
 # save(abs_medicare_10_20yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata")
 # save(abs_medicare_npi, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi.rdata")
 # save(n_no_medicare_record, n_exclude_10_20, file="data/numbers_for_cohort_desp.RData")
@@ -273,7 +273,7 @@ n_lost = nrow(abs_w_recert) - n_distinct(abs_medicare_npi$npi)
 perc = scales::percent(n_lost/nrow(abs_w_recert))
 ```
 
-5314 ABS surgeons don't have Medicare cases matched; 5140 surgeons don't have cases between 10 to 20 years after the initial certification.
+`r n_no_medicare_record` ABS surgeons don't have Medicare cases matched; `r n_exclude_10_20` surgeons don't have cases between 10 to 20 years after the initial certification.
 
 
 

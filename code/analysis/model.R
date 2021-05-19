@@ -19,14 +19,14 @@ covariates = c(
   'emergent_admit',
   'year',
   'surgeon_yearly_load_std',
-  # "had_assist_surg",
+  "had_assist_surg"
   # hospital--
-  'hospital_icu',
-  'hospital_urban',
-  'hospital_beds_gt_350',
-  'hospital_icu',
-  'hospital_rn2bed_ratio_std',
-  'hospital_mcday2inptday_ratio_std'
+  # 'hospital_icu',
+  # 'hospital_urban',
+  # 'hospital_beds_gt_350',
+  # 'hospital_icu',
+  # 'hospital_rn2bed_ratio_std',
+  # 'hospital_mcday2inptday_ratio_std'
 )
 
 
@@ -39,8 +39,8 @@ all(covariates %in% names(medicare_abs_model_ready_no_na))
 # 'npi', 
 # 'id_hospital'
 
-f = formula(paste("flg_death_30d ~ 1", paste(covariates, collapse = ' + '),
-                  "(1 | e_proc_grp_lbl)",
+f = formula(paste("death_30d ~ 1", paste(covariates, collapse = ' + '),
+                  "(1 | procedure)",
                   sep = " + "))
 f
 
