@@ -66,12 +66,18 @@ emmeans_cert = emmeans(death_model_bin,
                        ~ re_cert_bin,
                        type = "response",
                        data = death_model_bin@frame,
-                       weights = "cells")
+                        weights = "cells")
+
+gg_dt = ggplot_build(plot(emmeans_cert))
+gg_dt$data
+
 plot(emmeans_cert) +
-  scale_x_continuous(labels = scales::percent_format()) +
+  scale_x_continuous(labels = scales::percent_format(),
+                     limits = c(0, 0.075)) +
   labs(y = "Re-certification status",
        x = "Probability",
        title = "Risk-adjusted mortality rate by recertification status") +
+  coord_flip() +
   theme_classic()
 
 # try emmeans
