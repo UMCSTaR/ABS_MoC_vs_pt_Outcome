@@ -87,7 +87,7 @@
 \makeatother
 \subtitle{Cohort Definition}
 \author{Xilin Chen}
-\date{2021-05-19}
+\date{2021-06-01}
 
 \begin{document}
 \maketitle
@@ -108,6 +108,9 @@ statistical analyses.
 \item
   ABS certification data (received at September 2019 from ABS)
 \item
+  Fellowship Council data (\textbf{Need to incorporate Angie's updates
+  from Bariatric project})
+\item
   Medicare claim data
 
   \begin{itemize}
@@ -120,7 +123,8 @@ statistical analyses.
   \end{itemize}
 \end{itemize}
 
-ABS and Medicare claim data are linked using physician NPIs.
+ABS and Medicare claim data are linked using physician NPIs. ABS and
+Fellowship council data are used to exclude fellowship trained surgeons.
 
 \pagebreak
 
@@ -151,7 +155,13 @@ Inclusion:
 \item
   Surgeons with NPI
 \item
-  Passed initial certification exam
+  Passed initial certification exam after 1976
+\item
+  ABS introduced time-limited MOC certification in 1976. So we we only
+  include surgeons who pass their initial certification after 1976. This
+  is also described in Andrew Jones MOC paper, \emph{Certification data
+  were collected from the ABS database for all surgeons initially
+  certified in general surgery by the ABS between 1976 and 2005}.
 \item
   Not qualified (10 years after initial certification) for exam after
   2017 (exam change in 2017)
@@ -176,13 +186,13 @@ Exclusion:
 \begin{itemize}
 \tightlist
 \item
-  Fellowship or non-US trained surgeons (n = 14523).
+  Fellowship or non-US trained surgeons (n = 16472).
 
   \begin{itemize}
   \tightlist
   \item
-    Fellowship and Med school information is from ABS, AMA and
-    Fellowship Council data.
+    Fellowship and Med school information is from ABS and Fellowship
+    Council data.
   \end{itemize}
 \end{itemize}
 
@@ -193,63 +203,15 @@ i.e.~NA.
 
 \begin{table}[H]
 \centering
-\begin{tabular}{r|r|l}
-\hline
-ReCeverPassed & n suregon & percentage\\
-\hline
-0 & 138 & 1\%\\
-\hline
-1 & 15838 & 65\%\\
-\hline
-NA & 8511 & 35\%\\
-\hline
-\end{tabular}
-\end{table}
-
-\hypertarget{define-never-recertified-surgeon-group-define-na-group}{%
-\subsubsection{3.2. Define never recertified surgeon group (Define NA
-group)}\label{define-never-recertified-surgeon-group-define-na-group}}
-
-\hypertarget{at-least-10-years-after-the-initial-certification-year}{%
-\paragraph{3.2.1. At least 10 years after the initial certification
-year}\label{at-least-10-years-after-the-initial-certification-year}}
-
-The ABS require diplomats certified subsequently to pass a secure,
-multiple-choice comprehensive recertification examination in surgery
-every 10 years.
-
-5999 surgeons who had no recertification record but had initial board
-certification more than 10 years ago. We include this group as failed
-recertification group. Surgeons who didn't have 10 years after the
-initial certification process were excluded because they didn't have
-enough time to pass the re-certification exam.
-
-\hypertarget{grandfathered-out-of-the-recertification-process}{%
-\paragraph{3.2.2 Grandfathered out of the recertification
-process}\label{grandfathered-out-of-the-recertification-process}}
-
-We excluded surgeons who had their initial certification before 1976. It
-was bases on the recertification was introduced at 1976 ``the American
-Board of Surgery (ABS) introduced time-limited certification in 1976,
-requiring diplomats certified subsequently to pass\ldots{}''. If the
-surgeon was initially certified before 1976, she/he was not required for
-recertification at the initial certification time.
-
-702 surgeons graduated before 1976 and are excluded in the analyses
-cohort. Below are the surgeon re-certification status after excluding
-the 10 years cutoff and grandfathered out surgeons.
-
-\begin{table}[H]
-\centering
 \begin{tabular}{l|r|l}
 \hline
 Recert\_status & n suregon & percentage\\
 \hline
-failed & 138 & 1\%\\
+failed & 136 & 1\%\\
 \hline
-NA\_failed & 5297 & 25\%\\
+NA\_failed & 3982 & 20\%\\
 \hline
-passed & 15838 & 74\%\\
+passed & 15671 & 79\%\\
 \hline
 \end{tabular}
 \end{table}
@@ -269,8 +231,8 @@ certification*}\label{only-keep-cases-that-performed-between-10-20-years-after-i
 The ABS gives 10 years for surgeons for the recertification. We keep
 cases that 10 years after the initial certification to better capture
 the impact of the recertification process. However, we excluded cases
-happened 20 years after the initial certification to elude the
-re-recertification effect,.e. only the first recertificastion cases were
+happened 20 years after the initial certification to exlude the
+re-recertification effect,.e. only the first recertification cases were
 included in the cohort.
 
 Link ABS with Medicare by NPI. Below is the number of surgeons by each
@@ -286,12 +248,82 @@ failed & 44 & 0\%\\
 \hline
 NA\_failed & 1173 & 11\%\\
 \hline
-passed & 9602 & 89\%\\
+passed & 9597 & 89\%\\
 \hline
 \end{tabular}
 \end{table}
 
-5314 ABS surgeons don't have Medicare cases matched; 5140 surgeons don't
+4475 ABS surgeons don't have Medicare cases matched; 4500 surgeons don't
 have cases between 10 to 20 years after the initial certification.
+
+\hypertarget{qa}{%
+\subsection{5. Q\&A}\label{qa}}
+
+5.1 Did we exclude surgeons who didn't have enough time to pass
+Recertification exam? For example, if a surgeon only had 8 years after
+the initial certification, would the surgeon be excluded for the
+analysis?
+
+In our study, we only included surgeons who were initially board
+certified before 2007. We have ABS data available up to 2019. So every
+surgeon in our study had at least 12 years of record after initial
+certification. ABS requires recertification every 10 years.
+
+5.2 What if a surgeon passed the exam at year 12 after the initial
+certification? Would the surgeon be excluded because s/he didn't get
+certified within 10 years?
+
+The surgeon is included. No criteria was about when the surgeon was
+re-certified. The recertified data we have is binary, without any year
+information of when the surgeons took the exam. So we can't know if the
+recertification was on-time or late.
+
+5.3 Examples of how the recertification status were defined.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{l|r|r|l}
+\hline
+npi & Gcertyear & ReCeverPassed & Recert\_status\\
+\hline
+surgeon 1 & 1977 & 0 & failed\\
+\hline
+surgeon 2 & 1992 & 0 & failed\\
+\hline
+surgeon 3 & 2006 & 0 & failed\\
+\hline
+surgeon 4 & 1984 & 0 & failed\\
+\hline
+surgeon 5 & 2006 & 0 & failed\\
+\hline
+surgeon 6 & 2005 & NA & NA\_failed\\
+\hline
+surgeon 7 & 1979 & NA & NA\_failed\\
+\hline
+surgeon 8 & 1995 & NA & NA\_failed\\
+\hline
+surgeon 9 & 1987 & NA & NA\_failed\\
+\hline
+surgeon 10 & 2006 & NA & NA\_failed\\
+\hline
+surgeon 11 & 1983 & 1 & passed\\
+\hline
+surgeon 12 & 1989 & 1 & passed\\
+\hline
+surgeon 13 & 2003 & 1 & passed\\
+\hline
+surgeon 14 & 1995 & 1 & passed\\
+\hline
+surgeon 15 & 2001 & 1 & passed\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+\tightlist
+\item
+  Gcertyear: year of initial board certification; ReCeverPassed:
+  Original ABS variable 0 (failed), 1 (passed)
+\end{itemize}
 
 \end{document}
