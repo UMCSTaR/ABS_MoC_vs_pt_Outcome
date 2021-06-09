@@ -87,7 +87,7 @@
 \makeatother
 \subtitle{Cohort Definition}
 \author{Xilin Chen}
-\date{2021-06-01}
+\date{2021-06-02}
 
 \begin{document}
 \maketitle
@@ -186,13 +186,12 @@ Exclusion:
 \begin{itemize}
 \tightlist
 \item
-  Fellowship or non-US trained surgeons (n = 16472).
+  Fellowship trained surgeons (n = 30250).
 
   \begin{itemize}
   \tightlist
   \item
-    Fellowship and Med school information is from ABS and Fellowship
-    Council data.
+    Fellowship information is from ABS and Fellowship Council data.
   \end{itemize}
 \end{itemize}
 
@@ -207,11 +206,11 @@ i.e.~NA.
 \hline
 Recert\_status & n suregon & percentage\\
 \hline
-failed & 136 & 1\%\\
+failed & 12 & 0.1\%\\
 \hline
-NA\_failed & 3982 & 20\%\\
+NA\_failed & 269 & 2.7\%\\
 \hline
-passed & 15671 & 79\%\\
+passed & 9712 & 97.2\%\\
 \hline
 \end{tabular}
 \end{table}
@@ -244,16 +243,16 @@ recertification category after linked with Medicare outcomes.
 \hline
 Recert\_status & n suregon & percentage\\
 \hline
-failed & 44 & 0\%\\
+failed & 7 & 0.1\%\\
 \hline
-NA\_failed & 1173 & 11\%\\
+NA\_failed & 77 & 1.1\%\\
 \hline
-passed & 9597 & 89\%\\
+passed & 6803 & 98.8\%\\
 \hline
 \end{tabular}
 \end{table}
 
-4475 ABS surgeons don't have Medicare cases matched; 4500 surgeons don't
+4943 ABS surgeons don't have Medicare cases matched; 5194 surgeons don't
 have cases between 10 to 20 years after the initial certification.
 
 \hypertarget{qa}{%
@@ -286,35 +285,35 @@ recertification was on-time or late.
 \hline
 npi & Gcertyear & ReCeverPassed & Recert\_status\\
 \hline
-surgeon 1 & 1977 & 0 & failed\\
+surgeon 1 & 1980 & 0 & failed\\
 \hline
-surgeon 2 & 1992 & 0 & failed\\
+surgeon 2 & 2006 & 0 & failed\\
 \hline
-surgeon 3 & 2006 & 0 & failed\\
+surgeon 3 & 1996 & 0 & failed\\
 \hline
-surgeon 4 & 1984 & 0 & failed\\
+surgeon 4 & 1977 & 0 & failed\\
 \hline
-surgeon 5 & 2006 & 0 & failed\\
+surgeon 5 & 1982 & 0 & failed\\
 \hline
-surgeon 6 & 2005 & NA & NA\_failed\\
+surgeon 6 & 2002 & NA & NA\_failed\\
 \hline
-surgeon 7 & 1979 & NA & NA\_failed\\
+surgeon 7 & 2006 & NA & NA\_failed\\
 \hline
-surgeon 8 & 1995 & NA & NA\_failed\\
+surgeon 8 & 1976 & NA & NA\_failed\\
 \hline
-surgeon 9 & 1987 & NA & NA\_failed\\
+surgeon 9 & 1991 & NA & NA\_failed\\
 \hline
-surgeon 10 & 2006 & NA & NA\_failed\\
+surgeon 10 & 1978 & NA & NA\_failed\\
 \hline
-surgeon 11 & 1983 & 1 & passed\\
+surgeon 11 & 1988 & 1 & passed\\
 \hline
-surgeon 12 & 1989 & 1 & passed\\
+surgeon 12 & 1997 & 1 & passed\\
 \hline
-surgeon 13 & 2003 & 1 & passed\\
+surgeon 13 & 2006 & 1 & passed\\
 \hline
-surgeon 14 & 1995 & 1 & passed\\
+surgeon 14 & 2004 & 1 & passed\\
 \hline
-surgeon 15 & 2001 & 1 & passed\\
+surgeon 15 & 1986 & 1 & passed\\
 \hline
 \end{tabular}
 \end{table}
@@ -325,5 +324,9 @@ surgeon 15 & 2001 & 1 & passed\\
   Gcertyear: year of initial board certification; ReCeverPassed:
   Original ABS variable 0 (failed), 1 (passed)
 \end{itemize}
+
+5.4 Why included non-us grads?
+
+Followed the strategy of Andrew Jones MOC paper.
 
 \end{document}

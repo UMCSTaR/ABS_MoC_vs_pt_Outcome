@@ -63,7 +63,7 @@ Below is the consort diagram for the data selection process. Detailed cohort sel
 
 ```{r, cache=TRUE}
 # ABS data prep -----------------------------------------------------------
-abs = data.table::fread("/Volumes/George_Surgeon_Projects/Surgeon Profile data/abs_with_npi.csv")
+abs = data.table::fread("/Volumes/George_Surgeon_Projects/Surgeon Profile data/abs_with_npi.csv", colClasses = c('npi'='character'))
 
 # nrow(abs) #51624
 # gs_residency_yog combined info from AMA and ABS to get the graduation year
@@ -183,7 +183,7 @@ if (medicare_gs_splty == FALSE){
 
 ### 4.2 Only keep cases that performed between 10-20 years after initial certification*
 
-The ABS gives 10 years for surgeons for the recertification. We keep cases that 10 years after the initial certification to better capture the impact of the recertification process. However, we excluded cases happened 20 years after the initial certification to exlude the re-recertification effect,.e. only the first recertification cases were included in the cohort.
+The ABS gives 10 years for surgeons for the recertification. We keep cases that 10 years after the initial certification to better capture the impact of the recertification process. However, we excluded cases happened 20 years after the initial certification to exclude the re-recertification effect,.e. only the first recertification cases were included in the cohort.
 
 
 ```{r, eval=FALSE}
@@ -230,7 +230,7 @@ The ABS gives 10 years for surgeons for the recertification. We keep cases that 
 # n_distinct(abs_medicare_10_20yr$npi) #11444
 # 
 # 
-# if(!medicare_gs_splty) {
+# if(!medicare_gs_splty) {$
 #   save(abs_medicare_10_20yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata")
 #   save(abs_medicare_npi, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi.rdata")
 #   
