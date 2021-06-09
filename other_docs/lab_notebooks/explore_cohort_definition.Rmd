@@ -1,0 +1,78 @@
+---
+title: "Explore Cohort Definitions"
+author: "Xilin Chen"
+date: "6/8/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  eval = TRUE,
+  comment = NA,
+  message = FALSE,
+  warning = FALSE,
+  R.options = list(width = 220),
+  dev.args = list(bg = 'transparent'),
+  dev = 'png',
+  layout = "l-body-outset",
+  fig.align = 'center',
+  out.width = '75%',
+  fig.asp = .75,
+  fig.pos = 'H',
+  cache = FALSE, 
+  cache.rebuild = TRUE
+)
+
+library(tidyverse)
+
+```
+
+Definiting general surgery surgeons is difficult becasue we don't have complete data for fellowship training records. As June 2021, we have ABS and fellowship council data that contain fellowship training infomation. 
+
+Below we are going to explore 3 different ways to define general surgery surgeons, and it's pros and cons for using each definition.
+
+
+## 1. Exclude fellowship-trained surgeons using ABS and fellowship council data
+
+**Pros**: 
+
+1. ABS and fellowship council data have reliable fellowship training data. 
+2. Some ABS data have recorded NPI from the instustion. Most ABS and fellowship council surgeons records have been matched with NPIs.
+
+
+**Cons**: 
+
+1. Can't exclude fellowship trained suregons who were not in ABS or fellowship council data. ABS and fellowship council only have a subset of fellowshhip training program. ABS fellowship includes Vascular, Pediatric, Oncology and Critical Care. fellowship council includes Adv GI, Bariatric, Colorectal, Flexible Endoscopy, HPB and Thoracic.
+
+2. ABS and fellowship council data don't have complete NPI. 56% of ABS surgeos have NPI; 80% of fellowship council data have matched NPI. 
+
+
+![](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/cohort_definition.png)
+
+dataset at */Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata*
+
+
+## 2.Exclude fellowship-trained surgeons using ABS, fellowship council and medicare specilty code
+
+the same as option 1 but add medicare specilty as an additional data source. medicare specilty code was from Carrier file. Only surgeons who have only filed as general surgery specialty in carrer file are considers general surgery surgeons.
+
+**Pros**
+Using medicare specity code excluded most of the epecilty trained surgeons.
+
+**Cons**
+Medicare specilty code excluded a lot general surgery surgeons. Among the excluded suregons(based on medicare specilty code only group), 85% of the surgeons were identified as general surgery surgeons based on NPPES dataset. I also manually checked 10 surgeons for their specity info on their personal websites. 6 out of 10 were general surgery surgeons. 
+
+![](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/cohort_definition_and_medicare_splty.png)
+
+dataset at */Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_medicare_splty.rdata*
+
+
+## 3. Exclude non-GS surgeons by practice pattern, i.e. surgeon who don't act/perform like GS. using n types of procedures as threshold. 
+
+This definition 
+
+
+
+
+

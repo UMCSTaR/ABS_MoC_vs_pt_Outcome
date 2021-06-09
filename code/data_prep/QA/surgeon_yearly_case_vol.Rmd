@@ -15,7 +15,8 @@ load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_re
 surg_vol_year = medicare_abs_model_ready_no_na %>% 
   distinct(re_cert_bin, npi, surgeon_yearly_load, facility_clm_yr) 
 
-surg_vol_year %>% group_by(re_cert_bin) %>% summarise(mean = mean(surgeon_yearly_load))
+surg_vol_year %>% group_by(re_cert_bin) %>% summarise(mean = mean(surgeon_yearly_load),
+                                                      median = median(surgeon_yearly_load))
 
 # per surgeon per year
 ggplot(data = surg_vol_year,
@@ -34,12 +35,12 @@ sample_surg = surg_vol_year %>%
 
 #   npi        re_cert_bin
 #   <chr>      <chr>      
-# 1 1750355129 Failed     
-# 2 1689675134 Failed     
-# 3 1104888114 Failed     
-# 4 1205835063 Passed     
-# 5 1811194962 Passed     
-# 6 1326032723 Passed   
+# 1 1639171770 Failed     
+# 2 1508822255 Failed     
+# 3 1699851436 Failed     
+# 4 1174630917 Passed     
+# 5 1871596726 Passed     
+# 6 1154464410 Passed    
 
 sample_surg_vol = surg_vol_year %>% filter(npi %in% sample_surg$npi)
   
@@ -56,16 +57,16 @@ load("data/BETOS_TB.rda")
 ```
 
 ```{r falied}
-# sample surg 1104888114 -------------------------------------
+# sample surg 1508822255 -------------------------------------
 # from NPPES: Plastic and Reconstructive Surgery Physician
-medicare_abs_model_ready_no_na %>% filter(npi == 1104888114) # 1 case
-abs_medicare_10yr %>% filter(npi == 1104888114) # 1 case; facility claim March 2011
+medicare_abs_model_ready_no_na %>% filter(npi == 1508822255) 
+abs_medicare_10_20yr %>% filter(npi == 1508822255) 
 
 # checked medicare analytic file before merge ABS, n case =1
 
 # 100% carrier claims ---------------------------------------
 # check all professional claims for this surgeon in 2011
-carrier_phy_1104888114_2011 = read_csv( "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/QA/carrier_phy_1104888114_2011.csv")
+carrier_phy_1508822255_2011 = read_csv( "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/QA/carrier_phy_1104888114_2011.csv")
 
 # map to ecs
 phy_1104888114 = carrier_phy_1104888114_2011 %>% 
