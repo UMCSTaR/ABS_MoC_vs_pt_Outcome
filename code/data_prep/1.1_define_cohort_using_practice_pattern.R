@@ -1,5 +1,4 @@
 # option3: define cohort by practice patterns
-
 # Exclude non-GS surgeons by practice pattern, 
 # i.e. surgeon who don't act/perform like GS. using n types of procedures as threshold. 
 
@@ -31,6 +30,7 @@ abs_2017 = abs_cert %>%
 abs_76_17 = abs_2017 %>%  
   filter(Gcertyear>1975)
 
+# create new var Recert_status
 abs_w_recert = abs_76_17 %>%
   mutate(
     npi = as.character(npi),
@@ -42,7 +42,7 @@ abs_w_recert = abs_76_17 %>%
   ) 
 
 
-# medicare data -----------------------------------------------------------
+# load medicare data -----------------------------------------------------------
 medicare = data.table::fread("/Volumes/George_Surgeon_Projects/standardized_medicare_data_using_R/analysis_ready_data/ecs_primary_surgeon_medicare2018.csv")
 
 
@@ -53,7 +53,7 @@ abs_medicare = abs_w_recert %>%
 n_distinct(abs_medicare$npi) #20615
 
 
-# 10-20 yes after initial certification -----------------------------------
+# 10-20 yrs cases after initial certification -----------------------------------
 
 abs_medicare_10_20yr = abs_medicare %>%
   filter(facility_clm_yr - Gcertyear>10,
@@ -62,7 +62,7 @@ abs_medicare_10_20yr = abs_medicare %>%
 n_distinct(abs_medicare_10_20yr$npi) #14456
 
 
-# types of procedures -----------------------------------------------------
+# types of procedures for each NPI-----------------------------------------------------
 npi_procedure_type = abs_medicare_10_20yr %>%
   group_by(npi) %>%
   mutate(n_type = length(unique(e_proc_grp_lbl))) %>%
