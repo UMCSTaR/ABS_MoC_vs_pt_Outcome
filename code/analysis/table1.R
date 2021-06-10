@@ -20,7 +20,7 @@ covariates = c(
   'emergent_admit',
   'year',
   'surgeon_yearly_load',
-  'years_after_initial_certification',
+  # 'years_after_initial_certification',
   "had_assist_surg"
   # hospital--
   # 'hospital_icu',
@@ -33,15 +33,18 @@ covariates = c(
 
 # case level ----------------------------------
 medicare_abs_model_ready_no_na %>% 
-  select(!!covariates, -year) %>% 
+  select(!!covariates, -year, - surgeon_yearly_load) %>% 
   tbl_summary(by = re_cert_bin) %>% 
-  add_p() %>% 
-  as_flex_table() %>% 
-  save_as_docx(path = "manuscripts/table1.docx")
+  add_p() 
+  # as_flex_table() %>% 
+  # save_as_docx(path = "manuscripts/table1.docx")
 
+# surgeon level
 medicare_abs_model_ready_no_na %>% 
-  distinct(npi, re_cert_bin) %>% 
-  count(re_cert_bin)
+  distinct(npi, re_cert_bin, surgeon_yearly_load) %>% 
+  select(-npi) %>% 
+  tbl_summary(by = re_cert_bin) %>% 
+  add_p()
   
 
 # procedures -------------------------------------
