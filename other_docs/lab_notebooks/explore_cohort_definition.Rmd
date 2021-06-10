@@ -2,7 +2,10 @@
 title: "Explore Cohort Definitions"
 author: "Xilin Chen"
 date: "6/8/2021"
-output: pdf_document
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 2
 ---
 
 ```{r setup, include=FALSE}
@@ -25,54 +28,326 @@ knitr::opts_chunk$set(
 )
 
 library(tidyverse)
+library(lme4)
+library(gtsummary)
+library(gt)
+library(broom.mixed)
+
+source("code/functions/prep_model_ready_dt.R")
+
+# for table 1
+covariates = c(
+  # choose one cert status--
+  # 're_cert_status',
+  're_cert_bin',
+  # other--
+  'flg_male',
+  'age_at_admit',
+  'AHRQ_score',
+  'race_white',
+  'ses',
+  'emergent_admit',
+  'year',
+  'surgeon_yearly_load',
+  # 'years_after_initial_certification',
+  "had_assist_surg"
+  # hospital--
+  # 'hospital_icu',
+  # 'hospital_urban',
+  # 'hospital_beds_gt_350',
+  # 'hospital_icu',
+  # 'hospital_rn2bed_ratio',
+  # 'hospital_mcday2inptday_ratio'
+)
+
 
 ```
 
-Definiting general surgery surgeons is difficult becasue we don't have complete data for fellowship training records. As June 2021, we have ABS and fellowship council data that contain fellowship training infomation. 
+Defining general surgery surgeons is difficult because we don't have complete data for fellowship training records. As June 2021, we have ABS and fellowship council data that contain fellowship training information. 
 
-Below we are going to explore 3 different ways to define general surgery surgeons, and it's pros and cons for using each definition.
+Below we are going to explore 3 different ways to define general surgery surgeons, and their pros and cons for using each definition.
 
+# Cohort definition
 
 ## 1. Exclude fellowship-trained surgeons using ABS and fellowship council data
 
 **Pros**: 
 
 1. ABS and fellowship council data have reliable fellowship training data. 
-2. Some ABS data have recorded NPI from the instustion. Most ABS and fellowship council surgeons records have been matched with NPIs.
+2. Most ABS and fellowship council surgeons records have matched NPIs.
 
 
 **Cons**: 
 
-1. Can't exclude fellowship trained suregons who were not in ABS or fellowship council data. ABS and fellowship council only have a subset of fellowshhip training program. ABS fellowship includes Vascular, Pediatric, Oncology and Critical Care. fellowship council includes Adv GI, Bariatric, Colorectal, Flexible Endoscopy, HPB and Thoracic.
+1. Can't exclude fellowship trained surgeons who were not in ABS or fellowship council data. ABS and fellowship council only have a subset of fellowship training programs. ABS fellowship includes Vascular, Pediatric, Oncology and Critical Care. fellowship council includes Adv GI, Bariatric, Colorectal, Flexible Endoscopy, HPB and Thoracic.
 
-2. ABS and fellowship council data don't have complete NPI. 56% of ABS surgeos have NPI; 80% of fellowship council data have matched NPI. 
+2. ABS and fellowship council data don't have complete NPI. 56% of ABS surgeons have NPI; 80% of fellowship council data have matched NPI. 
 
+
+**Cohort definition diagram**
 
 ![](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/cohort_definition.png)
 
 dataset at */Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata*
 
 
-## 2.Exclude fellowship-trained surgeons using ABS, fellowship council and medicare specilty code
+## 2. Exclude fellowship-trained surgeons using ABS, fellowship council and medicare specialty code
 
-the same as option 1 but add medicare specilty as an additional data source. medicare specilty code was from Carrier file. Only surgeons who have only filed as general surgery specialty in carrer file are considers general surgery surgeons.
+The same as option 1 but added medicare specialty as an additional data source. medicare specialty code was from Carrier file. Only surgeons who have only filed as general surgery specialty in carrier file are considers general surgery surgeons.
 
 **Pros**
-Using medicare specity code excluded most of the epecilty trained surgeons.
+
+1. Using medicare specialty code excluded most of the specialty trained surgeons.
 
 **Cons**
-Medicare specilty code excluded a lot general surgery surgeons. Among the excluded suregons(based on medicare specilty code only group), 85% of the surgeons were identified as general surgery surgeons based on NPPES dataset. I also manually checked 10 surgeons for their specity info on their personal websites. 6 out of 10 were general surgery surgeons. 
+
+1. Medicare specialty code excluded a lot general surgery surgeons. 
+2. Among the excluded surgeons(based on medicare specialty code only group), 85% of the surgeons were identified as general surgery surgeons based on NPPES dataset. 
+3. I also manually checked 10 surgeons for their specialty info on their personal websites among the exclude surgeons cohort. 6 out of 10 were general surgery surgeons. 
+
+**Cohort definition diagram**
+
+The two diagrams below compare the differences between adding medicare specialty code filter vs. not.
 
 ![](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/cohort_definition_and_medicare_splty.png)
 
 dataset at */Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_medicare_splty.rdata*
 
 
-## 3. Exclude non-GS surgeons by practice pattern, i.e. surgeon who don't act/perform like GS. using n types of procedures as threshold. 
+## 3. Exclude non-GS surgeons by practice patterns, i.e. surgeon who don't perform cases like general surgery surgeons using number of types of procedures as threshold. 
 
-This definition 
+N types of procedures is defined using median number of types of procedures performed in ABS medicare data cohort. N = 21.
+
+**Pros**: 
+
+1. Don't need to rely on our incomplete fellowship training data. 
+
+**Cons**: 
+
+1. Hard to define how many types of procedures a surgeon should perform to be defined as a general surgery surgeon.
+
+**Cohort definition diagram**
+
+![](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/cohort_definition_pp.png)
+dataset at */Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_21_types_procs.rdata*
+
+# Table1 and model results on cohort definition
+
+## 1. ABS and fellowship council
+
+```{r, cache=TRUE}
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata")
+
+model_dt = prep_model_ready_dt(abs_medicare_10_20yr)
+```
+
+### table1
+
+*case level*
+
+```{r}
+# case level 
+model_dt %>% 
+  select(!!covariates, -year, - surgeon_yearly_load) %>% 
+  tbl_summary(by = re_cert_bin) %>% 
+  add_p() %>% 
+  as_kable_extra()
+```
+
+*Surgeon level*
+
+```{r}
+# surgeon level
+model_dt %>% 
+  distinct(npi, re_cert_bin, surgeon_yearly_load) %>% 
+  select(-npi) %>% 
+  tbl_summary(by = re_cert_bin) %>% 
+  add_p() %>% 
+  as_kable_extra()
+  
+```
 
 
+### Model results
+
+```{r, eval=FALSE}
+# run model
+f = formula(paste("death_30d ~ 1", paste(covariates, collapse = ' + '),
+                  "(1 | procedure)",
+                  sep = " + "))
+
+abs_fc_death = glmer(formula = f,
+                        data = model_dt,
+                        family = binomial)
+
+save(abs_fc_death, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/abs_fc_death.rdata")
+
+```
+
+
+```{r}
+# load model
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/abs_fc_death.rdata")
+```
+
+
+*Regression table*
+
+```{r}
+abs_fc_death@call$formula
+
+tidy(abs_fc_death) %>%
+  filter(!str_detect(term, "sd")) %>% 
+  transmute(term,
+            estimate = round(estimate, 3),
+            OR = exp(estimate),
+            OR = round(OR, 3),
+            p_value = round(p.value, 3)) 
+```
+
+
+
+## 2. ABS, fellowship council and medicare
+
+```{r, cache=TRUE}
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_medicare_splty.rdata")
+
+model_dt = prep_model_ready_dt(abs_medicare_10_20yr)
+```
+
+#### table1
+
+case level
+```{r}
+# case level
+model_dt %>%
+  select(!!covariates, -year, - surgeon_yearly_load) %>%
+  tbl_summary(by = re_cert_bin) %>%
+  add_p() %>%
+  as_kable_extra()
+```
+
+Surgeon level
+
+```{r}
+# surgeon level
+model_dt %>%
+  distinct(npi, re_cert_bin, surgeon_yearly_load) %>%
+  select(-npi) %>%
+  tbl_summary(by = re_cert_bin) %>%
+  add_p() %>%
+  as_kable_extra()
+
+```
+
+
+#### Model results
+
+```{r, eval=FALSE}
+# run model
+f = formula(paste("death_30d ~ 1", paste(covariates, collapse = ' + '),
+                  "(1 | procedure)",
+                  sep = " + "))
+
+abs_fc_medicare_death = glmer(formula = f,
+                        data = model_dt,
+                        family = binomial)
+
+save(abs_fc_medicare_death, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/abs_fc_medicare_death.rdata")
+
+```
+
+
+```{r}
+# load model
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/abs_fc_medicare_death.rdata")
+```
+
+*Regression table*
+
+```{r}
+abs_fc_medicare_death@call$formula
+
+tidy(abs_fc_medicare_death) %>%
+  filter(!str_detect(term, "sd")) %>%
+  transmute(term,
+            estimate = round(estimate, 3),
+            OR = exp(estimate),
+            OR = round(OR, 3),
+            p_value = round(p.value, 3)) 
+```
+
+
+## 3. Practice patterns to define general surgery surgeons
+
+```{r, cache=TRUE}
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_21_types_procs.rdata")
+
+abs_medicare_10_20yr = abs_medicare_10_20yr_n_type
+model_dt = prep_model_ready_dt(abs_medicare_10_20yr_n_type)
+```
+
+#### table1
+
+case level
+```{r}
+# case level
+model_dt %>%
+  select(!!covariates, -year, - surgeon_yearly_load) %>%
+  tbl_summary(by = re_cert_bin) %>%
+  add_p() %>%
+  as_kable_extra()
+```
+
+Surgeon level
+
+```{r}
+# surgeon level
+model_dt %>%
+  distinct(npi, re_cert_bin, surgeon_yearly_load) %>%
+  select(-npi) %>%
+  tbl_summary(by = re_cert_bin) %>%
+  add_p() %>%
+  as_kable_extra()
+
+```
+
+
+#### Model results
+
+```{r, eval=FALSE}
+# run model
+f = formula(paste("death_30d ~ 1", paste(covariates, collapse = ' + '),
+                  "(1 | procedure)",
+                  sep = " + "))
+
+practice_pattern_death = glmer(formula = f,
+                        data = model_dt,
+                        family = binomial)
+
+save(practice_pattern_death, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/practice_pattern_death.rdata")
+
+```
+
+
+```{r}
+# load model
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/practice_pattern_death.rdata")
+```
+
+*Regression table*
+
+```{r}
+practice_pattern_death@call$formula
+
+tidy(practice_pattern_death) %>%
+  filter(!str_detect(term, "sd")) %>%
+  transmute(term,
+            estimate = round(estimate, 3),
+            OR = exp(estimate),
+            OR = round(OR, 3),
+            p_value = round(p.value, 3)) 
+```
 
 
 
