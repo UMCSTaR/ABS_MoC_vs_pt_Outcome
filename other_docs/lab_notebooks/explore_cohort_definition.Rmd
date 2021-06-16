@@ -1,7 +1,7 @@
 ---
 title: "Explore Cohort Definitions"
 author: "Xilin Chen"
-date: "6/8/2021"
+date: "`r Sys.Date()`"
 output:
   pdf_document:
     toc: true
@@ -32,6 +32,8 @@ library(lme4)
 library(gtsummary)
 library(gt)
 library(broom.mixed)
+library(flextable)
+
 
 source("code/functions/prep_model_ready_dt.R")
 
@@ -62,6 +64,8 @@ covariates = c(
 
 
 ```
+
+# Intro
 
 Defining general surgery surgeons is difficult because we don't have complete data for fellowship training records. As June 2021, we have ABS and fellowship council data that contain fellowship training information. 
 
@@ -102,7 +106,7 @@ The same as option 1 but added medicare specialty as an additional data source. 
 **Cons**
 
 1. Medicare specialty code excluded a lot general surgery surgeons. 
-2. Among the excluded surgeons(based on medicare specialty code only group), 85% of the surgeons were identified as general surgery surgeons based on NPPES dataset. 
+2. Among the excluded surgeons(based on medicare specialty code only group), 34% of the surgeons were identified as general surgery surgeons based on NPPES dataset. (*34% was based on script "code/data_prep/QA/qa_surgeon_medicare_splty.R"*)
 3. I also manually checked 10 surgeons for their specialty info on their personal websites among the exclude surgeons cohort. 6 out of 10 were general surgery surgeons. 
 
 **Cohort definition diagram**
@@ -131,7 +135,7 @@ N types of procedures is defined using median number of types of procedures perf
 ![](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/cohort_definition_pp.png)
 dataset at */Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_21_types_procs.rdata*
 
-# Table1 and model results on cohort definition
+# Table1 and model results 
 
 ## 1. ABS and fellowship council
 
@@ -158,12 +162,14 @@ model_dt %>%
 
 ```{r}
 # surgeon level
-model_dt %>% 
-  distinct(npi, re_cert_bin, surgeon_yearly_load) %>% 
-  select(-npi) %>% 
-  tbl_summary(by = re_cert_bin) %>% 
-  add_p() %>% 
-  as_kable_extra()
+model_dt %>%
+  distinct(npi, re_cert_bin, surgeon_yearly_load) %>%
+  group_by(re_cert_bin) %>% 
+  summarise(n_surgeon = n_distinct(npi),
+            yearly_case_mean = mean(surgeon_yearly_load),
+            yearly_case_median = median(surgeon_yearly_load)) %>% 
+  flextable() %>% 
+  autofit()
   
 ```
 
@@ -202,7 +208,9 @@ tidy(abs_fc_death) %>%
             estimate = round(estimate, 3),
             OR = exp(estimate),
             OR = round(OR, 3),
-            p_value = round(p.value, 3)) 
+            p_value = round(p.value, 3)) %>% 
+  flextable() %>% 
+  autofit()
 ```
 
 
@@ -233,10 +241,12 @@ Surgeon level
 # surgeon level
 model_dt %>%
   distinct(npi, re_cert_bin, surgeon_yearly_load) %>%
-  select(-npi) %>%
-  tbl_summary(by = re_cert_bin) %>%
-  add_p() %>%
-  as_kable_extra()
+  group_by(re_cert_bin) %>% 
+  summarise(n_surgeon = n_distinct(npi),
+            yearly_case_mean = mean(surgeon_yearly_load),
+            yearly_case_median = median(surgeon_yearly_load)) %>% 
+  flextable() %>% 
+  autofit()
 
 ```
 
@@ -274,7 +284,9 @@ tidy(abs_fc_medicare_death) %>%
             estimate = round(estimate, 3),
             OR = exp(estimate),
             OR = round(OR, 3),
-            p_value = round(p.value, 3)) 
+            p_value = round(p.value, 3)) %>% 
+  flextable() %>% 
+  autofit()
 ```
 
 
@@ -305,10 +317,12 @@ Surgeon level
 # surgeon level
 model_dt %>%
   distinct(npi, re_cert_bin, surgeon_yearly_load) %>%
-  select(-npi) %>%
-  tbl_summary(by = re_cert_bin) %>%
-  add_p() %>%
-  as_kable_extra()
+  group_by(re_cert_bin) %>% 
+  summarise(n_surgeon = n_distinct(npi),
+            yearly_case_mean = mean(surgeon_yearly_load),
+            yearly_case_median = median(surgeon_yearly_load)) %>% 
+  flextable() %>% 
+  autofit()
 
 ```
 
@@ -348,6 +362,5 @@ tidy(practice_pattern_death) %>%
             OR = round(OR, 3),
             p_value = round(p.value, 3)) 
 ```
-
 
 

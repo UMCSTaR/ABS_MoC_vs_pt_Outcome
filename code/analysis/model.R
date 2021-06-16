@@ -57,12 +57,12 @@ save(death_model_bin, file = "X://George_Surgeon_Projects/MOC_vs_Outcome/model/d
 library(glmmTMB)
 
 system.time({
-  death_model_bin_glmtmb = glmmTMB(formula = f,
+  death_model_bin_glmmtmb = glmmTMB(formula = f,
                           data = medicare_abs_model_ready,
                           family = binomial)
 })
 
-# save(death_model_bin_glmtmb, file = "X://George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin_glmtmb.rdata")
+# save(death_model_bin_glmmtmb, file = "X://George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin_glmtmb.rdata")
 
 
 

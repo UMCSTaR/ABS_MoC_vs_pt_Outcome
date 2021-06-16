@@ -2,8 +2,8 @@
 
 **maintenance: JAMA letter**
   
-- on-time recertification (passed the recertification examination prior to expi- ration of the initial 10-year certification)
-- lapsed recertifica- tion (passed the recertification examination after the expiration of the initial 10-year certification)
+- on-time recertification (passed the recertification examination prior to expiration of the initial 10-year certification)
+- lapsed recertification (passed the recertification examination after the expiration of the initial 10-year certification)
 -  not recertified
 
 
