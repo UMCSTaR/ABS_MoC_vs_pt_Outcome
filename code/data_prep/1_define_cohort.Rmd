@@ -31,6 +31,10 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(kableExtra)
 
+# this document can produce 2 type of cohort
+# 1. bases on ABS and fellowship council
+# 2. bases on ABS and fellowship council and medicare spcialty code
+
 # use medicare specialty definition
 medicare_gs_splty = TRUE
 
@@ -54,7 +58,7 @@ ABS and Medicare claim data are linked using physician NPIs. ABS and Fellowship 
 
 Below is the consort diagram for the data selection process. Detailed cohort selection descriptions are included in *3. Data Process* and *4. Data linkage*. 
 
-![](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/cohort_definition.png)
+![](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/cohort_definition_and_medicare_splty.png)
 
 ## 3. Data Process
 
@@ -89,6 +93,7 @@ if (medicare_gs_splty == FALSE) {
   abs_gs = abs_cert %>%
     filter(fellowship == "FALSE")
 } else if (medicare_gs_splty == TRUE) {
+  # filter based medicare specialty 
   abs_gs = abs_cert %>%
     filter(fellowship == "FALSE", gs_specialty_cms == "TRUE")
 }
@@ -112,9 +117,6 @@ abs_gs = abs_gs %>%
 ```{r }
 # nrow(abs_gs) #33461
 n_exclude = nrow(abs_cert)-nrow(abs_gs)
-
-
-
 ```
 
 ```{r}
@@ -189,61 +191,63 @@ The ABS gives 10 years for surgeons for the recertification. We keep cases that 
 ```{r, eval=FALSE}
 # # # link abs with medicare
 #  
-# # # medicare
-# medicare = data.table::fread("/Volumes/George_Surgeon_Projects/standardized_medicare_data_using_R/analysis_ready_data/ecs_primary_surgeon_medicare2018.csv")
-# 
-# # abs
-# if (medicare_gs_splty == FALSE) {
-#   load(
-#     "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs/abs_w_recert.rdata"
-#   )
-# } else if (medicare_gs_splty == TRUE) {
-#   load(
-#     "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs/abs_w_recert_medicare_splty.rdata"
-#   )
-# }
-# 
-# abs_medicare = abs_w_recert %>%
-#   inner_join(medicare, by = c("npi" = "id_physician_npi"))
-# 
-# # number of ABS surgeons who have no medicare record
-# n_no_medicare_record = n_distinct(abs_w_recert$npi) - n_distinct(abs_medicare$npi)
-# 
-# # get 10 sample surgeons that didn't link with Medicare
-# set.seed(123)
-# abs_w_recert %>%
-#   filter(!npi %in% abs_medicare$npi) %>%
-#   group_by(Recert_status) %>%
-#   sample_n(3)
-# 
-# abs_medicare_10_20yr = abs_medicare %>%
-#   filter(facility_clm_yr - Gcertyear>10,
-#          facility_clm_yr - Gcertyear<=20)
-# 
-# n_exclude_10_20 = n_distinct(abs_medicare$npi) - n_distinct(abs_medicare_10_20yr$npi)
-# 
-# abs_medicare_npi = abs_medicare_10_20yr %>%
-#   select(npi)
-# 
-# # number of cases
-# nrow(abs_medicare_10_20yr) #976956
-# n_distinct(abs_medicare_10_20yr$npi) #11444
-# 
-# 
-# if(!medicare_gs_splty) {$
-#   save(abs_medicare_10_20yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata")
-#   save(abs_medicare_npi, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi.rdata")
-#   
-#   save(n_no_medicare_record, n_exclude_10_20, file = "data/numbers_for_cohort_desp.RData")
-# } else {
-#   save(abs_medicare_10_20yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_medicare_splty.rdata")
-# }
+# # medicare
+medicare = data.table::fread("/Volumes/George_Surgeon_Projects/standardized_medicare_data_using_R/analysis_ready_data/ecs_primary_surgeon_medicare2018.csv")
+
+# abs general surgery surgeons
+if (medicare_gs_splty == FALSE) {
+  load(
+    "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs/abs_w_recert.rdata"
+  )
+} else if (medicare_gs_splty == TRUE) {
+  load(
+    "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs/abs_w_recert_medicare_splty.rdata"
+  )
+}
+
+abs_medicare = abs_w_recert %>%
+  inner_join(medicare, by = c("npi" = "id_physician_npi"))
+
+# number of ABS surgeons who have no medicare record
+n_no_medicare_record = n_distinct(abs_w_recert$npi) - n_distinct(abs_medicare$npi)
+
+# get 10 sample surgeons that didn't link with Medicare
+set.seed(123)
+abs_w_recert %>%
+  filter(!npi %in% abs_medicare$npi) %>%
+  group_by(Recert_status) %>%
+  sample_n(3)
+
+# only keep 10-20 years after initial certfication medicare cases -----
+abs_medicare_10_20yr = abs_medicare %>%
+  filter(facility_clm_yr - Gcertyear>10,
+         facility_clm_yr - Gcertyear<=20)
+
+n_exclude_10_20 = n_distinct(abs_medicare$npi) - n_distinct(abs_medicare_10_20yr$npi)
+
+abs_medicare_npi = abs_medicare_10_20yr %>%
+  select(npi)
+
+# number of cases
+nrow(abs_medicare_10_20yr) #976956
+n_distinct(abs_medicare_10_20yr$npi) #11444
+
+
+if(!medicare_gs_splty) {$
+  save(abs_medicare_10_20yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata")
+  save(abs_medicare_npi, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi.rdata")
+
+  save(n_no_medicare_record, n_exclude_10_20, file = "data/numbers_for_cohort_desp.RData")
+} else {
+  save(abs_medicare_10_20yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_medicare_splty.rdata")
+}
 
 
 ```
 
 
 ```{r}
+# load data from above for fast markdown render
 load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi.rdata")
 load("~/Documents/Repo/ABS_MoC_vs_pt_Outcome/data/numbers_for_cohort_desp.RData")
 ```

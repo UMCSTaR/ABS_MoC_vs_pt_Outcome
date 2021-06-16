@@ -1,8 +1,12 @@
-# option3: define cohort by practice patterns
+# following the 1_define_chort.Rmd document
+library(tidyverse)
+
+
+
+# Option3: Practice Pattern-----------------------------------------------------------------
+# this script create the 3rd cohort definition: define cohort by practice patterns
 # Exclude non-GS surgeons by practice pattern, 
 # i.e. surgeon who don't act/perform like GS. using n types of procedures as threshold. 
-
-library(tidyverse)
 
 abs = data.table::fread("/Volumes/George_Surgeon_Projects/Surgeon Profile data/abs_with_npi.csv", colClasses = c('npi'='character'))
 
@@ -109,4 +113,73 @@ abs_medicare_10_20yr_n_type %>%
 )
 
 save(abs_medicare_10_20yr_n_type, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_21_types_procs.rdata")
+
+
+
+# Option4: ABS+FC+PP ---------------------------------------------------------------
+# Filtered out abs and fellowship council specialty training surgeons
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata")
+
+
+## types of procedures for each NPI-----------------------------------------------------
+npi_procedure_type = abs_medicare_10_20yr %>%
+  group_by(npi) %>%
+  mutate(n_type = length(unique(e_proc_grp_lbl))) %>%
+  select(npi, n_type, Recert_status) %>%
+  distinct() %>%
+  ungroup()
+
+npi_procedure_type %>% 
+  mutate(recert_bin = ifelse(Recert_status == "passed", "passed", "failed")) %>% 
+  group_by(recert_bin) %>% 
+  summarise(n_surgeon = n(),
+            mean_n_type_proc = mean(n_type),
+            median = median(n_type))
+
+# recert_bin n_surgeon mean_n_type_proc median
+# <chr>         <int>            <dbl>  <int>
+# 1 failed         1275             8.77      4
+# 2 passed        10169            25.2      23
+
+npi_procedure_type %>% 
+  summarise(n_surgon = n(),
+            mean_n_type_proc = mean(n_type),
+            median = median(n_type))
+
+# n_surgon mean_n_type_proc median
+# <int>            <dbl>  <dbl>
+# 11444             23.4     21
+
+
+# use 5 (median) to as minimal number of cases required
+n_lst = 4
+
+npi_list_procedure_type = npi_procedure_type %>% 
+  filter(n_type>n_lst) %>% 
+  pull(npi)
+
+n_distinct(npi_procedure_type$npi)-length(npi_list_procedure_type) #2201
+
+
+abs_fc_medicare_10_20yr_n_type = abs_medicare_10_20yr %>% 
+  filter(npi %in% npi_list_procedure_type)
+
+abs_fc_medicare_10_20yr_n_type %>% 
+  distinct(npi, Recert_status) %>% 
+  count(Recert_status, name = "n_surg") %>% 
+  mutate(sum_surgon = sum(n_surg),
+         perc = n_surg/sum_surgon*100)
+
+nrow(abs_fc_medicare_10_20yr_n_type)
+
+save(abs_fc_medicare_10_20yr_n_type, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_fc_medicare_10_20yr_5_type.rdata")
+
+
+
+
+
+
+
+
+
 
