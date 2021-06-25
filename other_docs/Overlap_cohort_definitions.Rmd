@@ -1,0 +1,529 @@
+---
+title: "Compare surgeons in 4 cohort definition"
+author: "Xilin Chen"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  eval = TRUE,
+  comment = NA,
+  message = FALSE,
+  warning = FALSE,
+  R.options = list(width = 220),
+  dev.args = list(bg = 'transparent'),
+  dev = 'png',
+  layout = "l-body-outset",
+  fig.align = 'center',
+  out.width = '75%',
+  fig.asp = .75,
+  fig.pos = 'H',
+  cache = FALSE, 
+  cache.rebuild = TRUE
+)
+
+source("code/functions/prep_model_ready_dt.R")
+
+
+library(tidyverse)
+library(gtsummary)
+library(patchwork)
+library(flextable)
+library(broom.mixed)
+
+# for table 1
+covariates = c(
+  # choose one cert status--
+  # 're_cert_status',
+  're_cert_bin',
+  # other--
+  'flg_male',
+  'age_at_admit',
+  'AHRQ_score',
+  'race_white',
+  'ses',
+  'emergent_admit',
+  'year',
+  'surgeon_yearly_load',
+  # 'years_after_initial_certification',
+  "had_assist_surg"
+  # hospital--
+  # 'hospital_icu',
+  # 'hospital_urban',
+  # 'hospital_beds_gt_350',
+  # 'hospital_icu',
+  # 'hospital_rn2bed_ratio',
+  # 'hospital_mcday2inptday_ratio'
+)
+
+```
+
+
+The 4 types of cohort definitions were described in details on the "explore_cohort_definition.pdf" in the repo.
+
+## 4 cohort definitions
+
+1. using ABS and fellowship council data to exclude fellowship trained surgeons.
+
+dataset name: *abs_fc*
+
+```{r}
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata")
+
+#  rename dataset
+abs_fc = abs_medicare_10_20yr
+
+rm(abs_medicare_10_20yr)
+```
+
+2. using ABS, fellowship council and medicare specialty code to exclude fellowship trained surgeons.
+
+dataset name: *abs_fc_medicare_splty*
+
+```{r}
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_medicare_splty.rdata")
+
+#  rename dataset
+abs_fc_medicare_splty = abs_medicare_10_20yr
+
+rm(abs_medicare_10_20yr)
+```
+
+3. Exclude non-GS surgeons by practice patterns by meeting minimal number of types of procedures.
+
+dataset name: *pp*
+
+```{r}
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_21_types_procs.rdata")
+
+#  rename dataset
+pp = abs_medicare_10_20yr_n_type
+
+rm(abs_medicare_10_20yr_n_type)
+```
+
+4. Exclude non-GS surgeons by abs, fellowship council and practice patterns.
+
+dataset name: *abs_fc_pp*
+
+```{r}
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_fc_medicare_10_20yr_5_type.rdata")
+
+abs_fc_pp = abs_fc_medicare_10_20yr_n_type
+
+rm(abs_fc_medicare_10_20yr_n_type)
+```
+
+
+## Compare surgeon cohort definitions
+
+The plot below shows the comparisons of the 4 cohort definition above. *Inner join* indicates the common surgeons that the compared datasets share.
+
+### 2 datasets inner join
+
+```{r}
+join_n_plot <- function(dt1, dt2) {
+  npi_ls1 = dt1 %>% distinct(npi)
+  npi_ls2 = dt2 %>% distinct(npi)
+  npi_ls12 = inner_join(npi_ls1, npi_ls2)
+  
+  dt = data.frame(
+    dataset_name = factor(c(deparse(substitute(dt1)), deparse(substitute(dt2)), "inner_join"),
+                          levels = c(deparse(substitute(dt1)), deparse(substitute(dt2)), "inner_join")),
+    n_suregons = c(nrow(npi_ls1), nrow(npi_ls2), nrow(npi_ls12))
+  ) 
+  
+  p = ggplot(data = dt,
+         aes(x = dataset_name, y = n_suregons)) +
+    geom_col(width = 0.5) +
+    geom_text(aes(label = n_suregons),  vjust = -0.25) +
+    scale_y_continuous(limits=c(0, 12000), n.breaks = 2) +
+    labs(x = "", y = "") +
+    theme_classic()
+  
+  p
+}
+
+
+(join_n_plot(abs_fc, abs_fc_medicare_splty) |
+  join_n_plot(abs_fc, pp) ) /
+  (join_n_plot(abs_fc, abs_fc_pp) |
+  join_n_plot(abs_fc_medicare_splty, pp)) /
+  (join_n_plot(abs_fc_medicare_splty, abs_fc_pp) |
+  join_n_plot(pp, abs_fc_pp)) +
+  plot_annotation(title = "number of surgeons in each dataset cohort")
+  
+```
+
+
+Combine all the *inner join groups* and get a cohort that at least met 2 out of the 4 criteria. The combined group are surgeons who are not fellowship trained based on current ABS or fellowship council database, and identified as general surgery specialty in NPPES or met practice pattern criteria.
+
+
+```{r}
+inner_joined_npi <- function(dt1, dt2) {
+  npi_ls1 = dt1 %>% distinct(npi)
+  npi_ls2 = dt2 %>% distinct(npi)
+  inner_join(npi_ls1, npi_ls2)
+}
+
+
+
+inner_joined_all_npi = list(inner_joined_npi(abs_fc, abs_fc_medicare_splty),
+     inner_joined_npi(abs_fc, pp),
+     inner_joined_npi(abs_fc, abs_fc_pp),
+     inner_joined_npi(abs_fc_medicare_splty, pp),
+     inner_joined_npi(abs_fc_medicare_splty, abs_fc_pp),
+     inner_joined_npi(pp, abs_fc_pp)) %>% 
+  reduce(full_join) 
+
+```
+
+
+The number of surgeons in the combined 4 criteria group is `r nrow(inner_joined_all_npi)`.
+
+### 3 groups inner join
+
+```{r}
+join_3n_plot<- function(dt1, dt2, dt3) {
+  npi_ls1 = dt1 %>% distinct(npi)
+  npi_ls2 = dt2 %>% distinct(npi)
+  npi_ls3 = dt3 %>% distinct(npi)
+  npi_ls123 = list(npi_ls1, npi_ls2, npi_ls3) %>% reduce(inner_join)
+  
+  
+  dt = data.frame(
+    dataset_name = factor(
+      c(
+        deparse(substitute(dt1)),
+        deparse(substitute(dt2)),
+        deparse(substitute(dt3)),
+        "inner_join"
+      ),
+      levels = c(
+        deparse(substitute(dt1)),
+        deparse(substitute(dt2)),
+        deparse(substitute(dt3)),
+        "inner_join"
+      )
+    ),
+    n_suregons = c(nrow(npi_ls1), nrow(npi_ls2), nrow(npi_ls3), nrow(npi_ls123))
+  )
+  
+    p = ggplot(data = dt,
+           aes(x = dataset_name, y = n_suregons)) +
+      geom_col(width = 0.5) +
+      geom_text(aes(label = n_suregons),  vjust = -0.25) +
+      scale_y_continuous(limits=c(0, 12000), n.breaks = 2) +
+      labs(x = "", y = "") +
+      theme_classic()
+    
+    p
+}
+
+join_3n_plot(abs_fc, abs_fc_medicare_splty, pp)  /
+join_3n_plot(abs_fc, abs_fc_medicare_splty, abs_fc_pp) /
+join_3n_plot(abs_fc, pp, abs_fc_pp) /
+join_3n_plot(abs_fc_medicare_splty, pp, abs_fc_pp) +
+  plot_annotation(title = "number of surgeons in each dataset cohort")
+
+```
+
+
+Combine all the *inner join groups* and get a cohort that at least met 3 out of the 4 criteria. The combined group are surgeons who are not fellowship trained based on current ABS or fellowship council database, and identified as general surgery specialty in medicare or met practice pattern criteria.
+
+
+```{r}
+inner_joined_3npi <- function(dt1, dt2, dt3) {
+  npi_ls1 = dt1 %>% distinct(npi)
+  npi_ls2 = dt2 %>% distinct(npi)
+  npi_ls3 = dt3 %>% distinct(npi)
+  list(npi_ls1, npi_ls2, npi_ls3) %>% reduce(inner_join)
+}
+
+
+
+inner_joined_all_3npi = list(inner_joined_3npi(abs_fc, abs_fc_medicare_splty, pp),
+                            inner_joined_3npi(abs_fc, abs_fc_medicare_splty, abs_fc_pp),
+                            inner_joined_3npi(abs_fc, pp, abs_fc_pp),
+                            inner_joined_3npi(abs_fc_medicare_splty, pp, abs_fc_pp)
+                            ) %>% 
+  reduce(full_join) 
+
+
+# npi_ls1 = abs_fc %>% distinct(npi)
+# npi_ls2 = abs_fc_pp %>% distinct(npi)
+# npi_ls3 = abs_fc_medicare_splty %>% distinct(npi)
+# npi_ls4 = pp %>% distinct(npi)
+# all_4 =  list(npi_ls1, npi_ls2, npi_ls3, npi_ls4) %>% reduce(inner_join)
+# 
+# full_join(npi_ls3, npi_ls2) %>% nrow()
+```
+
+
+The number of surgeons in the combined 4 criteria group is `r nrow(inner_joined_all_3npi)`.
+
+
+## Descriptive and model results for the combined dataset above
+
+## At least in 2 datasets
+
+### Table 1
+
+```{r}
+combined_4_dataset = abs_fc %>% filter(npi %in% inner_joined_all_npi$npi)
+
+model_dt = prep_model_ready_dt(combined_4_dataset)
+```
+
+*case level*
+
+```{r}
+# case level 
+model_dt %>% 
+  select(!!covariates, -year, - surgeon_yearly_load) %>% 
+  tbl_summary(by = re_cert_bin) %>% 
+  add_p() %>% 
+  as_kable_extra()
+```
+
+*Surgeon level*
+
+```{r}
+# surgeon level
+model_dt %>%
+  distinct(npi, re_cert_bin, surgeon_yearly_load) %>%
+  group_by(re_cert_bin) %>% 
+  summarise(n_surgeon = n_distinct(npi),
+            yearly_case_mean = mean(surgeon_yearly_load),
+            yearly_case_median = median(surgeon_yearly_load)) %>% 
+  flextable() %>% 
+  autofit()
+  
+```
+
+
+### Model
+
+```{r, eval=FALSE}
+# run model
+f = formula(paste("death_30d ~ 1", paste(covariates, collapse = ' + '),
+                  "(1 | procedure)",
+                  sep = " + "))
+
+combined_4_death = glmer(formula = f,
+                        data = model_dt,
+                        family = binomial)
+
+save(combined_4_death, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/combined_4_death.rdata")
+```
+
+
+```{r}
+# load model
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/combined_4_death.rdata")
+```
+
+
+#### Death
+
+```{r}
+combined_4_death@call$formula
+```
+
+
+*Regression table*
+
+```{r}
+tidy(combined_4_death) %>%
+  filter(!str_detect(term, "sd")) %>% 
+  transmute(term,
+            estimate = round(estimate, 3),
+            OR = exp(estimate),
+            OR = round(OR, 3),
+            p_value = round(p.value, 3)) %>% 
+  flextable() %>% 
+  autofit()
+```
+
+#### Severe complication
+
+Since POA flags only become available after 2010, so the patient outcomes from medicare only include 2010-2018.
+
+```{r, eval=FALSE}
+# severe cmp 
+model_dt_cmp = model_dt %>%
+  mutate(severe_complication_no_poa = as.numeric(severe_complication_no_poa)) %>% 
+  filter(year>2)
+
+# model_dt_cmp %>% count(year,severe_complication_no_poa)
+
+# run model
+f = formula(paste("severe_complication_no_poa ~ 1", paste(covariates, collapse = ' + '),
+                  "(1 | procedure)",
+                  sep = " + "))
+
+combined_4_cmp = glmer(formula = f,
+                        data = model_dt_cmp,
+                        family = binomial)
+
+save(combined_4_cmp, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/combined_4_cmp.rdata")
+
+```
+
+```{r}
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/combined_4_cmp.rdata")
+```
+
+
+```{r}
+combined_4_cmp@call$formula
+```
+
+
+*Regression table*
+
+```{r}
+tidy(combined_4_cmp) %>%
+  filter(!str_detect(term, "sd")) %>% 
+  transmute(term,
+            estimate = round(estimate, 3),
+            OR = exp(estimate),
+            OR = round(OR, 3),
+            p_value = round(p.value, 3)) %>% 
+  flextable() %>% 
+  autofit()
+```
+
+
+
+
+## At least in 3 datasets
+
+### Table 1
+
+```{r}
+combined_4_dataset = abs_fc %>% filter(npi %in% inner_joined_all_3npi$npi)
+
+model_dt = prep_model_ready_dt(combined_4_dataset)
+```
+
+*case level*
+
+```{r}
+# case level 
+model_dt %>% 
+  select(!!covariates, -year, - surgeon_yearly_load) %>% 
+  tbl_summary(by = re_cert_bin) %>% 
+  add_p() %>% 
+  as_kable_extra()
+```
+
+*Surgeon level*
+
+```{r}
+# surgeon level
+model_dt %>%
+  distinct(npi, re_cert_bin, surgeon_yearly_load) %>%
+  group_by(re_cert_bin) %>% 
+  summarise(n_surgeon = n_distinct(npi),
+            yearly_case_mean = mean(surgeon_yearly_load),
+            yearly_case_median = median(surgeon_yearly_load)) %>% 
+  flextable() %>% 
+  autofit()
+  
+```
+
+
+### Model
+
+```{r, eval=FALSE}
+# run model
+f = formula(paste("death_30d ~ 1", paste(covariates, collapse = ' + '),
+                  "(1 | procedure)",
+                  sep = " + "))
+
+combined_4_death_3dt = glmer(formula = f,
+                        data = model_dt,
+                        family = binomial)
+
+save(combined_4_death_3dt, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/combined_4_death_3dt.rdata")
+```
+
+
+```{r}
+# load model
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/combined_4_death_3dt.rdata")
+```
+
+
+#### Death
+
+```{r}
+combined_4_death_3dt@call$formula
+```
+
+
+*Regression table*
+
+```{r}
+tidy(combined_4_death_3dt) %>%
+  filter(!str_detect(term, "sd")) %>% 
+  transmute(term,
+            estimate = round(estimate, 3),
+            OR = exp(estimate),
+            OR = round(OR, 3),
+            p_value = round(p.value, 3)) %>% 
+  flextable() %>% 
+  autofit()
+```
+
+#### Severe complication
+
+Since POA flags only become available after 2010, so the patient outcomes from medicare only include 2010-2018.
+
+```{r, eval=FALSE}
+# severe cmp 
+model_dt_cmp = model_dt %>%
+  mutate(severe_complication_no_poa = as.numeric(severe_complication_no_poa)) %>% 
+  filter(year>2)
+
+# model_dt_cmp %>% count(year,severe_complication_no_poa)
+
+# run model
+f = formula(paste("severe_complication_no_poa ~ 1", paste(covariates, collapse = ' + '),
+                  "(1 | procedure)",
+                  sep = " + "))
+
+combined_4_cmp_3dt = glmer(formula = f,
+                        data = model_dt_cmp,
+                        family = binomial)
+
+save(combined_4_cmp_3dt, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/combined_4_cmp_3dt.rdata")
+
+```
+
+```{r}
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/combined_4_cmp_3dt.rdata")
+```
+
+
+```{r}
+combined_4_cmp_3dt@call$formula
+```
+
+
+*Regression table*
+
+```{r}
+tidy(combined_4_cmp_3dt) %>%
+  filter(!str_detect(term, "sd")) %>% 
+  transmute(term,
+            estimate = round(estimate, 3),
+            OR = exp(estimate),
+            OR = round(OR, 3),
+            p_value = round(p.value, 3)) %>% 
+  flextable() %>% 
+  autofit()
+```
