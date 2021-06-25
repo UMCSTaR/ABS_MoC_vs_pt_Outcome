@@ -36,8 +36,13 @@ Describes the cohort selection steps in details
 
 ## Lab notebook
 
-### Table 1
+### How we defined 4 different cohort definitions 
 
+[explore_cohort_definition]()
+
+### Compare the 4 different cohort definitions
+
+[overlap_cohort_definitions](other_docs/lab_notebooks/explore_cohort_definition.pdf)
 
 
 ## Other
