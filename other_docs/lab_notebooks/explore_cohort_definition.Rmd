@@ -118,7 +118,7 @@ The two diagrams below compare the differences between adding medicare specialty
 dataset at */Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_medicare_splty.rdata*
 
 
-## 3. Exclude non-GS surgeons by practice patterns, i.e. surgeon who don't perform cases like general surgery surgeons using number of types of procedures as threshold. 
+## 3. Exclude non-GS surgeons by practice patterns, i.e. surgeons who don't perform cases like general surgery surgeons using number of types of procedures as threshold. 
 
 N types of procedures is defined using median number of types of procedures performed in ABS medicare data cohort. N = 21.
 
@@ -134,6 +134,33 @@ N types of procedures is defined using median number of types of procedures perf
 
 ![](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/cohort_definition_pp.png)
 dataset at */Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_21_types_procs.rdata*
+
+
+## 4. Exclude non-GS surgeons by ABS, fellowship council and practice patterns.
+
+This combines the option1 and 3 by excluding recorded fellowship trained surgeons first, and then excluded surgeons by having performed minimal 5 types of procedures. 5 was defined by the median number of procedures performed by the non re-certified surgeon groups.
+
+**Pros**
+
+1. using our existing fellowship training information from ABS and fellowship council
+2. Fellowship trained surgeons usually perform fewer general surgery procedure types. By using a minimal number of types procedures can help exclude non-gs surgeons.
+3. If we want to manually check surgeon specialties, using practice patterns help reduce number of surgeons in our cohort, comparing with only using ABS and fellowship council data.
+
+**Con**
+
+1. Still not a perfect solution to eliminate fellowship trained surgeons.
+2. Number of types of procedures used to define general surgery surgeons can be argued. 
+
+
+
+
+**Cohort definition diagram**
+
+![](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/cohort_definition_abs_fc_pp.png)
+
+dataset at */Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_fc_medicare_10_20yr_5_type.rdata*
+
+
 
 # Table1 and model results 
 
