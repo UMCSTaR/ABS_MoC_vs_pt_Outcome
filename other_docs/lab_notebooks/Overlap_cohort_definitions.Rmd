@@ -158,7 +158,7 @@ join_n_plot <- function(dt1, dt2) {
 ```
 
 
-Combine all the *inner join groups* and get a cohort that at least met 2 out of the 4 criteria. The combined group are surgeons who are not fellowship trained based on current ABS or fellowship council database, and identified as general surgery specialty in NPPES or met practice pattern criteria.
+Combine all the *inner join groups* and get a cohort that at least met 2 out of the 4 criteria. The combined group are surgeons who are not fellowship trained based on current ABS or fellowship council database, and identified as general surgery specialty in Medicare or met practice pattern criteria.
 
 
 ```{r}
@@ -265,7 +265,7 @@ inner_joined_all_3npi = list(inner_joined_3npi(abs_fc, abs_fc_medicare_splty, pp
 The number of surgeons in the combined 4 criteria group is `r nrow(inner_joined_all_3npi)`.
 
 
-## Descriptive and model results for the combined dataset above
+## Descriptive and model results for the combined inner joined datasets
 
 ## At least in 2 datasets
 
