@@ -23,6 +23,8 @@ Only use data used before 2017
 
 ### Cohort definition
 
+note: included non-us graduates in the cohort. Usually we exclude these graduates. But we decided to include non-us grads based on Andrew Jones MOC paper and our research question.
+
 ### Cohort selection diagram
 
 ![](other_docs/Diagram/cohort_definition/cohort_definition.png)
@@ -36,13 +38,13 @@ Describes the cohort selection steps in details
 
 ## Lab notebook
 
-### How we defined 4 different cohort definitions 
+1. How we defined 4 different cohort definitions 
 
-[explore_cohort_definition]()
+[explore_cohort_definition](other_docs/lab_notebooks/explore_cohort_definition.pdf)
 
-### Compare the 4 different cohort definitions
+2. Compare the 4 different cohort definitions
 
-[overlap_cohort_definitions](other_docs/lab_notebooks/explore_cohort_definition.pdf)
+[overlap_cohort_definitions](other_docs/lab_notebooks/Overlap_cohort_definitions.pdf)
 
 
 ## Other
