@@ -5,7 +5,7 @@ prep_model_ready_dt <- function(data = abs_medicare_10_20yr) {
   
   source("code/functions/prep_medicare_data.R")
   
-  medicare_abs_model_ready = prep_data_for_model(abs_medicare_10_20yr) %>% 
+  medicare_abs_model_ready = prep_data_for_model(data) %>% 
     mutate(re_cert_status = case_when(ReCeverPassed == 0 ~ "failed",
                                       ReCeverPassed == 1 ~ "passed",
                                       is.na(ReCeverPassed) ~ "no record, failed"),

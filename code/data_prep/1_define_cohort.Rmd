@@ -33,10 +33,10 @@ library(kableExtra)
 
 # this document can produce 2 type of cohort
 # 1. bases on ABS and fellowship council
-# 2. bases on ABS and fellowship council and medicare spcialty code
+# 2. bases on ABS and fellowship council and medicare specialty code
 
 # use medicare specialty definition
-medicare_gs_splty = TRUE
+medicare_gs_splty = FALSE
 
 ```
 
