@@ -1,0 +1,51 @@
+---
+title: "Union 4 Cohort Definitions"
+author: "Xilin Chen"
+date: "6/28/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  eval = TRUE,
+  comment = NA,
+  message = FALSE,
+  warning = FALSE,
+  R.options = list(width = 220),
+  dev.args = list(bg = 'transparent'),
+  dev = 'png',
+  layout = "l-body-outset",
+  fig.align = 'center',
+  out.width = '75%',
+  fig.asp = .75,
+  fig.pos = 'H',
+  cache = FALSE, 
+  cache.rebuild = TRUE
+)
+
+library(tidyverse)
+```
+
+## How to define the cohort based on ABS, fellowship council, medicare specialty code and practice patterns criteria
+
+**Background**
+
+This cohort was created by full join the inner joinned datasets. Details can be found on report "other_docs/lab_notebooks/Overlap_cohort_definitions.pdf".
+
+**How the cohort is defined**
+
+ABS and fellowship council data were first used to exclude fellowship trained surgeons, because these two datasets are the most reliable fellowship record data we have. Then, medicare GS definition dataset were used to identify GS surgeons. By using medicare GS definition, 40% of surgeons were excluded. Medicare GS definition is the most stringent qualification criteria. This qualification ensured that surgeons who were identified in Medicare GS definition were *true* general surgery surgeons. However, this step also misclassified a portion of general surgery surgeons to the non-GS group. In summary, Medicare GS code has high sensitivity, but low specificity.
+
+To improve the true fellowship trained surgeons classification, the practice patterns filter was used among the excluded surgeons based on the medicare specialty code exclusion. The excluded surgeons who were qualified based on the practice patterns were added back to our finial analyses cohort. This helps add the falsely classified general surgery surgeons back to our analyses cohort.
+
+
+## Diagram 
+
+The diagram below shows the details of the inclusion and exclusion of our analyses cohort.
+
+
+![union cohort definition](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/union4_def.png)
+
+
+

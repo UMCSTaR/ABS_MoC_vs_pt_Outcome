@@ -52,6 +52,12 @@ First attempt to define cohort. This document included the explanation of the ba
 
 [overlap_cohort_definitions](other_docs/lab_notebooks/Overlap_cohort_definitions.pdf)
 
+4. Union all 4 criteria
+
+keynote: after excluding general surgery surgeons based on Medicare, but use practice patterns criteria to add excluded medicare gs surgeons back to cohort.
+
+[union cohort definition](other_docs/lab_notebooks/union4_cohort_definition.pdf)
+
 
 ## Other
 
