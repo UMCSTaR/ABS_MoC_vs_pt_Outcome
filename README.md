@@ -38,11 +38,17 @@ Describes the cohort selection steps in details
 
 ## Lab notebook
 
-1. How we defined 4 different cohort definitions 
+1. Initial cohort definition
+
+First attempt to define cohort. This document included the explanation of the basics of cohort criteria.
+
+[define_cohort](code/data_prep/1_define_cohort.pdf)
+
+2. How we defined 4 different cohort definitions 
 
 [explore_cohort_definition](other_docs/lab_notebooks/explore_cohort_definition.pdf)
 
-2. Compare the 4 different cohort definitions
+3. Compare the 4 different cohort definitions
 
 [overlap_cohort_definitions](other_docs/lab_notebooks/Overlap_cohort_definitions.pdf)
 
