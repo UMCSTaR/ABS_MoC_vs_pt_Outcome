@@ -1,8 +1,6 @@
 # following the 1_define_chort.Rmd document
 library(tidyverse)
 
-
-
 # Option3: Practice Pattern-----------------------------------------------------------------
 # this script create the 3rd cohort definition: define cohort by practice patterns
 # Exclude non-GS surgeons by practice pattern, 

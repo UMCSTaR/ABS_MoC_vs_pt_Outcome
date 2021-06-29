@@ -18,8 +18,9 @@ Available MOC variables in ABS data:
 - **PFfirstR**:	Pass/Fail result in first ReCert attempt
 - **ReCeverPassed**:	Candidate has passed at least one ReCert exam (1), or attempted but never passed (0)
 
-Only use data used before 2017
+Only use certification data after 1976 and before 2017 
 > They changed their process to an annual certification starting in 2018. Therefore, I think we should only analyze data until 2017, just to keep the method cleaner. We can list this as a limitation. - Andrew Jones
+> ABS introduced time-limited MOC certification in 1976.
 
 ### Cohort definition
 
@@ -29,14 +30,10 @@ note: included non-us graduates in the cohort. Usually we exclude these graduate
 
 ![](other_docs/Diagram/cohort_definition/cohort_definition.png)
 
-### Cohort selection document
-
-Describes the cohort selection steps in details
-
-[define_cohort report](code/data_prep/1_define_cohort.pdf)
-
 
 ## Lab notebook
+
+### Cohort selection document
 
 1. Initial cohort definition
 
@@ -52,7 +49,7 @@ First attempt to define cohort. This document included the explanation of the ba
 
 [overlap_cohort_definitions](other_docs/lab_notebooks/Overlap_cohort_definitions.pdf)
 
-4. Union all 4 criteria
+4. Union all 4 criteria cohort definition
 
 keynote: after excluding general surgery surgeons based on Medicare, but use practice patterns criteria to add excluded medicare gs surgeons back to cohort.
 
