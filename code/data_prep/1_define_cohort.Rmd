@@ -190,7 +190,6 @@ The ABS gives 10 years for surgeons for the recertification. We keep cases that 
 
 ```{r, eval=FALSE}
 # # # link abs with medicare
-#  
 # # medicare
 medicare = data.table::fread("/Volumes/George_Surgeon_Projects/standardized_medicare_data_using_R/analysis_ready_data/ecs_primary_surgeon_medicare2018.csv")
 

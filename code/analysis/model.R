@@ -2,7 +2,7 @@ library(tidyverse)
 library(lme4)
 
 # load dt
-load("X:\\George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata")
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata")
 
 # model -------------------------------------------------------------------
 
@@ -44,31 +44,13 @@ f = formula(paste("death_30d ~ 1", paste(covariates, collapse = ' + '),
                   sep = " + "))
 f
 
-system.time({
-  death_model_bin = glmer(formula = f,
-                          data = medicare_abs_model_ready_no_na,
-                          family = binomial)
-})
 
-save(death_model_bin, file = "X://George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
+death_model_bin = glmer(formula = f,
+                        data = medicare_abs_model_ready_no_na,
+                        family = binomial)
 
 
-# glmmtmb -----------------------------------------------------------------
-library(glmmTMB)
-
-system.time({
-  death_model_bin_glmmtmb = glmmTMB(formula = f,
-                          data = medicare_abs_model_ready,
-                          family = binomial)
-})
-
-# save(death_model_bin_glmmtmb, file = "X://George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin_glmtmb.rdata")
-
-
-
-# bayesian -----------------------------------------------------------------
-
-
+save(death_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
 
 
 

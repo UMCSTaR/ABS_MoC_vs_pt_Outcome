@@ -11,13 +11,11 @@
 # We can use the median number of types cases performed by the defined GS surgeons 
 # from step1 and 2 to define the threshold of number of types cases for GS surgeons.
 
-
-
 library(tidyverse)
 
 # filtered ABS and fellowship council ---------------------------------------------------------------------
 # Filtered out abs and fellowship council specialty training surgeons
-# dataset creation can be found at 1_define_cohort_rmd
+# dataset creation can be found at code/data_prep/create_medicare_10_20yr_dt.R
 load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata")
 
 # medicare specialty ----
