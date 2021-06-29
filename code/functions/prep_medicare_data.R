@@ -12,13 +12,6 @@ prep_data_for_model <- function(
   
   # cohort selection -------------------------------------------------------
   
-  # if only want physicians with minimum number of obs
-  # data = data %>% 
-  #   group_by(npi, facility_clm_yr) %>% 
-  #   mutate(surgeon_yearly_load = n()) %>% 
-  #   ungroup()
-  
-  
   # redefine categorical ------------------------------------------------------
   # race
   # emergency status

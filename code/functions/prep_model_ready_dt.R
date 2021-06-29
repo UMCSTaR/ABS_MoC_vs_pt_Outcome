@@ -17,9 +17,9 @@ prep_model_ready_dt <- function(data = abs_medicare_10_20yr) {
            years_after_initial_certification = facility_clm_yr - Gcertyear)
   
   
-  # check
-  medicare_abs_model_ready %>% distinct(npi, re_cert_status, re_cert_bin) %>% count(re_cert_status, re_cert_bin)
-  n_distinct(medicare_abs_model_ready$e_proc_grp_lbl) #162
+  # # check
+  # medicare_abs_model_ready %>% distinct(npi, re_cert_status, re_cert_bin) %>% count(re_cert_status, re_cert_bin)
+  # n_distinct(medicare_abs_model_ready$e_proc_grp_lbl) #162
   
   
   # choose variables to include in table1. The variables should be consistent with the model covariates.
