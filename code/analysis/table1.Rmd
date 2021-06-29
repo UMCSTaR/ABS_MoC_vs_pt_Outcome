@@ -92,7 +92,7 @@ medicare_abs_model_ready_no_na %>%
 medicare_abs_model_ready_no_na %>% 
   count(procedure) %>% 
   mutate(perc = round(n/sum(n), 2),
-         percentage_in_pass_or_fail_grp = scales::percent(perc)) %>% 
+         percentage = scales::percent(perc)) %>% 
   select(-perc) %>% 
   arrange(-n) %>% 
   slice(1:10) %>% 
