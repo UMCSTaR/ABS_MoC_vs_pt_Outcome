@@ -6,9 +6,9 @@ Association between *initial* American Board of Surgery (ABS) re-certification i
 
 - Main variable: Maintenance of certification (MOC)
 - Outcome: severe complication and death within 30 days
-- Procedure: 162 general surgery procedures
+- Procedure: 162 general surgery procedures 2007 to 2018
 
-## Dataset
+## Data Sources
 
 ### ABS
 
@@ -22,13 +22,21 @@ Only use certification data after 1976 and before 2017
 > They changed their process to an annual certification starting in 2018. Therefore, I think we should only analyze data until 2017, just to keep the method cleaner. We can list this as a limitation. - Andrew Jones
 > ABS introduced time-limited MOC certification in 1976.
 
-### Cohort definition
+### Fellowship Council data
+
+Use to excluded fellowship trained surgeons
+
+### Medicare general surgery surgeons Specialty data
+
+Based on medicare Carrier claim data, medicare general surgery surgeons are defined as surgeons that have never files any claims that are not GS specialty code.
+
+## Cohort definition Diagram
 
 note: included non-us graduates in the cohort. Usually we exclude these graduates. But we decided to include non-us grads based on Andrew Jones MOC paper and our research question.
 
 ### Cohort selection diagram
 
-![](other_docs/Diagram/cohort_definition/cohort_definition.png)
+![](other_docs/Diagram/cohort_definition/union4_def.png)
 
 
 ## Lab notebook
