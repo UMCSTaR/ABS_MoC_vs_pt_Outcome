@@ -67,6 +67,8 @@ covariates = c(
 
 ## Table1
 
+Complete cases
+
 ### Case level
 
 ```{r}
@@ -81,6 +83,10 @@ medicare_abs_model_ready_no_na %>%
 ```{r}
 medicare_abs_model_ready_no_na %>% 
   distinct(npi, re_cert_bin, surgeon_yearly_load) %>% 
+  group_by(npi) %>% 
+  mutate(mean_yearly_case_per_sug = mean(surgeon_yearly_load)) %>% 
+  ungroup() %>% 
+  distinct(npi, re_cert_bin, mean_yearly_case_per_sug) %>% 
   select(-npi) %>% 
   tbl_summary(by = re_cert_bin) %>% 
   add_p()
