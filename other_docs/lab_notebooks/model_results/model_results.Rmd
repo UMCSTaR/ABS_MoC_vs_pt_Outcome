@@ -1,0 +1,63 @@
+---
+title: "Model Results"
+author: "Xilin Chen"
+date: "4/20/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  eval = TRUE,
+  comment = NA,
+  message = FALSE,
+  warning = FALSE,
+  R.options = list(width = 220),
+  dev.args = list(bg = 'transparent'),
+  dev = 'png',
+  layout = "l-body-outset",
+  fig.align = 'center',
+  out.width = '75%',
+  fig.asp = .75,
+  fig.pos = 'H',
+  cache = FALSE, 
+  cache.rebuild = TRUE
+)
+
+library(tidyverse)
+library(kableExtra)
+library(broom.mixed)
+library(lme4)
+library(emmeans)
+library(ggeffects)
+```
+
+## Death 30days
+
+```{r}
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
+```
+
+### Regression table
+
+Fixed effect table
+```{r}
+tidy(death_model_bin) %>%
+  filter(!str_detect(term, "sd")) %>% 
+  transmute(term,
+            estimate,
+            OR = exp(estimate),
+            p_value = round(p.value, 3)) %>% 
+  kable() %>% 
+  kable_styling(full_width = F)
+```
+
+
+### Risk asjusted rates
+
+[death](images/adjusted_outcome_rates_death.png)
+
+
+
+
+

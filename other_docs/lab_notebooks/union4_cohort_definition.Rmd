@@ -31,7 +31,7 @@ library(tidyverse)
 
 **Background**
 
-This cohort was created by full join the inner joinned datasets. Details can be found on report "other_docs/lab_notebooks/Overlap_cohort_definitions.pdf".
+This cohort was created by full join the inner joined datasets. Details can be found on report "other_docs/lab_notebooks/Overlap_cohort_definitions.pdf".
 
 **How the cohort is defined**
 

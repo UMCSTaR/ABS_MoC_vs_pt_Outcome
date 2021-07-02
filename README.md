@@ -63,6 +63,14 @@ keynote: after excluding general surgery surgeons based on Medicare, but use pra
 
 [union cohort definition](other_docs/lab_notebooks/union4_cohort_definition.pdf)
 
+### Results
+
+1. table 1
+
+only based on complete cases
+
+[table1](code/analysis/table1.pdf)
+
 
 ## Other
 
