@@ -47,7 +47,7 @@ note: included non-us graduates in the cohort. Usually we exclude these graduate
 
 First attempt to define cohort. This document included the explanation of the basics of cohort criteria.
 
-[define_cohort](code/data_prep/1_define_cohort.pdf)
+[define_cohort](code/data_prep/archived/1_define_cohort.pdf)
 
 2. How we defined 4 different cohort definitions 
 
@@ -57,9 +57,9 @@ First attempt to define cohort. This document included the explanation of the ba
 
 [overlap_cohort_definitions](other_docs/lab_notebooks/Overlap_cohort_definitions.pdf)
 
-4. Union all 4 criteria cohort definition
+4. Union all 4 criteria cohort definition. This is the final cohort we use in analyses.
 
-keynote: after excluding general surgery surgeons based on Medicare, but use practice patterns criteria to add excluded medicare gs surgeons back to cohort.
+keynote: after excluding general surgery surgeons based on Medicare, then use practice patterns criteria to add excluded medicare gs surgeons back to cohort.
 
 [union cohort definition](other_docs/lab_notebooks/union4_cohort_definition.pdf)
 

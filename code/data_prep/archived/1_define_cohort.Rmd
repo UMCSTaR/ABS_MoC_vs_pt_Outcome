@@ -98,9 +98,6 @@ if (medicare_gs_splty == FALSE) {
     filter(fellowship == "FALSE", gs_specialty_cms == "TRUE")
 }
 
-
-# include foreign grads
-        # us_medschool != "Foreign_MG" | is.na(us_medschool))
 ```
 
 
@@ -232,7 +229,7 @@ nrow(abs_medicare_10_20yr) #976956
 n_distinct(abs_medicare_10_20yr$npi) #11444
 
 
-if(!medicare_gs_splty) {$
+if(!medicare_gs_splty) {
   save(abs_medicare_10_20yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata")
   save(abs_medicare_npi, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_npi.rdata")
 

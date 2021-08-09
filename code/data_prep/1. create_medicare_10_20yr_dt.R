@@ -1,4 +1,4 @@
-# this code were from 1_define_cohort.Rmd
+# this code were from archived/1_define_cohort.Rmd
 # but more organized with less text explanation of why we choose the filters
 # if you want to know why the filters were chosen, refer to the 1_define_cohort.pdf document.
 # in the end we created abs_medicare_10_20yr.rdata 
