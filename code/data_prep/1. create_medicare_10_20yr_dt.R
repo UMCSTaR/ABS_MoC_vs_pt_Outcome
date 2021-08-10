@@ -28,13 +28,17 @@ abs_gs = abs_cert %>%
   filter(!npi %in% fellow_council$npi, # fellowship council
          fellowship == F) # ABS fellowship
 
-# 1976-2017 certification year
-abs_gs_76_17 = abs_gs %>% 
+# 1987-2017 certification year
+abs_gs_87_17 = abs_gs %>% 
   mutate(cutoff_2007 = ifelse(Gcertyear+10>=2017, "exlcude", "include")) %>% 
-  filter(cutoff_2007 == "include" | is.na(cutoff_2007), Gcertyear>1975)
+  filter(cutoff_2007 == "include" | is.na(cutoff_2007), Gcertyear>1987)
+
+# the reason to start with 1987 is because our medicare data starts at 2007,
+# we only analyze data 10-20 years after initial certification. surgeons who graudated before 
+# 1987 don't have medicare outcomes
 
 ## recat recertification status
-abs_w_recert = abs_gs_76_17 %>%
+abs_w_recert = abs_gs_87_17 %>%
   mutate(
     npi = as.character(npi),
     Recert_status = case_when(
