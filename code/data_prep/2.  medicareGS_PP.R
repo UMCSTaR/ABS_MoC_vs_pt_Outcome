@@ -65,6 +65,8 @@ npi_not_medicare_gs = abs_medicare_10_20yr %>%
 npi_qualified_pp = npi_not_medicare_gs %>% 
   filter(n_type>npi_procedure_type_summary$median)
 
+nrow(npi_not_medicare_gs) - nrow(npi_qualified_pp)
+
 
 ## Union medicare gs and pp qualified  --------
 abs_medicare_union = abs_medicare_10_20yr %>% 

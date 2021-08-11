@@ -18,13 +18,12 @@ covariates = c(
   'ses',
   'emergent_admit',
   'year',
-  'surgeon_yearly_load_std',
+  # 'surgeon_yearly_load_std',
   "had_assist_surg"
   # hospital--
   # 'hospital_icu',
   # 'hospital_urban',
   # 'hospital_beds_gt_350',
-  # 'hospital_icu',
   # 'hospital_rn2bed_ratio_std',
   # 'hospital_mcday2inptday_ratio_std'
 )
