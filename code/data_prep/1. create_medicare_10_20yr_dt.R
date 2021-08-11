@@ -28,10 +28,14 @@ abs_gs = abs_cert %>%
   filter(!npi %in% fellow_council$npi, # fellowship council
          fellowship == F) # ABS fellowship
 
+nrow(abs_cert) - nrow(abs_gs)
+
 # 1987-2017 certification year
 abs_gs_87_17 = abs_gs %>% 
   mutate(cutoff_2007 = ifelse(Gcertyear+10>=2017, "exlcude", "include")) %>% 
   filter(cutoff_2007 == "include" | is.na(cutoff_2007), Gcertyear>1987)
+
+nrow(abs_gs) - nrow(abs_gs_87_17)
 
 # the reason to start with 1987 is because our medicare data starts at 2007,
 # we only analyze data 10-20 years after initial certification. surgeons who graudated before 
@@ -55,13 +59,15 @@ medicare = data.table::fread("/Volumes/George_Surgeon_Projects/standardized_medi
 abs_medicare = abs_w_recert %>%
   inner_join(medicare, by = c("npi" = "id_physician_npi"))
 
+nrow(abs_w_recert) - n_distinct(abs_medicare$npi)
 
 ## filter only keep 10-20 years after initial certfication medicare cases 
 abs_medicare_10_20yr = abs_medicare %>%
   filter(facility_clm_yr - Gcertyear>10,
          facility_clm_yr - Gcertyear<=20)
 
-
+n_distinct(abs_medicare_10_20yr$npi) - n_distinct(abs_medicare$npi)
+nrow(abs_medicare_10_20yr)
 
 # save data ---------------------------------------------------------------
 save(abs_medicare_10_20yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata")
