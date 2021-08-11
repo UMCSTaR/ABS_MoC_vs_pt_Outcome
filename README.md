@@ -36,7 +36,7 @@ note: included non-us graduates in the cohort. Usually we exclude these graduate
 
 ### Cohort selection diagram
 
-![](other_docs/Diagram/cohort_definition/union4_def.png)
+![](other_docs/Diagram/cohort_definition/publication.png)
 
 
 ## Lab notebook

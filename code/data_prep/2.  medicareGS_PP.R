@@ -18,7 +18,7 @@ library(tidyverse)
 # dataset creation can be found at code/data_prep/create_medicare_10_20yr_dt.R
 load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata")
 
-# medicare specialty ----
+## Keep medicare GS specialty ----
 abs_medicare_10_20yr_medicare = abs_medicare_10_20yr %>% 
   filter(gs_specialty_cms)
 
@@ -26,7 +26,11 @@ abs_medicare_10_20yr %>%
   distinct(npi, gs_specialty_cms) %>% 
   count(gs_specialty_cms)
 
-# practice patterns ----
+# case
+abs_medicare_10_20yr %>% 
+  count(gs_specialty_cms)
+
+## practice patterns ----
 # number of types of procedures
 # 1. using medicare specialty
 npi_procedure_type = abs_medicare_10_20yr_medicare %>%
@@ -43,29 +47,13 @@ npi_procedure_type_summary = npi_procedure_type %>%
 
 quantile(npi_procedure_type$n_type)
 npi_procedure_type_summary
-# n_surgon mean_n_type_proc median
-# <int>            <dbl>  <int>
-# 6887             28.3     27
+# n_surgeon mean_n_type_proc median
+# <int>            <dbl>  <dbl>
+# 6636             29.8     28
 
-# # 2. not using medicare specialty
-# npi_procedure_type = abs_medicare_10_20yr %>%
-#   group_by(npi) %>%
-#   mutate(n_type = length(unique(e_proc_grp_lbl))) %>%
-#   select(npi, n_type, Recert_status) %>%
-#   distinct() %>%
-#   ungroup()
-# 
-# npi_procedure_type %>% 
-#   summarise(n_suregon = n(),
-#             mean_n_type_proc = mean(n_type),
-#             median = median(n_type))
-# 
-# # n_surgon mean_n_type_proc median
-# # <int>            <dbl>  <dbl>
-# # 11444             23.4     21
-
+# not qualified medicare general surgery surgeons
+# and n_type; number of types of procedures
 npi_not_medicare_gs = abs_medicare_10_20yr %>% 
-  # not qualified surgeons
   filter(!gs_specialty_cms) %>% 
   group_by(npi) %>%
   mutate(n_type = length(unique(e_proc_grp_lbl))) %>%
@@ -73,17 +61,18 @@ npi_not_medicare_gs = abs_medicare_10_20yr %>%
   distinct() %>%
   ungroup()
   
+# filter surgeon have >median
 npi_qualified_pp = npi_not_medicare_gs %>% 
   filter(n_type>npi_procedure_type_summary$median)
 
 
-# Union medicare gs and pp qualified 
+## Union medicare gs and pp qualified  --------
 abs_medicare_union = abs_medicare_10_20yr %>% 
   filter(gs_specialty_cms |
            npi %in% npi_qualified_pp$npi)
 
-n_distinct(abs_medicare_union$npi) #7937
-nrow(abs_medicare_union) # 853795
+n_distinct(abs_medicare_union$npi) #7644
+nrow(abs_medicare_union) # 892045
 
 
 abs_medicare_union %>% 

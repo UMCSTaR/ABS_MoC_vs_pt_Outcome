@@ -1,4 +1,8 @@
+# archive script, we decided to use the combination cohort definition option4 
+
+
 # following the 1_define_chort.Rmd document
+# listed in this script
 library(tidyverse)
 
 # Option3: Practice Pattern-----------------------------------------------------------------
