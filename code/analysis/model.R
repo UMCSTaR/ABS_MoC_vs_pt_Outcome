@@ -4,6 +4,8 @@ library(lme4)
 # load dt
 load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata")
 
+medicare_abs_model_ready_no_na %>% count(year)
+
 # model -------------------------------------------------------------------
 
 covariates = c(
@@ -19,13 +21,13 @@ covariates = c(
   'emergent_admit',
   'year',
   # 'surgeon_yearly_load_std',
-  "had_assist_surg"
+  "had_assist_surg",
   # hospital--
-  # 'hospital_icu',
-  # 'hospital_urban',
-  # 'hospital_beds_gt_350',
-  # 'hospital_rn2bed_ratio_std',
-  # 'hospital_mcday2inptday_ratio_std'
+  'hospital_icu',
+  'hospital_urban',
+  'hospital_beds_gt_350',
+  'hospital_rn2bed_ratio_std',
+  'hospital_mcday2inptday_ratio_std'
 )
 
 
