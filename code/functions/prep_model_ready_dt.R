@@ -35,20 +35,19 @@ prep_model_ready_dt <- function(data = abs_medicare_10_20yr) {
     'age_at_admit_std',
     'AHRQ_score_std',
     'race_white',
-    'ses',
+    'ses',  # ses had a 7% missing too
     'emergent_admit',
     'year',
-    'surgeon_yearly_load_std',
+    # 'surgeon_yearly_load_std',
     'years_after_initial_certification',
-    "had_assist_surg"
+    "had_assist_surg",
     # hospital--
     # not until AHA had 2018 data
-    # 'hospital_icu',
-    # 'hospital_urban',
-    # 'hospital_beds_gt_350',
-    # 'hospital_icu',
-    # 'hospital_rn2bed_ratio_std',
-    # 'hospital_mcday2inptday_ratio_std'
+    # 'hospital_icu',  # have 10% missing
+    'hospital_urban',
+    'hospital_beds_gt_350',
+    'hospital_rn2bed_ratio_std',
+    'hospital_mcday2inptday_ratio_std'
   )
   
   medicare_abs_model_ready = medicare_abs_model_ready %>%

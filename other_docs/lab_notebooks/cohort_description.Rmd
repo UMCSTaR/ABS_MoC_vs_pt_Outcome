@@ -1,0 +1,100 @@
+---
+title: "Cohort Definition"
+author: "Xilin Chen"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+        toc: yes
+        toc_depth: 4
+        toc_float:
+          toc_collapsed: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = F,                                     # code
+  message = F,
+  warning = F,
+  error = F,
+  comment = NA,
+  R.options = list(width = 220),
+  dev.args = list(bg = 'transparent'),          # viz
+  fig.align = 'center',
+  cache = F
+)
+library(tidyverse)
+library(gtsummary)
+library(kableExtra)
+library(patchwork)
+library(flextable)
+```
+
+
+### Cohort Diagram
+
+![](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/publication_5_17.png)
+
+
+### Table1
+
+```{r}
+# load data
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata")
+
+medicare_abs_model_ready_no_na = medicare_abs_model_ready_no_na %>% 
+  rename(severe_complication = severe_complication_no_poa)
+
+covariates = c(
+  # choose one cert status--
+  # 're_cert_status',
+  're_cert_bin',
+  # other--
+  'flg_male',
+  'age_at_admit',
+  'AHRQ_score',
+  'race_white',
+  'ses',
+  'emergent_admit',
+  'year',
+  'surgeon_yearly_load',
+  'years_after_initial_certification',
+  "had_assist_surg",
+  # hospital--
+  'hospital_urban',
+  'hospital_beds_gt_350',
+  'val_hosp_rn2inptday_ratio',
+  'val_hosp_mcday2inptday_ratio',
+  "death_30d",
+  "severe_complication"
+)
+
+```
+
+
+## Table1
+
+
+### Number of Surgeons at each certification status
+
+```{r}
+medicare_abs_model_ready_no_na %>%
+  distinct(npi, re_cert_bin) %>%
+  count(re_cert_bin, name = "n of surgeons") %>% 
+  kable() %>% 
+  kable_styling(full_width = F)
+```
+
+
+Complete cases
+
+### Case level
+
+```{r}
+medicare_abs_model_ready_no_na %>% 
+  select(!!covariates) %>% 
+  tbl_summary(by = re_cert_bin) %>% 
+  add_p() %>% 
+  as_flex_table()
+```
+
+severe complication outcomes only available after 2010

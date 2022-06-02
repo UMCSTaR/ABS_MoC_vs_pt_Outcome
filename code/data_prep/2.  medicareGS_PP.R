@@ -26,6 +26,8 @@ abs_medicare_10_20yr %>%
   distinct(npi, gs_specialty_cms) %>% 
   count(gs_specialty_cms)
 
+n_distinct(abs_medicare_10_20yr$npi) - n_distinct(abs_medicare_10_20yr_medicare$npi)
+
 # case
 abs_medicare_10_20yr %>% 
   count(gs_specialty_cms)

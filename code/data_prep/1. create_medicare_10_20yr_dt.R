@@ -38,7 +38,7 @@ abs_gs_87_17 = abs_gs %>%
 nrow(abs_gs) - nrow(abs_gs_87_17)
 
 # the reason to start with 1987 is because our medicare data starts at 2007,
-# we only analyze data 10-20 years after initial certification. surgeons who graudated before 
+# we only analyze data 10-20 years after initial certification. surgeons who graduated before 
 # 1987 don't have medicare outcomes
 
 ## recat recertification status
@@ -61,7 +61,7 @@ abs_medicare = abs_w_recert %>%
 
 nrow(abs_w_recert) - n_distinct(abs_medicare$npi)
 
-## filter only keep 10-20 years after initial certfication medicare cases 
+## filter only keep 10-20 years after initial certification medicare cases 
 abs_medicare_10_20yr = abs_medicare %>%
   filter(facility_clm_yr - Gcertyear>10,
          facility_clm_yr - Gcertyear<=20)
