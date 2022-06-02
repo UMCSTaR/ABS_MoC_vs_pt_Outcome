@@ -1,0 +1,33 @@
+---
+title: "Medicare analytic File procedures"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(data.table)
+library(tidyverse)
+```
+
+## R Markdown
+
+```{r}
+medicare_dt = fread("X://George_Surgeon_Projects/standardized_medicare_data_using_R/analysis_ready_data/ecs_primary_surgeon_medicare2018.csv")
+
+# n cases
+procedure_cnt = medicare_dt %>% count(e_proc_grp_lbl, sort = T) 
+
+# outcomes
+procedure_cnt_outcome = medicare_dt %>% 
+  group_by(e_proc_grp, e_proc_grp_lbl) %>% 
+  summarise(n_case = n(),
+            death_30day = mean(flg_death_30d),
+            severe_cmp = mean(flg_cmp_po_severe),
+            reop = mean(flg_util_reop),
+            readmit = mean(flg_readmit_30d))
+
+readr::write_csv(procedure_cnt_outcome, "X:/George_Surgeon_Projects/standardized_medicare_data_using_R/QA/procedure_cnt_outcome.csv")
+  
+```
+
