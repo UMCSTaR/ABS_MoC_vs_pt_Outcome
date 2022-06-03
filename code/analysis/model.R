@@ -1,13 +1,13 @@
 library(tidyverse)
-library(lme4)
+library(glmmTMB)
 
 # load dt
 load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata")
+load("x:\\/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata") # pc location
 
 medicare_abs_model_ready_no_na %>% count(year)
 
 # model -------------------------------------------------------------------
-
 covariates = c(
   # choose one cert status--
   # 're_cert_status',
@@ -23,7 +23,6 @@ covariates = c(
   # 'surgeon_yearly_load_std',
   "had_assist_surg",
   # hospital--
-  'hospital_icu',
   'hospital_urban',
   'hospital_beds_gt_350',
   'hospital_rn2bed_ratio_std',
@@ -33,8 +32,10 @@ covariates = c(
 
 all(covariates %in% names(medicare_abs_model_ready_no_na))
 
+test = medicare_abs_model_ready_no_na %>% drop_na(!!covariates)
 
-# lme4 --------------------------------------------------------------------
+
+# GLME --------------------------------------------------------------------
 # random effect 
 # id
 # 'npi', 
@@ -43,16 +44,41 @@ all(covariates %in% names(medicare_abs_model_ready_no_na))
 f = formula(paste("death_30d ~ 1", paste(covariates, collapse = ' + '),
                   "(1 | procedure)",
                   sep = " + "))
-f
 
-
-death_model_bin = glmer(formula = f,
+death_model_bin = glmmTMB(formula = f,
                         data = medicare_abs_model_ready_no_na,
                         family = binomial)
 
+broom.mixed::tidy(death_model_bin)
+summary(death_model_bin)
+
 
 save(death_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
+save(death_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
 
+
+# complication
+medicare_abs_model_ready_no_na = medicare_abs_model_ready_no_na %>% 
+  mutate(severe_complication = ifelse(severe_complication_no_poa == "N/A (no var)", NA, severe_complication_no_poa),
+         severe_complication = as.numeric(severe_complication))
+
+medicare_abs_model_ready_no_na %>% count(severe_complication)
+  
+
+f = formula(paste("severe_complication ~ 1", paste(covariates, collapse = ' + '),
+                  "(1 | procedure)",
+                  sep = " + "))
+
+cmp_model_bin = glmmTMB(formula = f,
+                          data = medicare_abs_model_ready_no_na,
+                          family = binomial)
+
+broom.mixed::tidy(cmp_model_bin)
+summary(cmp_model_bin)
+
+
+save(cmp_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin.rdata")
+save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin.rdata")
 
 
 

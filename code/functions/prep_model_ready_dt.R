@@ -42,7 +42,6 @@ prep_model_ready_dt <- function(data = abs_medicare_10_20yr) {
     'years_after_initial_certification',
     "had_assist_surg",
     # hospital--
-    # not until AHA had 2018 data
     # 'hospital_icu',  # have 10% missing
     'hospital_urban',
     'hospital_beds_gt_350',
