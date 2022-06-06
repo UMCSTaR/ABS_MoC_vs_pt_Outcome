@@ -71,9 +71,6 @@ covariates = c(
 ```
 
 
-## Table1
-
-
 ### Number of Surgeons at each certification status
 
 ```{r}
