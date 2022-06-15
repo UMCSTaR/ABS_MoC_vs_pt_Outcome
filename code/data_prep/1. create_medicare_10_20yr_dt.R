@@ -54,7 +54,11 @@ abs_w_recert = abs_gs_87_17 %>%
 
 
 # Link with Medicare data -------------------------------------------------
-medicare = data.table::fread("/Volumes/George_Surgeon_Projects/standardized_medicare_data_using_R/analysis_ready_data/ecs_primary_surgeon_medicare2018.csv")
+# medicare = data.table::fread("/Volumes/George_Surgeon_Projects/standardized_medicare_data_using_R/analysis_ready_data/ecs_primary_surgeon_medicare2018.csv")
+# Core medicare procedure
+medicare = data.table::fread("/Volumes/George_Surgeon_Projects/ECV_2.0/data/ecv_medicare_procedures.csv")
+# medicare %>% 
+#   count(score_core_advanced)
 
 abs_medicare = abs_w_recert %>%
   inner_join(medicare, by = c("npi" = "id_physician_npi"))
@@ -71,5 +75,6 @@ nrow(abs_medicare_10_20yr)
 
 # save data ---------------------------------------------------------------
 save(abs_medicare_10_20yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata")
+# save(abs_medicare_10_20yr, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/abs_medicare_10_20yr.rdata")
 
 
