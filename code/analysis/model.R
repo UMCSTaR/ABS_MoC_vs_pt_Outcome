@@ -5,6 +5,9 @@ library(glmmTMB)
 load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata")
 load("x:\\/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata") # pc location
 
+# core procedure cohort
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/medicare_abs_model_ready_no_na.rdata") 
+
 medicare_abs_model_ready_no_na %>% count(year)
 
 # model -------------------------------------------------------------------
@@ -32,8 +35,6 @@ covariates = c(
 
 all(covariates %in% names(medicare_abs_model_ready_no_na))
 
-test = medicare_abs_model_ready_no_na %>% drop_na(!!covariates)
-
 
 # GLME --------------------------------------------------------------------
 # random effect 
@@ -55,6 +56,10 @@ summary(death_model_bin)
 
 save(death_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
 save(death_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
+
+# core procedure
+save(death_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/death_model_bin.rdata")
+
 
 
 # complication
@@ -79,6 +84,9 @@ summary(cmp_model_bin)
 
 save(cmp_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin.rdata")
 save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin.rdata")
+
+# core procedure
+save(cmp_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/cmp_model_bin.rdata")
 
 
 
