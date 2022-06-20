@@ -6,7 +6,7 @@ load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_re
 load("x:\\/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata") # pc location
 
 # core procedure cohort
-load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/medicare_abs_model_ready_no_na.rdata") 
+load("x:\\George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/medicare_abs_model_ready_no_na.rdata") 
 
 medicare_abs_model_ready_no_na %>% count(year)
 
@@ -58,7 +58,7 @@ save(death_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/mo
 save(death_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
 
 # core procedure
-save(death_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/death_model_bin.rdata")
+save(death_model_bin, file = "X:\\/George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/death_model_bin.rdata")
 
 
 
@@ -86,7 +86,7 @@ save(cmp_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/mode
 save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin.rdata")
 
 # core procedure
-save(cmp_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/cmp_model_bin.rdata")
+save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/cmp_model_bin.rdata")
 
 
 
