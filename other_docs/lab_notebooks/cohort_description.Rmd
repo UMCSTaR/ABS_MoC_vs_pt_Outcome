@@ -79,6 +79,12 @@ medicare_abs_model_ready_no_na %>%
   count(re_cert_bin, name = "n of surgeons") %>% 
   kable() %>% 
   kable_styling(full_width = F)
+
+medicare_abs_model_ready_no_na %>%
+  distinct(npi, Recert_status) %>%
+  count(Recert_status, name = "n of surgeons") %>% 
+  kable(caption = "breakdown of failed surgeons: no record of attempting and record failed ") %>% 
+  kable_styling(full_width = F)
 ```
 
 
