@@ -8,6 +8,9 @@ load("x:\\/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_
 # core procedure cohort
 load("x:\\George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/medicare_abs_model_ready_no_na.rdata") 
 
+# removed multi proc
+medicare_abs_model_ready_no_na = readRDS("x:\\/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na_remove_multi_proc.rds") 
+
 medicare_abs_model_ready_no_na %>% count(year)
 
 # model -------------------------------------------------------------------
@@ -43,7 +46,7 @@ all(covariates %in% names(medicare_abs_model_ready_no_na))
 # 'id_hospital'
 
 f = formula(paste("death_30d ~ 1", paste(covariates, collapse = ' + '),
-                  "(1 | procedure)",
+                  "(1 | procedure)", "(1 | npi)", "(1|id_hospital)",
                   sep = " + "))
 
 death_model_bin = glmmTMB(formula = f,
@@ -60,7 +63,8 @@ save(death_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/d
 # core procedure
 save(death_model_bin, file = "X:\\/George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/death_model_bin.rdata")
 
-
+# remove multi proc
+save(death_model_bin, file = "X:\\/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin_remove_multi_proc.rdata")
 
 # complication
 medicare_abs_model_ready_no_na = medicare_abs_model_ready_no_na %>% 
@@ -71,7 +75,7 @@ medicare_abs_model_ready_no_na %>% count(severe_complication)
   
 
 f = formula(paste("severe_complication ~ 1", paste(covariates, collapse = ' + '),
-                  "(1 | procedure)",
+                  "(1 | procedure)", "(1 | npi)", "(1|id_hospital)",
                   sep = " + "))
 
 cmp_model_bin = glmmTMB(formula = f,
@@ -88,5 +92,7 @@ save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/cmp
 # core procedure
 save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/cmp_model_bin.rdata")
 
+# remove multi proc
+save(cmp_model_bin, file = "X:\\/George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin_remove_multi_proc.rdata")
 
 
