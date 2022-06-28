@@ -1,0 +1,135 @@
+---
+title: "Maintainance of Certification Analysis Explore"
+author: "Xilin Chen"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = F,                                     # code
+  message = F,
+  warning = F,
+  error = F,
+  comment = NA,
+  R.options = list(width = 220),
+  dev.args = list(bg = 'transparent'),          # viz
+  fig.align = 'center',
+  cache = F
+)
+
+library(tidyverse)
+library(kableExtra)
+```
+
+```{r}
+# load data
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/medicare_abs_model_ready_no_na.rdata") 
+
+medicare_abs_model_ready_no_na = medicare_abs_model_ready_no_na %>% 
+  mutate(re_cert_passed = ifelse(re_cert_bin  == "Failed", 0, 1))
+```
+
+## Propensity Score using GLM
+```{r, cache = TRUE}
+covariates = c(
+  # choose one cert status--
+  # 're_cert_bin',
+  # other--
+  'flg_male',
+  'age_at_admit_std',
+  'AHRQ_score_std',
+  'race_white',
+  'ses',
+  'emergent_admit',
+  'year',
+  "had_assist_surg",
+  # hospital--
+  'hospital_urban',
+  'hospital_beds_gt_350',
+  'hospital_rn2bed_ratio_std',
+  'hospital_mcday2inptday_ratio_std'
+)
+
+# GLM --------------------------------------------------------------------
+
+f = formula(paste("re_cert_passed ~ 1 +", paste(covariates, collapse = ' + ')))
+
+glm_model = glm(formula = f,
+    data = medicare_abs_model_ready_no_na,
+    family = binomial)
+
+prob = predict(glm_model, type = "response") 
+
+prob_status = cbind(medicare_abs_model_ready_no_na %>% select(re_cert_bin),
+             prob) %>% 
+  mutate(log_prob = log(prob))
+
+ggplot(data = prob_status,
+       aes(x = re_cert_bin, y = prob)) +
+  geom_boxplot() +
+  theme_classic()
+
+ggplot(data = prob_status,
+       aes(x = re_cert_bin, y = log(prob))) +
+  geom_boxplot() +
+  theme_classic()
+
+
+prob_status %>%
+  group_by(re_cert_bin) %>%
+  summarise(
+    n = n(),
+    lr_quartile = quantile(prob, 0.25),
+    mean = mean(prob),
+    upr_quartile = quantile(prob, 0.75)
+  ) %>% 
+  kable() %>% 
+  kable_styling(full_width = F)
+  
+```
+
+
+## Raw outcome rates per surgeon
+
+
+### Complication
+
+```{r}
+cmp_rate_npi = medicare_abs_model_ready_no_na %>% 
+  filter(severe_complication_no_poa %in% c(0,1)) %>% 
+  mutate(severe_complication_no_poa = as.numeric(severe_complication_no_poa)) %>% 
+  group_by(npi, re_cert_bin, Recert_status) %>% 
+  summarise(severe_cmp_rate = mean(severe_complication_no_poa)) %>% 
+  ungroup()
+  
+cmp_rate_npi %>% 
+  ggplot(aes(x = severe_cmp_rate)) +
+  geom_histogram() +
+  facet_wrap(~Recert_status, scales="free_y",
+             nrow = 3) +
+  labs(y = "number of surgeon",
+       x= "mean complication rates")
+```
+
+
+### Death
+
+```{r}
+death_rate_npi = medicare_abs_model_ready_no_na %>% 
+  group_by(npi, re_cert_bin, Recert_status) %>% 
+  summarise(death_rate = mean(death_30d)) %>% 
+  ungroup()
+  
+death_rate_npi %>% 
+  ggplot(aes(x = death_rate)) +
+  geom_histogram() +
+  facet_wrap(~Recert_status, scales="free_y",
+             nrow = 3) +
+  labs(y = "number of surgeon",
+       x= "mean death rates")
+```
+
+
+
+
