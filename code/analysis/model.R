@@ -96,3 +96,58 @@ save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/cor
 save(cmp_model_bin, file = "X:\\/George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin_remove_multi_proc.rdata")
 
 
+
+# re-certification 3 groups ------------------------------------------------
+load("x:\\/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata") # pc location
+
+covariates = c(
+  # choose one cert status--
+  're_cert_status',
+  # other--
+  'flg_male',
+  'age_at_admit_std',
+  'AHRQ_score_std',
+  'race_white',
+  'ses',
+  'emergent_admit',
+  'year',
+  # 'surgeon_yearly_load_std',
+  "had_assist_surg",
+  # hospital--
+  'hospital_urban',
+  'hospital_beds_gt_350',
+  'hospital_rn2bed_ratio_std',
+  'hospital_mcday2inptday_ratio_std'
+)
+
+# death
+f = formula(paste("death_30d ~ 1", paste(covariates, collapse = ' + '),
+                  "(1 | procedure)",
+                  sep = " + "))
+
+medicare_abs_model_ready_no_na = medicare_abs_model_ready_no_na %>%
+  mutate(re_cert_status = factor(re_cert_status, levels = c("failed", "passed", "no record, failed"))) 
+
+death_model_bin = glmmTMB(formula = f,
+                          data = medicare_abs_model_ready_no_na,
+                          family = binomial)
+
+summary(death_model_bin)
+
+save(death_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin_3_cert_cat.rdata")
+
+# complication
+medicare_abs_model_ready_no_na = medicare_abs_model_ready_no_na %>% 
+  mutate(severe_complication = ifelse(severe_complication_no_poa == "N/A (no var)", NA, severe_complication_no_poa),
+         severe_complication = as.numeric(severe_complication))
+
+
+f = formula(paste("severe_complication ~ 1", paste(covariates, collapse = ' + '),
+                  "(1 | procedure)", 
+                  sep = " + "))
+
+cmp_model_bin = glmmTMB(formula = f,
+                        data = medicare_abs_model_ready_no_na,
+                        family = binomial)
+
+save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin_3_cert_cat.rdata")
