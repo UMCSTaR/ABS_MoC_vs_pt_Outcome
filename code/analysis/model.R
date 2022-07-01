@@ -150,4 +150,6 @@ cmp_model_bin = glmmTMB(formula = f,
                         data = medicare_abs_model_ready_no_na,
                         family = binomial)
 
+summary(cmp_model_bin)
+
 save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin_3_cert_cat.rdata")
