@@ -99,6 +99,8 @@ save(cmp_model_bin, file = "X:\\/George_Surgeon_Projects/MOC_vs_Outcome/model/cm
 
 # re-certification 3 groups ------------------------------------------------
 load("x:\\/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata") # pc location
+# core procedure cohort
+load("x:\\George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/medicare_abs_model_ready_no_na.rdata") 
 
 covariates = c(
   # choose one cert status--
@@ -122,7 +124,7 @@ covariates = c(
 
 # death
 f = formula(paste("death_30d ~ 1", paste(covariates, collapse = ' + '),
-                  "(1 | procedure)",
+                  "(1 | procedure)", "(1 | npi)", "(1|id_hospital)",
                   sep = " + "))
 
 medicare_abs_model_ready_no_na = medicare_abs_model_ready_no_na %>%
@@ -134,7 +136,10 @@ death_model_bin = glmmTMB(formula = f,
 
 summary(death_model_bin)
 
+
 save(death_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin_3_cert_cat.rdata")
+# core procedure
+save(death_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/death_model_bin_3_cert_cat.rdata")
 
 # complication
 medicare_abs_model_ready_no_na = medicare_abs_model_ready_no_na %>% 
@@ -143,7 +148,7 @@ medicare_abs_model_ready_no_na = medicare_abs_model_ready_no_na %>%
 
 
 f = formula(paste("severe_complication ~ 1", paste(covariates, collapse = ' + '),
-                  "(1 | procedure)", 
+                  "(1 | procedure)", "(1 | npi)", "(1|id_hospital)",
                   sep = " + "))
 
 cmp_model_bin = glmmTMB(formula = f,
@@ -153,3 +158,5 @@ cmp_model_bin = glmmTMB(formula = f,
 summary(cmp_model_bin)
 
 save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin_3_cert_cat.rdata")
+#core procedure
+save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/cmp_model_bin_3_cert_cat.rdata")
