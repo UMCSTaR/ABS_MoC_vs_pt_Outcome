@@ -65,6 +65,10 @@ prob_status = cbind(medicare_abs_model_ready_no_na %>% select(re_cert_bin),
              prob) %>% 
   mutate(log_prob = log(prob))
 
+# check auc
+library(pROC)
+roc(medicare_abs_model_ready_no_na$re_cert_passed, prob) %>% plot
+
 ggplot(data = prob_status,
        aes(x = re_cert_bin, y = prob)) +
   geom_boxplot() +

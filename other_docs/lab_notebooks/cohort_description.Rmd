@@ -88,7 +88,54 @@ medicare_abs_model_ready_no_na %>%
 ```
 
 
-Complete cases
+#### Observed outcomes by surgeon groups
+
+```{r}
+medicare_abs_model_ready_no_na %>%
+  mutate(
+    severe_complication = ifelse(
+      severe_complication == "N/A (no var)",
+      NA,
+      severe_complication
+    ),
+    severe_complication = as.numeric(severe_complication)
+  ) %>%
+  group_by(Recert_status) %>%
+  summarise(
+    n_surgon = length(unique(npi)),
+    death_rate = mean(death_30d),
+    cmp_date = mean(severe_complication, na.rm = T)
+  ) %>% 
+  kable() %>% 
+  kable_styling(full_width = F)
+```
+
+
+#### Individual failed surgeons
+
+```{r}
+medicare_abs_model_ready_no_na %>%
+  mutate(
+    severe_complication = ifelse(
+      severe_complication == "N/A (no var)",
+      NA,
+      severe_complication
+    ),
+    severe_complication = as.numeric(severe_complication)
+  ) %>%
+  filter(Recert_status == "failed") %>%
+  group_by(npi) %>% 
+  summarise(
+    n_cases = length(npi),
+    death_rate = mean(death_30d),
+    cmp_date = mean(severe_complication, na.rm = T)
+  ) %>% arrange(-n_cases) %>% 
+  mutate(npi = openssl::md5(as.character(npi))) %>% 
+  kable() %>% 
+  kable_styling(full_width = F)
+```
+
+
 
 ### Case level
 

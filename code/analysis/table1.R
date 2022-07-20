@@ -5,38 +5,58 @@ library(flextable)
 library(patchwork)
 
 # load dt
-load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata")
+medicare_abs_model_ready_no_na = readRDS("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na_remove_multi_proc.rds") 
+
 
 covariates = c(
   # choose one cert status--
-  # 're_cert_status',
   're_cert_bin',
   # other--
   'flg_male',
-  'age_at_admit',
-  'AHRQ_score',
+  'age_at_admit_std',
+  'AHRQ_score_std',
   'race_white',
   'ses',
   'emergent_admit',
   'year',
-  'surgeon_yearly_load',
-  'years_after_initial_certification',
-  "had_assist_surg"
+  "had_assist_surg",
   # hospital--
-  # 'hospital_icu',
-  # 'hospital_urban',
-  # 'hospital_beds_gt_350',
-  # 'hospital_icu',
-  # 'hospital_rn2bed_ratio',
-  # 'hospital_mcday2inptday_ratio'
+  'hospital_urban',
+  'hospital_beds_gt_350',
+  'hospital_rn2bed_ratio_std',
+  'hospital_mcday2inptday_ratio_std'
 )
 
+processed_data = medicare_abs_model_ready_no_na %>% 
+  select(
+    procedure, re_cert_bin,
+    `Age (years)` = age_at_admit,     # pt
+    `Sex` = sex,
+    `Socioeconomic status` = ses,
+    Race = race_white,
+    `Comorbidity score` = AHRQ_score,
+     # case
+    `Emergency admission status` = emergent_admit,
+    `Included assistant surgeon` = had_assist_surg,  # surg
+    # `Years of practice at date of surgery` = val_yr_practice,
+    `Hospital location`= hospital_urban,   # hosp
+    `Hospital bedsize` = hospital_beds_gt_350,
+    `Hospital nurse-to-bed ratio` = val_hosp_rn2bed_ratio,
+    `Hospital medicaid/inpatient days ratio` = val_hosp_mcday2inptday_ratio,
+    `30-day Deaths` = death_30d,         # outcomes
+    `30-day Severe Complications` = severe_complication_no_poa
+    # `30-day Readmissions` = readmission_30d,
+    # `30-day Reoperations` = reoperation_30d,
+  ) %>% 
+  mutate(Race = ifelse(Race==1, "White", "Non-White"))
+
 # case level ----------------------------------
-medicare_abs_model_ready_no_na %>% 
-  select(!!covariates, -year) %>% 
+processed_data %>% 
+  select(-procedure) %>% 
   tbl_summary(by = re_cert_bin) %>% 
   add_p() %>% 
-  as_flex_table() %>% 
+  add_overall() %>% 
+  as_flex_table() 
   save_as_docx(path = "manuscripts/table1.docx")
 
 medicare_abs_model_ready_no_na %>% 

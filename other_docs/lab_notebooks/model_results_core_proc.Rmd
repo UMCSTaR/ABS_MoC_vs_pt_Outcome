@@ -26,6 +26,7 @@ library(tidyverse)
 library(glmmTMB)
 library(marginaleffects)
 library(emmeans)
+library(kableExtra)
 ```
 
 ```{r}
@@ -46,7 +47,7 @@ summary(death_model_bin)
 ### marginal means
 
 ```{r}
-death_means = emmeans(death_model_bin, "re_cert_bin",  type = "response", data = death_model_bin$frame)
+death_means = emmeans(death_model_bin, "re_cert_bin",  type = "response", data = death_model_bin$frame, weights = "cells")
 
 plot(death_means) +
   scale_x_continuous(labels = scales::percent_format()) +
@@ -64,7 +65,7 @@ summary(cmp_model_bin)
 ```
 
 ```{r}
-cmp_means = emmeans(cmp_model_bin, "re_cert_bin",  type = "response", data = cmp_model_bin$frame)
+cmp_means = emmeans(cmp_model_bin, "re_cert_bin",  type = "response", data = cmp_model_bin$frame,  weights = "cells")
 
 plot(cmp_means) +
   scale_x_continuous(labels = scales::percent_format()) +
@@ -72,4 +73,39 @@ plot(cmp_means) +
        title = "risk-adjusted rates") +
   medicareAnalytics::theme_cstar()
 ```
+
+## Certification 3 categories
+
+Recorded Failed, No record, passed.
+
+Purpose: to see if there is a significant differences between  no record vs. failed surgeons.
+
+```{r}
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/cmp_model_bin_3_cert_cat.rdata")
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/death_model_bin_3_cert_cat.rdata")
+```
+
+### Death
+
+```{r}
+# summary(death_model_bin)
+broom.mixed::tidy(death_model_bin) %>% 
+  mutate_if(is.numeric, ~round(.x,2)) %>% 
+  select(-component) %>% 
+  kable() %>% 
+  kable_styling(full_width = F) 
+```
+
+### Complication
+
+```{r}
+# summary(cmp_model_bin)
+broom.mixed::tidy(cmp_model_bin) %>% 
+  mutate_if(is.numeric, ~round(.x,2)) %>% 
+  select(-component) %>% 
+  kable() %>% 
+  kable_styling(full_width = F) 
+```
+
+
 
