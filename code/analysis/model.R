@@ -1,26 +1,26 @@
+# this script runs on the PC 
 library(tidyverse)
 library(glmmTMB)
 
-# load dt
-load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata")
-load("x:\\/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata") # pc location
 
-# core procedure cohort
-load("x:\\George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/medicare_abs_model_ready_no_na.rdata") 
+# load data ---------------------------------------------------------------
+# # all cohort
+# load("x:\\/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata")
+# 
+# # core procedure cohort
+# load("x:\\George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/medicare_abs_model_ready_no_na.rdata") 
 
-# removed multi proc
+# removed multi proc, keep core procedure only
 medicare_abs_model_ready_no_na = readRDS("x:\\/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na_remove_multi_proc.rds") 
 
-medicare_abs_model_ready_no_na %>% count(year)
+ecv_proc = read_csv("data_public/ecv_proc_id.csv")
 
-# partial colectomy only
-load("x:\\George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/medicare_abs_model_ready_no_na.rdata") 
-medicare_pc = medicare_abs_model_ready_no_na %>% 
-  filter(score_operation_procedure == "Colectomy - Partial")
+core_proc = ecv_proc %>%
+  filter(`SCORE CORE/ADVANCED` == "CORE")
 
-unique(medicare_pc$cpt_cd)
+medicare_abs_model_ready_no_na = medicare_abs_model_ready_no_na %>% filter(e_proc_grp %in% core_proc$e_ecs_id)
 
-# model -------------------------------------------------------------------
+# covariates -------------------------------------------------------------------
 covariates = c(
   # choose one cert status--
   # 're_cert_status',
@@ -47,10 +47,6 @@ all(covariates %in% names(medicare_abs_model_ready_no_na))
 
 
 # GLME --------------------------------------------------------------------
-# random effect 
-# id
-# 'npi', 
-# 'id_hospital'
 
 f = formula(paste("death_30d ~ 1", paste(covariates, collapse = ' + '),
                   "(1 | procedure)", "(1 | npi)", "(1|id_hospital)",
@@ -63,23 +59,21 @@ death_model_bin = glmmTMB(formula = f,
 broom.mixed::tidy(death_model_bin)
 summary(death_model_bin)
 
-
-save(death_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
-save(death_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
-
-# core procedure
-save(death_model_bin, file = "X:\\/George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/death_model_bin.rdata")
+# overall procedures
+# save(death_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
+# save(death_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin.rdata")
+# 
+# # core procedure
+# save(death_model_bin, file = "X:\\/George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/death_model_bin.rdata")
 
 # remove multi proc
-save(death_model_bin, file = "X:\\/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_bin_remove_multi_proc.rdata")
+save(death_model_bin, file = "X:\\/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_core_bin_remove_multi_proc.rdata")
 
 # complication
 medicare_abs_model_ready_no_na = medicare_abs_model_ready_no_na %>% 
   mutate(severe_complication = ifelse(severe_complication_no_poa == "N/A (no var)", NA, severe_complication_no_poa),
          severe_complication = as.numeric(severe_complication))
 
-medicare_abs_model_ready_no_na %>% count(severe_complication)
-  
 
 f = formula(paste("severe_complication ~ 1", paste(covariates, collapse = ' + '),
                   "(1 | procedure)", "(1 | npi)", "(1|id_hospital)",
@@ -93,17 +87,24 @@ broom.mixed::tidy(cmp_model_bin)
 summary(cmp_model_bin)
 
 
-save(cmp_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin.rdata")
-save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin.rdata")
-
-# core procedure
-save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/cmp_model_bin.rdata")
+# save(cmp_model_bin, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin.rdata")
+# save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin.rdata")
+# 
+# # core procedure
+# save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/cmp_model_bin.rdata")
 
 # remove multi proc
-save(cmp_model_bin, file = "X:\\/George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin_remove_multi_proc.rdata")
+save(cmp_model_bin, file = "X:\\/George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_core_bin_remove_multi_proc.rdata")
 
 
 # partial colectomy -------------------------------------------------------
+load("x:\\George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/medicare_abs_model_ready_no_na.rdata")
+medicare_pc = medicare_abs_model_ready_no_na %>%
+  filter(score_operation_procedure == "Colectomy - Partial")
+
+unique(medicare_pc$cpt_cd)
+
+
 f = formula(paste("death_30d ~ 1", paste(covariates, collapse = ' + '),
                    "(1 | npi)", "(1|id_hospital)",
                   sep = " + "))
@@ -142,6 +143,7 @@ save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/par
 
 
 # re-certification 3 groups ------------------------------------------------
+# all procedures
 load("x:\\/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_no_na.rdata") # pc location
 # core procedure cohort
 load("x:\\George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/medicare_abs_model_ready_no_na.rdata") 
