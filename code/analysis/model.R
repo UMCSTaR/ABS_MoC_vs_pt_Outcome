@@ -13,6 +13,13 @@ medicare_abs_model_ready_no_na = readRDS("x:\\/George_Surgeon_Projects/MOC_vs_Ou
 
 medicare_abs_model_ready_no_na %>% count(year)
 
+# partial colectomy only
+load("x:\\George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/medicare_abs_model_ready_no_na.rdata") 
+medicare_pc = medicare_abs_model_ready_no_na %>% 
+  filter(score_operation_procedure == "Colectomy - Partial")
+
+unique(medicare_pc$cpt_cd)
+
 # model -------------------------------------------------------------------
 covariates = c(
   # choose one cert status--
@@ -94,6 +101,43 @@ save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/cor
 
 # remove multi proc
 save(cmp_model_bin, file = "X:\\/George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_bin_remove_multi_proc.rdata")
+
+
+# partial colectomy -------------------------------------------------------
+f = formula(paste("death_30d ~ 1", paste(covariates, collapse = ' + '),
+                   "(1 | npi)", "(1|id_hospital)",
+                  sep = " + "))
+
+death_model_bin = glmmTMB(formula = f,
+                          data = medicare_pc,
+                          family = binomial)
+
+broom.mixed::tidy(death_model_bin)
+summary(death_model_bin)
+
+
+save(death_model_bin, file = "X:\\/George_Surgeon_Projects/MOC_vs_Outcome/model/partial_colectomy/death_model_bin.rdata")
+
+
+# complication
+medicare_pc = medicare_pc %>% 
+  mutate(severe_complication = ifelse(severe_complication_no_poa == "N/A (no var)", NA, severe_complication_no_poa),
+         severe_complication = as.numeric(severe_complication))
+
+
+f = formula(paste("severe_complication ~ 1", paste(covariates, collapse = ' + '),
+                   "(1 | npi)", "(1|id_hospital)",
+                  sep = " + "))
+
+cmp_model_bin = glmmTMB(formula = f,
+                        data = medicare_pc,
+                        family = binomial)
+
+broom.mixed::tidy(cmp_model_bin)
+summary(cmp_model_bin)
+
+save(cmp_model_bin, file = "X:\\George_Surgeon_Projects/MOC_vs_Outcome/model/partial_colectomy/cmp_model_bin.rdata")
+
 
 
 
