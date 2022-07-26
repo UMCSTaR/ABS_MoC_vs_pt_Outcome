@@ -1,5 +1,5 @@
 ---
-title: "Model Results using CORE procedures"
+title: "Model Results using only Partial Colectomy"
 author: "Xilin Chen"
 date: "`r Sys.Date()`"
 output: 
@@ -31,9 +31,31 @@ library(kableExtra)
 
 ```{r}
 #load models
-load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/death_model_bin.rdata")
-load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/cmp_model_bin.rdata")
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/partial_colectomy/death_model_bin.rdata")
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/partial_colectomy/cmp_model_bin.rdata")
 ```
+
+## Partial Colectomy cohort
+
+```{r}
+dt = death_model_bin$frame
+```
+
+### Number of Surgeons and case at each certification status
+
+```{r}
+dt %>%
+  group_by(re_cert_bin) %>%
+  summarise(
+    n_surgon = length(unique(npi)),
+    n_case = n()
+  ) %>% 
+  kable() %>% 
+  kable_styling(full_width = F)
+```
+
+
+# model based
 
 
 ## Death
@@ -96,40 +118,5 @@ plot(cmp_means) +
 ```{r}
 pairs(regrid(cmp_means, transform = "log"), type = "response")
 ```
-
-
-## Certification 3 categories
-
-Recorded Failed, No record, passed.
-
-Purpose: to see if there is a significant differences between  no record vs. failed surgeons.
-
-```{r}
-load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/cmp_model_bin_3_cert_cat.rdata")
-load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/core_proc/death_model_bin_3_cert_cat.rdata")
-```
-
-### Death
-
-```{r}
-# summary(death_model_bin)
-broom.mixed::tidy(death_model_bin) %>% 
-  mutate_if(is.numeric, ~round(.x,2)) %>% 
-  select(-component) %>% 
-  kable() %>% 
-  kable_styling(full_width = F) 
-```
-
-### Complication
-
-```{r}
-# summary(cmp_model_bin)
-broom.mixed::tidy(cmp_model_bin) %>% 
-  mutate_if(is.numeric, ~round(.x,2)) %>% 
-  select(-component) %>% 
-  kable() %>% 
-  kable_styling(full_width = F) 
-```
-
 
 
