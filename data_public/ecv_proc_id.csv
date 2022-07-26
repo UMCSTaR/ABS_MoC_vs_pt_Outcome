@@ -1,0 +1,192 @@
+e_ecs_id,SCORE OPERATION/PROCEDURE,SCORE CATEGORY,SCORE CORE/ADVANCED,ecs_lbl
+26,Abdominal Exploration,Abdomen - General,CORE,Exploratory laparotomy
+22,Abdominal Exploration,Abdomen - General,CORE,Diagnostic laparoscopy +/- biopsy/drainage
+168,Abdominal Exploration,Abdomen - General,CORE,"Exploratory laparotomy with repair of volvulus, intussusception, or internal hernia"
+23,Peritoneal Dialysis Catheter Insertion,Abdomen - General,CORE,Tunneled intraperitoneal catheter (laparoscopic)
+41,Inguinal and Femoral Hernia - Repair,Abdomen - Hernia,CORE,Inguinal hernia repair (laparoscopic)
+42,Inguinal and Femoral Hernia - Repair,Abdomen - Hernia,CORE,Recurrent Inguinal hernia repair (laparoscopic)
+43,Inguinal and Femoral Hernia - Repair,Abdomen - Hernia,CORE,Inguinal hernia repair (open)
+44,Inguinal and Femoral Hernia - Repair,Abdomen - Hernia,CORE,Incacerated/strangulated Inguinal hernia repair (open)
+45,Inguinal and Femoral Hernia - Repair,Abdomen - Hernia,CORE,Recurrent Inguinal hernia repair (open)
+47,Inguinal and Femoral Hernia - Repair,Abdomen - Hernia,CORE,Femoral hernia repair (open)
+48,Inguinal and Femoral Hernia - Repair,Abdomen - Hernia,CORE,Incacerated/strangulated Femoral hernia repair (open)
+49,Inguinal and Femoral Hernia - Repair,Abdomen - Hernia,CORE,Recurrent Femoral hernia repair (open)
+51,Ventral Hernia - Repair,Abdomen - Hernia,CORE,Ventral hernia repair (open)
+52,Ventral Hernia - Repair,Abdomen - Hernia,CORE,Incarcerated/strangulated Ventral hernia repair (open)
+53,Ventral Hernia - Repair,Abdomen - Hernia,CORE,Epigastric hernia repair (open)
+54,Ventral Hernia - Repair,Abdomen - Hernia,CORE,Incarcerated/strangulated Epigastric hernia repair (open)
+56,Ventral Hernia - Repair,Abdomen - Hernia,CORE,Umbilical hernia repair (open)
+57,Ventral Hernia - Repair,Abdomen - Hernia,CORE,Incarcerated/strangulated Umbilical hernia repair (open)
+758,Ventral Hernia - Repair,Abdomen - Hernia,CORE,Ventral Hernia Repair W/Mesh
+759,Ventral Hernia - Repair,Abdomen - Hernia,CORE,Laparoscopic Ventral Hernia Repair (reducible)
+760,Ventral Hernia - Repair,Abdomen - Hernia,CORE,Laparoscopic Ventral Hernia Repair (incarcerated)
+1,Choleycstectomy with or without Cholangiography,Abdomen - Biliary,CORE,Cholecystectomy (laparoscopic)
+3,Choleycstectomy with or without Cholangiography,Abdomen - Biliary,CORE,Cholecystectomy (open)
+4,Choleycstectomy with or without Cholangiography,Abdomen - Biliary,CORE,Cholecystectomy with IOC (open)
+8,Common Bile Duct Exploration and Choledochoscopy,Abdomen - Biliary,CORE,CBD exploration (laparoscopic)
+10,Common Bile Duct Exploration and Choledochoscopy,Abdomen - Biliary,CORE,CBD exploration (open)
+11,Bile Duct Cancer - Operation,Abdomen - Biliary,ADVANCED,Excision extrahepatic bile duct tumor (open)
+12,Bile Duct Cancer - Operation,Abdomen - Biliary,ADVANCED,Excision intrahepatic bile duct tumor (open)
+6,Choledochoenteric Anastomosis,Abdomen - Biliary,ADVANCED,CBD exploration with hepaticojejunostomy (open)
+58,Hepatic Abscess - Drainage,Abdomen - Liver,CORE,Drainage of liver abscess/cyst (open)
+67,Hepatic Biopsy,Abdomen - Liver,CORE,Liver biopsy (open)
+59,Segmentectomy/Lobectomy,Abdomen - Liver,ADVANCED,Hepatectomy (open)
+78,Pancreatectomy - Distal,Abdomen - Pancreas,CORE,"Pancreatectomy, distal (open or laparoscopic)"
+83,Pancreatic Debridement,Abdomen - Pancreas,CORE,Pancreatic debridement
+70,Pancreatic Pseudocyst - Drainage,Abdomen - Pancreas,CORE,Pancreatic cystjejunostomy
+71,Pancreatic Pseudocyst - Drainage,Abdomen - Pancreas,CORE,Pancreatic cystjejunostomy;Roux-en-Y
+76,Ampullary Resection for Tumor,Abdomen - Pancreas,ADVANCED,Excision of ampulla of Vater
+79,Pancreatectomy - Total,Abdomen - Pancreas,ADVANCED,"Pancreatectomy, total (open)"
+81,Pancreaticoduodenectomy,Abdomen - Pancreas,ADVANCED,Whipple
+82,"Pancreatitis, Chronic - Operative Management",Abdomen - Pancreas,ADVANCED,Pancreaticojejunostomy
+84,Splenectomy,Abdomen - Spleen,CORE,Splenectomy (laparoscopic)
+86,Splenectomy,Abdomen - Spleen,CORE,Splenectomy (open)
+106,Antireflux Procedures,Alimentary Tract - Esophagus,CORE,Gastric fundoplication +/- gastroplasty (laparoscopic)
+130,Antireflux Procedures,Alimentary Tract - Esophagus,CORE,Heller myotomy +/- fundoplasty (open)
+770,Antireflux Procedures,Alimentary Tract - Esophagus,CORE,Esoph Fundoplasty Thor
+124,Esophageal Perforation - Repair/Resection,Alimentary Tract - Esophagus,ADVANCED,"Esophageal perforation repair, ligation/stapling"
+118,Esophagectomy/Esophagogastrectomy,Alimentary Tract - Esophagus,ADVANCED,"Esophagectomy, total/near total"
+119,Esophagectomy/Esophagogastrectomy,Alimentary Tract - Esophagus,ADVANCED,"Esophagectomy, partial, +/- proximal gastrectomy"
+121,Esophagectomy/Esophagogastrectomy,Alimentary Tract - Esophagus,ADVANCED,Excision of esophageal lesion with primary repair
+122,Esophagectomy/Esophagogastrectomy,Alimentary Tract - Esophagus,ADVANCED,"Esophagectomy, partial, +/- proximal gastrectomy, enteric interpostion"
+123,Esophagectomy/Esophagogastrectomy,Alimentary Tract - Esophagus,ADVANCED,Esophagectomy revision/reconstruction
+761,Paraesophageal Hernia - Repair,Alimentary Tract - Esophagus,ADVANCED,Lap Paraesophag Hern Repair
+221,Gastrectomy - Partial/Total,Alimentary Tract - Stomach,CORE,"Gastrectomy, partial"
+222,Gastrectomy - Partial/Total,Alimentary Tract - Stomach,CORE,"Gastrectomy, partial, with gastroduodenostomy"
+223,Gastrectomy - Partial/Total,Alimentary Tract - Stomach,CORE,"Gastrectomy, partial, with gastrojejunostomy"
+224,Gastrectomy - Partial/Total,Alimentary Tract - Stomach,CORE,"Gastrectomy, partial, with Roux-en-Y reconstruction"
+225,Gastrectomy - Partial/Total,Alimentary Tract - Stomach,CORE,"Gastrectomy, partial, with formation of intestinal pouch"
+227,Gastrectomy - Partial/Total,Alimentary Tract - Stomach,CORE,"Gastrectomy, total, with esophagoenterostomy or Roux-en-Y reconstruction"
+245,Gastroduodenal Perforation - Repair,Alimentary Tract - Stomach,CORE,Suture repair of duodenal or gastric perforation
+230,Gastroduodenal Perforation - Repair,Alimentary Tract - Stomach,CORE,Gastrotomy with suture repair of ulcer/laceration(open)
+228,Gastrostomy,Alimentary Tract - Stomach,CORE,Gastrostomy (laparoscopic)
+243,Vagotomy and Drainage,Alimentary Tract - Stomach,CORE,Vagotomy and drainage (open)
+762,Morbid Obesity - Operations,Alimentary Tract - Stomach,ADVANCED,Lap Sleeve Gastrectomy
+213,Morbid Obesity - Operations,Alimentary Tract - Stomach,ADVANCED,Roux-en-Y gastric bypass  (open)
+214,Morbid Obesity - Operations,Alimentary Tract - Stomach,ADVANCED,"Gastric bypass, other than Roux-en-Y (open)"
+216,Morbid Obesity - Operations,Alimentary Tract - Stomach,ADVANCED,Gastric band procedure (laparoscopic)
+218,Morbid Obesity - Operations,Alimentary Tract - Stomach,ADVANCED,Roux-en-Y gastric bypass (laparoscopic)
+219,Morbid Obesity - Operations,Alimentary Tract - Stomach,ADVANCED,"Gastric bypass, other than Roux-en-Y (laparoscopic)"
+212,Morbid Obesity - Operations,Alimentary Tract - Stomach,ADVANCED,"Gastric restrictive procedure, other than bypass or vertical banded gastroplasty (open)"
+237,Postgastrectomy Syndromes - Revisional Procedures,Alimentary Tract - Stomach,ADVANCED,Gastrojejunostomy revision
+195,Adhesiolysis,Alimentary Tract - Small Intestine,CORE,Lysis of adhesions (open)
+196,Adhesiolysis,Alimentary Tract - Small Intestine,CORE,Lysis of adhesions (laparoscopic)
+193,Ileostomy and Ileostomy Closure,Alimentary Tract - Small Intestine,CORE,"Enterostomy takedown with bowel resection and anastomosis, non-colorectal (open)"
+197,Ileostomy and Ileostomy Closure,Alimentary Tract - Small Intestine,CORE,"Ileostomy or jejunostomy, non-tube (open)"
+200,Ileostomy and Ileostomy Closure,Alimentary Tract - Small Intestine,CORE,"Ileostomy or jejunostomy, non-tube (laparoscoopic)"
+202,Ileostomy and Ileostomy Closure,Alimentary Tract - Small Intestine,CORE,Ileostomy revision/reconstruction
+198,Ileostomy and Ileostomy Closure,Alimentary Tract - Small Intestine,CORE,Continent ileostomy (Kock procedure) (separate procedure)
+152,Small Intestinal Resection,Alimentary Tract - Small Intestine,CORE,Small bowel resection with anastomosis (laparoscopic)
+189,Small Intestinal Resection,Alimentary Tract - Small Intestine,CORE,Small bowel resection with anastomosis (open)
+191,Small Intestinal Resection,Alimentary Tract - Small Intestine,CORE,Small bowel resection with enterostomy (open)
+207,Small Intestinal Resection,Alimentary Tract - Small Intestine,CORE,Excision of intestinal lesion(s) with primary repair
+146,Appendectomy,Alimentary Tract - Large Intestine,CORE,Appendectomy (laparoscopic)
+147,Appendectomy,Alimentary Tract - Large Intestine,CORE,"Appendectomy, ruptured with abscess/peritonitis (open)"
+148,Appendectomy,Alimentary Tract - Large Intestine,CORE,Appendectomy (open)
+153,Colectomy - Partial,Alimentary Tract - Large Intestine,CORE,Partial colectomy with anastomosis (laparoscopic)
+154,Colectomy - Partial,Alimentary Tract - Large Intestine,CORE,Partial colectomy with ileocolostomy (laparoscopic)
+155,Colectomy - Partial,Alimentary Tract - Large Intestine,CORE,Hartmann procedure (laparoscopic)
+156,Colectomy - Partial,Alimentary Tract - Large Intestine,CORE,Partial colectomy with coloproctostomy (laparoscopic)
+166,Colectomy - Partial,Alimentary Tract - Large Intestine,CORE,Partial colectomy with anastomosis (open)
+167,Colectomy - Partial,Alimentary Tract - Large Intestine,CORE,Partial colectomy with cecostomy or colostomy (open)
+169,Colectomy - Partial,Alimentary Tract - Large Intestine,CORE,Partial colectomy with coloproctostomy (open)
+170,Colectomy - Partial,Alimentary Tract - Large Intestine,CORE,"Partial colectomy, abdominal and transanal approach (open)"
+173,Colectomy - Partial,Alimentary Tract - Large Intestine,CORE,Partial colectomy with ileocolostomy (open)
+157,Colectomy - Total and Subtotal,Alimentary Tract - Large Intestine,CORE,Total abdominal colectomy with ileostomy/ileoprcotostomy (laparoscopic)
+171,Colectomy - Total and Subtotal,Alimentary Tract - Large Intestine,CORE,Total abdominal colectomy with ileostomy/ileoprcotostomy (open)
+172,Colectomy - Total and Subtotal,Alimentary Tract - Large Intestine,CORE,Coloproctectomy with ileostomy (open)
+149,Colectomy - Total and Subtotal,Alimentary Tract - Large Intestine,CORE,Total abdominal colectomy with continent ileostomy
+150,Colectomy - Total and Subtotal,Alimentary Tract - Large Intestine,CORE,Coloproctectomy for congenital megacolon
+151,Colectomy - Total and Subtotal,Alimentary Tract - Large Intestine,CORE,Coloproctectomy with ileoanal anastomosis (open)
+158,Colectomy - Total and Subtotal,Alimentary Tract - Large Intestine,CORE,Coloproctectomy with ileoanal anastomosis (laparoscopic)
+159,Colectomy - Total and Subtotal,Alimentary Tract - Large Intestine,CORE,Coloproctectomy with ileostomy (laparoscopic)
+174,Colostomy and Colostomy Closure,Alimentary Tract - Large Intestine,CORE,Colostomy takedown with partial colectomy and colorectal anastomosis (open)
+176,Colostomy and Colostomy Closure,Alimentary Tract - Large Intestine,CORE,Colostomy (laparoscopic)
+178,Colostomy and Colostomy Closure,Alimentary Tract - Large Intestine,CORE,Colostomy (open)
+179,Colostomy and Colostomy Closure,Alimentary Tract - Large Intestine,CORE,Colostomy revision
+180,Colostomy and Colostomy Closure,Alimentary Tract - Large Intestine,CORE,Colostomy revision with parastomal hernia repair
+181,Colostomy and Colostomy Closure,Alimentary Tract - Large Intestine,CORE,Colostomy/Ileostomy takedown (open)
+194,Colostomy and Colostomy Closure,Alimentary Tract - Large Intestine,CORE,Colostomy/ileostomy takedown with bowel resection and anastomosis (laparoscopic)
+90,Anorectal Abscess - Drainage,Alimentary Tract - Anorectal,CORE,Drainage perirectal abscess
+93,Hemorrhoids - Management,Alimentary Tract - Anorectal,CORE,Hemorrhoidectomy
+143,Rectal Cancer - Abdominoperineal Resection and Pelvic Exenteration,Alimentary Tract - Anorectal,ADVANCED,Abdominoperineal resection (open)
+161,Rectal Cancer - Abdominoperineal Resection and Pelvic Exenteration,Alimentary Tract - Anorectal,ADVANCED,Abdominoperineal resection (laparoscopic)
+162,Rectal Cancer - Abdominoperineal Resection and Pelvic Exenteration,Alimentary Tract - Anorectal,ADVANCED,Abdominoperineal resection with J-pouch (laparoscopic)
+145,Rectal Cancer - Abdominoperineal Resection and Pelvic Exenteration,Alimentary Tract - Anorectal,ADVANCED,Pelvic exenteration for malignancy
+99,Rectal Cancer - Abdominoperineal Resection and Pelvic Exenteration,Alimentary Tract - Anorectal,ADVANCED,Rectal tumor excision
+101,Rectal Cancer - Transanal Resection,Alimentary Tract - Anorectal,ADVANCED,Transanal Tumor Excision
+186,Rectal Cancer - Transanal Resection,Alimentary Tract - Anorectal,ADVANCED,"Excision/destruction of rectal tumor, transanal approach"
+182,Rectal Cancer - Transanal Resection,Alimentary Tract - Anorectal,ADVANCED,"Partial proctectomy with anastomosis, transsacral approach"
+111,Rectal Prolapse - Repair,Alimentary Tract - Anorectal,ADVANCED,Rectal prolapse repair (perineal approach)
+112,Rectal Prolapse - Repair,Alimentary Tract - Anorectal,ADVANCED,Rectal prolapse repair (abdominal approach)
+164,Rectal Prolapse - Repair,Alimentary Tract - Anorectal,ADVANCED,Proctopexy with sigmoid resection (laparoscopic)
+175,Rectal Prolapse - Repair,Alimentary Tract - Anorectal,ADVANCED,"Resection for rectal prolapse, abdominal and perineal approach (open)"
+246,Excisional Breast Biopsy and Partial Mastectomy,Breast,CORE,Breast biopsy/excision +/- needle localization
+247,Excisional Breast Biopsy and Partial Mastectomy,Breast,CORE,Breast biopsy/excision; partial mastectomy
+248,Excisional Breast Biopsy and Partial Mastectomy,Breast,CORE,"Mastectomy, partial, with axillary lymphadenectomy"
+249,"Mastectomy - Simple, Modified Radical, and Radical",Breast,CORE,Modified radical mastectomy
+255,"Mastectomy - Simple, Modified Radical, and Radical",Breast,CORE,"Mastectomy, simple"
+264,Parathyroidectomy,Endocrine,CORE,Parathyroidectomy
+265,Parathyroidectomy,Endocrine,CORE,"Parathyroidectomy, redo"
+266,Parathyroidectomy,Endocrine,CORE,"Parathyroidectomy, with mediastinal exploration"
+267,Parathyroidectomy,Endocrine,CORE,Parathyroid autotransplant
+268,Thyroidectomy - Partial or Total,Endocrine,CORE,"Thyroidectomy, partial/total"
+270,Thyroidectomy - Partial or Total,Endocrine,CORE,"Thyroidectomy, partial/total"
+269,Thyroidectomy - Partial or Total,Endocrine,CORE,"Thyroidectomy, partial/total"
+271,Thyroidectomy - Partial or Total,Endocrine,CORE,"Thyroidectomy, partial/total with radical neck dissection"
+272,Thyroidectomy - Partial or Total,Endocrine,CORE,"Thyroidectomy, partial/total, redo"
+260,Adrenalectomy,Endocrine,ADVANCED,Adrenalectomy (open)
+261,Adrenalectomy,Endocrine,ADVANCED,Adrenalectomy (laparoscopic)
+647,"Soft Tissue Infections - Incision, Drainage, Debridement",Skin and Soft Tissue,CORE,NSTI Debridement
+324,"Soft Tissue Infections - Incision, Drainage, Debridement",Skin and Soft Tissue,CORE,"Incision and drainage, foot"
+27,Ilioinguinal-Femoral Lymphadenectomy,Skin and Soft Tissue,ADVANCED,"Lymphadenectomy, abdominal/pelvic/RP (open)"
+539,Fasciotomy,Trauma,CORE,Lower extremity fasciotomy
+367,Urinary Tract Injuries - Operations,Trauma,CORE,Suture repair of bladder injury
+386,Amputations - Lower Extremity,Vascular - Arterial Disease,CORE,Above knee amputation
+387,Amputations - Lower Extremity,Vascular - Arterial Disease,CORE,"Above knee amputation, guillotine"
+388,Amputations - Lower Extremity,Vascular - Arterial Disease,CORE,"Above knee amputation, secondary closure"
+390,Amputations - Lower Extremity,Vascular - Arterial Disease,CORE,"Lower leg amputation, secondary closure"
+391,Amputations - Lower Extremity,Vascular - Arterial Disease,CORE,Lower leg amputation
+392,Amputations - Lower Extremity,Vascular - Arterial Disease,CORE,"Lower leg amputation, guillotine"
+396,Amputations - Lower Extremity,Vascular - Arterial Disease,CORE,"Foot amputation, transmetatarsal"
+397,Amputations - Lower Extremity,Vascular - Arterial Disease,CORE,Metatarsal/toe amputation
+389,Amputations - Lower Extremity,Vascular - Arterial Disease,CORE,Knee disarticulation
+507,Embolectomy/Thrombectomy - Arterial,Vascular - Arterial Disease,CORE,Aorta/iliac artery/femoral artery thrombectomy/endarterectomy
+509,Embolectomy/Thrombectomy - Arterial,Vascular - Arterial Disease,CORE,"Aorta, iliac artery, femoral artery or popliteal artery embolectomy/thrombectomy via leg incision"
+510,Embolectomy/Thrombectomy - Arterial,Vascular - Arterial Disease,CORE,"Popliteal artery, tibial artery, peroneal artery embolectomy/thrombectomy via leg incision"
+521,Embolectomy/Thrombectomy - Arterial,Vascular - Arterial Disease,CORE,Superficial Femoral artery thrombectomy/endarterectomy
+524,Embolectomy/Thrombectomy - Arterial,Vascular - Arterial Disease,CORE,Common femoral/Deep (profunda) artery thrombectomy/endarterectomy
+548,Embolectomy/Thrombectomy - Arterial,Vascular - Arterial Disease,CORE,"Embolectomy/thrombectomy/endarterectomy  of axillary, brachial, innominate, subclavian artery"
+522,Embolectomy/Thrombectomy - Arterial,Vascular - Arterial Disease,CORE,Popliteal artery thrombectomy/endarterectomy
+556,Embolectomy/Thrombectomy - Arterial,Vascular - Arterial Disease,CORE,"Thrombectomy of arteriovenous fistula, without revision (open)"
+398,Abdominal and Aortoiliac Aneurysm - Repair,Vascular - Arterial Disease,ADVANCED,Infrarenal abdominal aortic aneurysm/dissection repair (endovascular)
+399,Abdominal and Aortoiliac Aneurysm - Repair,Vascular - Arterial Disease,ADVANCED,"Iliac artery repair of aneurysm, pseudoaneurysm, AVM, trauma), (endovascular)"
+408,Abdominal and Aortoiliac Aneurysm - Repair,Vascular - Arterial Disease,ADVANCED,Infrarenal abdominal aortic aneurysm repair (open)
+409,Abdominal and Aortoiliac Aneurysm - Repair,Vascular - Arterial Disease,ADVANCED,Ruptured infrarenal abdominal aortic/iliac aneurysm repair (open)
+496,Aortoiliac Reconstruction for Occlusive Disease,Vascular - Arterial Disease,ADVANCED,Iliac Artery atherectomy (percutaneous)
+500,Aortoiliac Reconstruction for Occlusive Disease,Vascular - Arterial Disease,ADVANCED,Aortic transluminal balloon angioplasty (percutaneous)
+504,Aortoiliac Reconstruction for Occlusive Disease,Vascular - Arterial Disease,ADVANCED,Iliac artery transluminal angiopalsty (percutaneous)
+505,Aortoiliac Reconstruction for Occlusive Disease,Vascular - Arterial Disease,ADVANCED,Aorta to iliofemoral artery bypass graft
+764,Aortoiliac Reconstruction for Occlusive Disease,Vascular - Arterial Disease,ADVANCED,Iliac Revascularization
+431,Carotid Endarterectomy,Vascular - Arterial Disease,ADVANCED,"Thromboendarterectomy of carotid artery, vertebral artery, or subclavian artery by neck incision"
+435,Carotid Endarterectomy,Vascular - Arterial Disease,ADVANCED,"Embolectomy/thrombectomy of carotid, innominate, or subclavian artery via neck incision"
+432,Carotid Endarterectomy,Vascular - Arterial Disease,ADVANCED,"Carotid thromboendarterectomy, reoperation"
+515,Lower Extremity Bypass,Vascular - Arterial Disease,ADVANCED,Femoral artery to popliteal artery bypass with  graft
+461,Lower Extremity Bypass,Vascular - Arterial Disease,ADVANCED,Bypass graft; femoral-femoral
+517,Lower Extremity Bypass,Vascular - Arterial Disease,ADVANCED,Femoral to below knee bypass graft
+527,Lower Extremity Bypass,Vascular - Arterial Disease,ADVANCED,Re-do lower extremity bypass
+765,Lower Extremity Bypass,Vascular - Arterial Disease,ADVANCED,Femoropopliteal revascualrization
+380,Mesenteric Occlusive Disease - Operation,Vascular - Arterial Disease,ADVANCED,Mesenteric / Renal angioplasty/stent (percutaneous)
+406,Peripheral Aneurysms - Repair,Vascular - Arterial Disease,ADVANCED,Femoral artery aneurysm repair (open)
+567,Venous Insufficiency/Varicose Veins - Operation,Vascular - Venous,ADVANCED,Endovenous ablation therapy (radiofrequency) of incompetent vein in extremity
+568,Venous Insufficiency/Varicose Veins - Operation,Vascular - Venous,ADVANCED,Endovenous ablation therapy (laser) of incompetent vein in extremity
+552,Arteriovenous Graft/Fistula,Vascular - Access,ADVANCED,"Creation of arteriovenous fistula, direct anastomosis"
+553,Arteriovenous Graft/Fistula,Vascular - Access,ADVANCED,Creation of arteriovenous fistula
+347,Exploratory Thoracotomy - Open and Thoracoscopic,Thoracic Surgery,CORE,Diagnostic thoracoscopy
+342,Partial Pulmonary Resection - Open and Thoracoscopic,Thoracic Surgery,ADVANCED,Repair of lung injury by lobectomy/pneumonectomy (open)
+351,Partial Pulmonary Resection - Open and Thoracoscopic,Thoracic Surgery,ADVANCED,Repair of lung injury by lobectomy (thoracoscopic)
+187,Meckel Diverticulum - Excision,Pediatric Surgery,CORE,Excision of Meckel's or omphalomesenteric duct
+234,Pyloromyotomy,Pediatric Surgery,CORE,Pyloroplasty
+373,Cystostomy,Genitourinary,CORE,Ureteroneocystostomy +/- Psoas hitch
+746,Hysterectomy and Salpingo-oophorectomy,Gynecology and Obstetrics,ADVANCED,Partial/Total Hysterectomy
+767,Hysterectomy and Salpingo-oophorectomy,Gynecology and Obstetrics,ADVANCED,Oopherectomy/salpingectomy
