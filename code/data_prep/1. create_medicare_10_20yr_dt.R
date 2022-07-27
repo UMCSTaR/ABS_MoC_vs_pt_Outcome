@@ -30,6 +30,10 @@ abs_gs = abs_cert %>%
 
 nrow(abs_cert) - nrow(abs_gs)
 
+# fellowship trained surgeons
+anti_join(abs_cert, abs_gs) %>% 
+  count(ReCeverPassed)
+
 # 1987-2017 certification year
 abs_gs_87_17 = abs_gs %>% 
   mutate(cutoff_2007 = ifelse(Gcertyear+10>=2017, "exlcude", "include")) %>% 
@@ -65,6 +69,10 @@ abs_medicare = abs_w_recert %>%
   inner_join(medicare, by = c("npi" = "id_physician_npi"))
 
 nrow(abs_w_recert) - n_distinct(abs_medicare$npi)
+
+# surgeons excluded by not having medicare records
+abs_w_recert %>% anti_join(abs_medicare, by = "npi") %>% 
+  count(Recert_status)
 
 ## filter only keep 10-20 years after initial certification medicare cases 
 abs_medicare_10_20yr = abs_medicare %>%

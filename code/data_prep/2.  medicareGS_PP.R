@@ -17,7 +17,7 @@ library(tidyverse)
 # Filtered out abs and fellowship council specialty training surgeons
 # dataset creation can be found at code/data_prep/create_medicare_10_20yr_dt.R
 load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr.rdata")
-# ecv data
+# ecv data: core procedure
 # load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/abs_medicare_10_20yr.rdata")
 
 ## Keep medicare GS specialty ----
@@ -85,5 +85,13 @@ abs_medicare_union %>%
   distinct(npi, Recert_status) %>% 
   count(Recert_status)
 
-# save(abs_medicare_union, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_union_4_def.rdata")
-save(abs_medicare_union, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/abs_medicare_10_20yr_union_4_def.rdata")
+# excluded surgeons
+anti_join(abs_medicare_10_20yr, abs_medicare_union) %>% 
+  distinct(npi, Recert_status) %>% 
+  count(Recert_status)
+
+
+# all procedures
+save(abs_medicare_union, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/abs_medicare_10_20yr_union_4_def.rdata")
+# core procedures
+# save(abs_medicare_union, file = "/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/ECV_data/abs_medicare_10_20yr_union_4_def.rdata")
