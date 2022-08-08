@@ -2,7 +2,7 @@
 # This cohort definition is defined after the comparison of the 4 definitions doc at
 # [overlap_cohort_definitions](other_docs/lab_notebooks/Overlap_cohort_definitions.pdf)
 
-# summary
+# summary: exclude fellowship trained surgeons based on practice patterns
 # Step1: Using ABS and fellowship council data to exclude fellowship trained surgeons.
 # 
 # Step2: Using medicare general surgery code to flag GS surgeons who can't be defined in step1. 

@@ -1,0 +1,122 @@
+---
+title: "Model Results for CORE procedure excluding multiple procedures"
+author: "Xilin Chen"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+        toc: yes
+        toc_depth: 4
+        toc_float:
+          toc_collapsed: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = F,                                     # code
+  message = F,
+  warning = F,
+  error = F,
+  comment = NA,
+  R.options = list(width = 220),
+  dev.args = list(bg = 'transparent'),          # viz
+  fig.align = 'center',
+  cache = F
+)
+library(tidyverse)
+library(glmmTMB)
+library(marginaleffects)
+library(emmeans)
+library(kableExtra)
+```
+
+```{r}
+#load models
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/death_model_core_bin_remove_multi_proc.rdata")
+load("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/model/cmp_model_core_bin_remove_multi_proc.rdata")
+```
+
+##cohort
+
+```{r}
+dt = death_model_bin$frame
+```
+
+### Number of Surgeons and case at each certification status
+
+```{r}
+dt %>%
+  group_by(re_cert_bin) %>%
+  summarise(
+    n_surgon = length(unique(npi)),
+    n_case = n()
+  ) %>% 
+  kable() %>% 
+  kable_styling(full_width = F)
+```
+
+
+# model based
+
+
+## Death
+
+### Model summary
+
+```{r}
+summary(death_model_bin)
+```
+
+#### Adjusted Prediction at the Mean
+
+The predicted outcome when all the predictors are held at their mean. For categorical predictors, we used all categorical values to make the reference grid but weight the predictions according to their cell frequencies.
+
+```{r}
+death_means = emmeans(death_model_bin, "re_cert_bin",  type = "response", data = death_model_bin$frame, weights = "cells")
+
+death_means
+
+plot(death_means) +
+  scale_x_continuous(labels = scales::percent_format()) +
+  labs(y = "",
+       title = "risk-adjusted rates") +
+  medicareAnalytics::theme_cstar()
+
+```
+
+#### Risk ratio
+
+```{r}
+pairs(regrid(death_means, transform = "log"), type = "response")
+```
+
+
+## Severe Complication
+
+```{r}
+summary(cmp_model_bin)
+```
+
+### Adjusted Prediction at the Mean
+
+The predicted outcome when all the predictors are held at their mean. For categorical predictors, we used all categorical values to make the reference grid but weight the predictions according to their cell frequencies.
+
+```{r}
+cmp_means = emmeans(cmp_model_bin, "re_cert_bin",  type = "response", data = cmp_model_bin$frame, weights = "cells")
+
+cmp_means
+
+plot(cmp_means) +
+  scale_x_continuous(labels = scales::percent_format()) +
+  labs(y = "",
+       title = "risk-adjusted rates") +
+  medicareAnalytics::theme_cstar()
+
+```
+
+#### Risk ratio
+
+```{r}
+pairs(regrid(cmp_means, transform = "log"), type = "response")
+```
+
+
