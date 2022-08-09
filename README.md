@@ -41,6 +41,8 @@ note: included non-us graduates in the cohort. Usually we exclude these graduate
 
 ## Lab notebook
 
+most recent notbooks are on dropbox at https://www.dropbox.com/home/Analytic_lab_notebooks/MOC_medicare_outcomes
+
 ### Cohort selection document
 
 1. Initial cohort definition
