@@ -29,7 +29,93 @@ library(patchwork)
 library(flextable)
 ```
 
+## all procedures include fellowship trained
+### Cohort Diagram
 
+![](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/all_proc_include_fellow.png)
+
+```{r}
+# load data
+medicare_abs_model_ready_no_na = readRDS("/Volumes/George_Surgeon_Projects/MOC_vs_Outcome/data/medicare_abs_model_ready_ex_multi_include_fellowship.rds")
+
+medicare_abs_model_ready_no_na = medicare_abs_model_ready_no_na %>% 
+  rename(severe_complication = severe_complication_no_poa)
+
+covariates = c(
+  # choose one cert status--
+  're_cert_status',
+  # other--
+  'flg_male',
+  'age_at_admit',
+  'AHRQ_score',
+  'race_white',
+  'ses',
+  'emergent_admit',
+  'year',
+  'surgeon_yearly_load',
+  'years_after_initial_certification',
+  "had_assist_surg",
+  # hospital--
+  'hospital_urban',
+  'hospital_beds_gt_350',
+  'val_hosp_rn2inptday_ratio',
+  'val_hosp_mcday2inptday_ratio',
+  "death_30d",
+  "severe_complication"
+)
+
+```
+
+
+### Number of Surgeons at each certification status
+
+```{r}
+medicare_abs_model_ready_no_na %>%
+  distinct(npi, Recert_status) %>%
+  count(Recert_status, name = "n of surgeons") %>% 
+  kable(caption = "breakdown of failed surgeons: no record of attempting and record failed ") %>% 
+  kable_styling(full_width = F)
+```
+
+
+#### Observed outcomes by surgeon groups
+
+```{r}
+medicare_abs_model_ready_no_na %>%
+  mutate(
+    severe_complication = ifelse(
+      severe_complication == "N/A (no var)",
+      NA,
+      severe_complication
+    ),
+    severe_complication = as.numeric(severe_complication)
+  ) %>%
+  group_by(Recert_status) %>%
+  summarise(
+    n_surgon = length(unique(npi)),
+    death_rate = mean(death_30d),
+    cmp_date = mean(severe_complication, na.rm = T)
+  ) %>% 
+  kable() %>% 
+  kable_styling(full_width = F)
+```
+
+
+
+### Case level table1
+
+```{r}
+medicare_abs_model_ready_no_na %>% 
+  select(!!covariates) %>% 
+  tbl_summary(by = re_cert_status) %>% 
+  add_p() %>% 
+  as_flex_table()
+```
+
+severe complication outcomes only available after 2010
+
+
+## all procedures exclude fellowship trained
 ### Cohort Diagram
 
 ![](/Users/xilinchen/Documents/Repo/ABS_MoC_vs_pt_Outcome/other_docs/Diagram/cohort_definition/publication_5_17.png)
