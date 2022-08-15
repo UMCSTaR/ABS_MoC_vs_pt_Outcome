@@ -1,5 +1,7 @@
 # MOC vs. Outcomes
 
+The information below was updated when we first started the project in early 2021, and the project got restarted in mid 2022. The descriptions and cohort have changed so the Readme here is just for reference. 
+
 ## Summary
 
 Association between *initial* American Board of Surgery (ABS) re-certification in ABS *US trained* *general surgeons* and risk-adjusted surgical patient outcomes. 
