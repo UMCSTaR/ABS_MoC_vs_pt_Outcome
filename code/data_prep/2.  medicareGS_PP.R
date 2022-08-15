@@ -1,3 +1,9 @@
+# Read this: 
+# No need to run this script if plan to
+# include all fellowship trained surgeons 
+# go to step3--------
+
+
 # Define cohort by combining 4 criteria 
 # This cohort definition is defined after the comparison of the 4 definitions doc at
 # [overlap_cohort_definitions](other_docs/lab_notebooks/Overlap_cohort_definitions.pdf)
